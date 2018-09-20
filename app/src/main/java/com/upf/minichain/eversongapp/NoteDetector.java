@@ -1,7 +1,6 @@
 package com.upf.minichain.eversongapp;
 
 public class NoteDetector {
-    String LOG_TAG = "AdriHellLog::";
 
     public NoteDetector() {
     }
