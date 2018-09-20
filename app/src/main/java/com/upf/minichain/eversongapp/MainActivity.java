@@ -20,8 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-    final int SAMPLE_RATE = 22050; // The sampling rate
-    boolean mShouldContinue; // Indicates if recording / playback should stop
+    boolean mShouldContinue;        // Indicates if recording / playback should stop
     String LOG_TAG = "AdriHellLog::";
     Button recordingButton;
     TextView frequencyText;
@@ -133,17 +132,17 @@ public class MainActivity extends AppCompatActivity {
                 android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO);
 
                 // buffer size in bytes
-                int bufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE,
+                int bufferSize = AudioRecord.getMinBufferSize(Constants.SAMPLE_RATE,
                         AudioFormat.CHANNEL_IN_MONO,
                         AudioFormat.ENCODING_PCM_16BIT);
 
                 if (bufferSize == AudioRecord.ERROR || bufferSize == AudioRecord.ERROR_BAD_VALUE) {
 //                    bufferSize = SAMPLE_RATE * 2;
                 }
-                bufferSize = 4096;
+                bufferSize = Constants.BUFFER_SIZE;
 
                 AudioRecord record = new AudioRecord(MediaRecorder.AudioSource.DEFAULT,
-                        SAMPLE_RATE,
+                        Constants.SAMPLE_RATE,
                         AudioFormat.CHANNEL_IN_MONO,
                         AudioFormat.ENCODING_PCM_16BIT,
                         bufferSize);

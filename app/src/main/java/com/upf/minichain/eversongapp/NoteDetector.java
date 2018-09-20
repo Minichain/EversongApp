@@ -4,7 +4,6 @@ import android.util.Log;
 
 public class NoteDetector {
     String LOG_TAG = "AdriHellLog::";
-    final int SAMPLE_RATE = 22050; // The sampling rate
 
     public NoteDetector() {
     }
@@ -51,7 +50,7 @@ public class NoteDetector {
 
     public float indexToFrequency(int index) {
         float frequencyDetected = 0;
-        frequencyDetected = ((float)SAMPLE_RATE / 2f) * ((float)index / (4096f / 2));
+        frequencyDetected = ((float)Constants.SAMPLE_RATE / 2f) * ((float)index / (Constants.BUFFER_SIZE / 2f));
         return frequencyDetected;
     }
 }
