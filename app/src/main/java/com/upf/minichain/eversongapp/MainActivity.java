@@ -9,11 +9,11 @@ import android.graphics.Rect;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.Process;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     boolean mShouldContinue;        // Indicates if recording / playback should stop
-    String LOG_TAG = "AdriHellLog::";
     Button recordingButton;
     TextView frequencyText;
     TextView noteText;
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         recordingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v(LOG_TAG, "AdriHell:: Button pressed! recordingButton is " + recordingButton);
+                Log.l("AdriHell:: Button pressed! recordingButton is " + recordingButton);
                 if (recordingButton.getText().equals(getString(R.string.start_record_button))) {
                     recordingButton.setText(R.string.stop_record_button);
                     recordAudio();
@@ -129,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO);
+                Process.setThreadPriority(Process.THREAD_PRIORITY_AUDIO);
 
                 // buffer size in bytes
                 int bufferSize = AudioRecord.getMinBufferSize(Constants.SAMPLE_RATE,
@@ -148,12 +147,12 @@ public class MainActivity extends AppCompatActivity {
                         bufferSize);
 
                 if (record.getState() != AudioRecord.STATE_INITIALIZED) {
-                    Log.e(LOG_TAG, "AdriHell:: Audio Record can't initialize!");
+                    Log.l("AdriHell:: Audio Record can't initialize!");
                     return;
                 }
                 record.startRecording();
 
-                Log.v(LOG_TAG, "AdriHell:: Start recording");
+                Log.l("AdriHell:: Start recording");
 
                 long shortsRead = 0;
                 mShouldContinue = true;
@@ -190,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 record.stop();
                 record.release();
 
-                Log.v(LOG_TAG, String.format("AdriHell:: Recording stopped. Samples read: %d", shortsRead));
+                Log.l("AdriHell:: Recording stopped. Samples read: " + shortsRead);
             }
         }).start();
     }

@@ -1,7 +1,5 @@
 package com.upf.minichain.eversongapp;
 
-import android.util.Log;
-
 public class NoteDetector {
     String LOG_TAG = "AdriHellLog::";
 
@@ -24,8 +22,8 @@ public class NoteDetector {
             }
             i++;
         }
-//        Log.v(LOG_TAG, "AdriHell:: Freq: " + frequencyValue);
-//        Log.v(LOG_TAG, "AdriHell:: Note detected: " + noteDetected);
+//        Log.l("AdriHell:: Freq: " + frequencyValue);
+//        Log.l("AdriHell:: Note detected: " + noteDetected);
         return noteDetected;
     }
 
@@ -33,7 +31,7 @@ public class NoteDetector {
         int valueIndex = maxValueIndex(buffer);
         float frequencyValue = indexToFrequency(valueIndex);
         return frequencyValue;
-//        Log.v(LOG_TAG, "AdriHell:: Peak detected. Index: " + valueIndex + ", Freq: " + frequencyValue);
+//        Log.l("AdriHell:: Peak detected. Index: " + valueIndex + ", Freq: " + frequencyValue);
     }
 
     public int maxValueIndex(double[] buffer) {
