@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < audioBuffer.length;  i++) {
                         audioBufferDouble[i] = (double)audioBuffer[i] / (double)MAX_SHORT_VALUE;
                     }
-                    final double[] audioBufferFrequency = AudioUtils.fft(audioBufferDouble, true);
+                    final double[] audioBufferFrequency = AudioUtils.bandPassFilter(AudioUtils.fft(audioBufferDouble, true), 0, 1);
 
                     runOnUiThread(new Runnable() {
                         final int amplitudePercentage = (int) Math.abs(((float)audioBuffer[0] / (float)MAX_SHORT_VALUE) * 100.0);
