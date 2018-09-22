@@ -16,7 +16,7 @@ public class FFTbase {
      *            TRUE = direct transform, FALSE = inverse transform
      * @return a new array of length 2n
      */
-    public final double[] fft(final double[] inputReal, double[] inputImag, boolean DIRECT) {
+    public static double[] fft(final double[] inputReal, double[] inputImag, boolean DIRECT) {
         // - n is the dimension of the problem
         // - nu is its logarithm in base e
         int n = inputReal.length;

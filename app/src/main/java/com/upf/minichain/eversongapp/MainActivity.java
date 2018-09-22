@@ -164,11 +164,10 @@ public class MainActivity extends AppCompatActivity {
                     shortsRead += numberOfShort;
 
                     final double[] audioBufferDouble = new double[bufferSize / 2];
-                    FFTbase ffTbase = new FFTbase();
                     for (int i = 0; i < audioBuffer.length;  i++) {
                         audioBufferDouble[i] = (double)audioBuffer[i] / (double)MAX_SHORT_VALUE;
                     }
-                    final double[] audioBufferFrequency = ffTbase.fft(audioBufferDouble, null, true);
+                    final double[] audioBufferFrequency = AudioUtils.fft(audioBufferDouble, true);
 
                     runOnUiThread(new Runnable() {
                         final int amplitudePercentage = (int) Math.abs(((float)audioBuffer[0] / (float)MAX_SHORT_VALUE) * 100.0);
