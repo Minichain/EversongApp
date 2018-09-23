@@ -11,8 +11,9 @@ public class NoteDetector {
         double frequencyDistance = 1000.0;
         NotesEnum noteDetected = NotesEnum.NO_NOTE;
         double tempFrequency = 0.0;
-        int i = 35;
-        while (tempFrequency < 20000f) {
+        int i = 0;
+        float maxFreqToCheck = 10000f;
+        while (tempFrequency < maxFreqToCheck) {
             tempFrequency = Math.pow(NotesEnum.refValue, ((double)i - 49.0)) * NotesEnum.refFreq;
             double newFreqDistance = Math.abs(tempFrequency - frequencyValue);
             if (newFreqDistance < frequencyDistance) {
@@ -21,8 +22,8 @@ public class NoteDetector {
             }
             i++;
         }
-//        Log.l("AdriHell:: Freq: " + frequencyValue);
-//        Log.l("AdriHell:: Note detected: " + noteDetected);
+        Log.l("AdriHell:: Freq: " + frequencyValue);
+        Log.l("AdriHell:: Note detected: " + noteDetected);
         return noteDetected;
     }
 

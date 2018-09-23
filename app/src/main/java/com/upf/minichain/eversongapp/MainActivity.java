@@ -105,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
                 mCanvas.drawLine(i * 2, (buffer[i] / 60) + (mCanvas.getHeight() / 2),
                         i * 2 + 1 , (buffer[i + 1] / 60) + (mCanvas.getHeight() / 2), mPaint);
 
-                mCanvas.drawLine(i * 2, ((float)Math.abs(bufferFrequency[(i + 10)]) * -500) + (mCanvas.getHeight()),
-                        i * 2 + 1, ((float)Math.abs(bufferFrequency[((i + 10)) + 1]) * -500) + (mCanvas.getHeight()), mPaint);
+                mCanvas.drawLine(i * 2, ((float)Math.abs(bufferFrequency[i]) * -500) + (mCanvas.getHeight()),
+                        i * 2 + 1, ((float)Math.abs(bufferFrequency[(i) + 1]) * -500) + (mCanvas.getHeight()), mPaint);
             }
         }
     }
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < audioBuffer.length;  i++) {
                         audioBufferDouble[i] = (double)audioBuffer[i] / (double)MAX_SHORT_VALUE;
                     }
-                    final double[] audioBufferFrequency = AudioUtils.bandPassFilter(AudioUtils.fft(audioBufferDouble, true), 0, 1);
+                    final double[] audioBufferFrequency = AudioUtils.bandPassFilter(AudioUtils.fft(audioBufferDouble, true), 140, 2000);
 
                     runOnUiThread(new Runnable() {
                         final int amplitudePercentage = (int) Math.abs(((float)audioBuffer[0] / (float)MAX_SHORT_VALUE) * 100.0);
