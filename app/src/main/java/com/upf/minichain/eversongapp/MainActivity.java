@@ -107,6 +107,9 @@ public class MainActivity extends AppCompatActivity {
 
                 mCanvas.drawLine(i * 2, ((float)Math.abs(bufferFrequency[i]) * -500) + (mCanvas.getHeight()),
                         i * 2 + 1, ((float)Math.abs(bufferFrequency[(i) + 1]) * -500) + (mCanvas.getHeight()), mPaint);
+
+                int averageValueY = (int)(AudioUtils.getAverageLevel(bufferFrequency) * -20000 + mCanvas.getHeight());
+                mCanvas.drawLine(0, averageValueY, mCanvas.getWidth(), averageValueY, mPaint);
             }
         }
     }
@@ -120,8 +123,21 @@ public class MainActivity extends AppCompatActivity {
 
     public void processAudio(short[] buffer, double[] bufferFrequency) {
         NoteDetector noteDetector = new NoteDetector();
-        frequencyText.setText(String.valueOf((int)noteDetector.detectFrequency(bufferFrequency) + " Hz"));
-        noteText.setText(String.valueOf(noteDetector.detectNote(bufferFrequency)));
+        float freqDetected = noteDetector.detectFrequency(bufferFrequency);
+//        frequencyText.setText(String.valueOf((int)freqDetected + " Hz"));
+//        noteText.setText(String.valueOf(noteDetector.detectNote(freqDetected)));
+        int[] peaks;
+        peaks = noteDetector.detectPeaks(bufferFrequency, 5, AudioUtils.getAverageLevel(bufferFrequency) * 40);
+        Log.l("AdriHell:: " + peaks[0]
+                + ", " + peaks[1]
+                + ", " + peaks[2]
+                + ", " + peaks[3]
+                + ", " + peaks[4]);
+        Log.l("AdriHell:: " + noteDetector.indexToFrequency(peaks[0])
+                + ", " + noteDetector.indexToFrequency(peaks[1])
+                + ", " + noteDetector.indexToFrequency(peaks[2])
+                + ", " + noteDetector.indexToFrequency(peaks[3])
+                + ", " + noteDetector.indexToFrequency(peaks[4]));
     }
 
     void recordAudio() {
@@ -167,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < audioBuffer.length;  i++) {
                         audioBufferDouble[i] = (double)audioBuffer[i] / (double)MAX_SHORT_VALUE;
                     }
-                    final double[] audioBufferFrequency = AudioUtils.bandPassFilter(AudioUtils.fft(audioBufferDouble, true), 140, 2000);
+                    final double[] audioBufferFrequency = AudioUtils.smoothFunction(AudioUtils.bandPassFilter(AudioUtils.fft(audioBufferDouble, true), 150, 2000));
 
                     runOnUiThread(new Runnable() {
                         final int amplitudePercentage = (int) Math.abs(((float)audioBuffer[0] / (float)MAX_SHORT_VALUE) * 100.0);

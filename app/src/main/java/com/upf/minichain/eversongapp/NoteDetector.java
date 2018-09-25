@@ -5,9 +5,7 @@ public class NoteDetector {
     public NoteDetector() {
     }
 
-    public NotesEnum detectNote(double[] buffer) {
-        int valueIndex = maxValueIndex(buffer);
-        double frequencyValue = indexToFrequency(valueIndex);
+    public NotesEnum detectNote(double frequencyValue) {
         double frequencyDistance = 1000.0;
         NotesEnum noteDetected = NotesEnum.NO_NOTE;
         double tempFrequency = 0.0;
@@ -22,8 +20,8 @@ public class NoteDetector {
             }
             i++;
         }
-        Log.l("AdriHell:: Freq: " + frequencyValue);
-        Log.l("AdriHell:: Note detected: " + noteDetected);
+//        Log.l("AdriHell:: Freq: " + frequencyValue);
+//        Log.l("AdriHell:: Note detected: " + noteDetected);
         return noteDetected;
     }
 
@@ -37,7 +35,7 @@ public class NoteDetector {
     public int maxValueIndex(double[] buffer) {
         int maxValueIndex = -1;
         double maxValue = 0.0;
-        for (int i = 10; i < (buffer.length / 2); i++) {
+        for (int i = 0; i < (buffer.length / 2); i++) {
             if (Math.abs(buffer[i]) > maxValue) {
                 maxValueIndex = i;
                 maxValue = Math.abs(buffer[i]);
@@ -46,8 +44,24 @@ public class NoteDetector {
         return maxValueIndex;
     }
 
+    public int[] detectPeaks(double[] buffer, int numOfPeaksToDetect, double threshold) {
+        int[] peaksDetected = new int[numOfPeaksToDetect];
+        int peaksDetectedCounter = 0;
+        int i = 0;
+        while (peaksDetectedCounter < numOfPeaksToDetect && i < ((buffer.length / 2) - 1)) {
+            if (Math.abs(buffer[i]) >= threshold
+                    && Math.abs(buffer[i - 1]) < Math.abs(buffer[i])
+                    && Math.abs(buffer[i]) > Math.abs(buffer[i + 1])) {
+                peaksDetected[peaksDetectedCounter] = i;
+                peaksDetectedCounter++;
+            }
+            i++;
+        }
+        return peaksDetected;
+    }
+
     public float indexToFrequency(int index) {
-        float frequencyDetected = 0;
+        float frequencyDetected;
         frequencyDetected = ((float)Constants.SAMPLE_RATE / 2f) * ((float)index / (Constants.BUFFER_SIZE / 2f));
         return frequencyDetected;
     }

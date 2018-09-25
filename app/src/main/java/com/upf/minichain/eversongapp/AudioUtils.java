@@ -20,20 +20,20 @@ public final class AudioUtils {
         return samples;
     }
 
-    public static double[] bandPassFilter(double[] samples, float lowFreq, float highFreq) {
-        int lowFreqIndex = (int)((lowFreq / (float)Constants.SAMPLE_RATE) * Constants.BUFFER_SIZE);
-        int highFreqIndex = (int)((highFreq / (float)Constants.SAMPLE_RATE) * Constants.BUFFER_SIZE);
+    public static double[] bandPassFilter(double[] samples, float lowCutOffFreq, float highCutOffFreq) {
+        int lowCutOffFreqIndex = (int)((lowCutOffFreq / (float)Constants.SAMPLE_RATE) * Constants.BUFFER_SIZE);
+        int highCutOffFreqIndex = (int)((highCutOffFreq / (float)Constants.SAMPLE_RATE) * Constants.BUFFER_SIZE);
         int length = samples.length;
         double[] tempSamples = new double[length];
         samples = removeZeroFrequency(samples);
         float attenuationFactor = 1.2f;
         for (int i = 0; i < length; i++) {
-            if (lowFreqIndex > i){
-                tempSamples[i] = samples[i] / (float)(attenuationFactor * (lowFreqIndex - i));
-            } else if (lowFreqIndex <= i && i <= highFreqIndex) {
+            if (lowCutOffFreqIndex > i){
+                tempSamples[i] = samples[i] / (attenuationFactor * (lowCutOffFreqIndex - i));
+            } else if (lowCutOffFreqIndex <= i && i <= highCutOffFreqIndex) {
                 tempSamples[i] = samples[i];
-            } else if (i > highFreqIndex) {
-                tempSamples[i] = samples[i] / (float)(attenuationFactor * (i - highFreqIndex));
+            } else if (i > highCutOffFreqIndex) {
+                tempSamples[i] = samples[i] / (attenuationFactor * (i - highCutOffFreqIndex));
             }
         }
         return tempSamples;
@@ -44,5 +44,30 @@ public final class AudioUtils {
         samples[1] = 0;
         samples[2] = 0;
         return samples;
+    }
+
+    public static double getAverageLevel(double[] samples) {
+        double sumOfSamples = 0;
+        for (int i = 0; i < samples.length; i++) {
+            sumOfSamples += Math.abs(samples[i]);
+        }
+        return (sumOfSamples / (double)samples.length);
+    }
+
+    public static double[] smoothFunction(double[] function) {
+        return smoothFunction(function, 2);
+    }
+
+    public static double[] smoothFunction(double[] function, int smoothingFactor) {
+        double[] outputFunction =  new double[function.length];
+        for (int i = smoothingFactor; i < (function.length - smoothingFactor); i++) {
+            double average = 0;
+            for (int z = i - smoothingFactor; z <= i + smoothingFactor; z++) {
+                average += Math.abs(function[z]);
+            }
+            average = average / (double)(smoothingFactor * 2 + 1);
+            outputFunction[i] = average;
+        }
+        return outputFunction;
     }
 }
