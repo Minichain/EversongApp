@@ -36,9 +36,9 @@ public class NoteDetector {
         int maxValueIndex = -1;
         double maxValue = 0.0;
         for (int i = 0; i < (buffer.length / 2); i++) {
-            if (Math.abs(buffer[i]) > maxValue) {
+            if (buffer[i] > maxValue) {
                 maxValueIndex = i;
-                maxValue = Math.abs(buffer[i]);
+                maxValue = buffer[i];
             }
         }
         return maxValueIndex;
@@ -49,9 +49,9 @@ public class NoteDetector {
         int peaksDetectedCounter = 0;
         int i = 0;
         while (peaksDetectedCounter < numOfPeaksToDetect && i < ((buffer.length / 2) - 1)) {
-            if (Math.abs(buffer[i]) >= threshold
-                    && Math.abs(buffer[i - 1]) < Math.abs(buffer[i])
-                    && Math.abs(buffer[i]) > Math.abs(buffer[i + 1])) {
+            if (buffer[i] >= threshold
+                    && buffer[i - 1] < buffer[i]
+                    && buffer[i] > buffer[i + 1]) {
                 peaksDetected[peaksDetectedCounter] = i;
                 peaksDetectedCounter++;
             }

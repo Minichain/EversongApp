@@ -105,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
                 mCanvas.drawLine(i * 2, (buffer[i] / 60) + (mCanvas.getHeight() / 2),
                         i * 2 + 1 , (buffer[i + 1] / 60) + (mCanvas.getHeight() / 2), mPaint);
 
-                mCanvas.drawLine(i * 2, ((float)Math.abs(bufferFrequency[i]) * -500) + (mCanvas.getHeight()),
-                        i * 2 + 1, ((float)Math.abs(bufferFrequency[(i) + 1]) * -500) + (mCanvas.getHeight()), mPaint);
+                mCanvas.drawLine(i * 2, ((float)bufferFrequency[i] * -500) + (mCanvas.getHeight()),
+                        i * 2 + 1, ((float)bufferFrequency[(i) + 1] * -500) + (mCanvas.getHeight()), mPaint);
 
                 int averageValueY = (int)(AudioUtils.getAverageLevel(bufferFrequency) * -20000 + mCanvas.getHeight());
                 mCanvas.drawLine(0, averageValueY, mCanvas.getWidth(), averageValueY, mPaint);
@@ -124,20 +124,20 @@ public class MainActivity extends AppCompatActivity {
     public void processAudio(short[] buffer, double[] bufferFrequency) {
         NoteDetector noteDetector = new NoteDetector();
         float freqDetected = noteDetector.detectFrequency(bufferFrequency);
-//        frequencyText.setText(String.valueOf((int)freqDetected + " Hz"));
-//        noteText.setText(String.valueOf(noteDetector.detectNote(freqDetected)));
+        frequencyText.setText(String.valueOf((int)freqDetected + " Hz"));
+        noteText.setText(String.valueOf(noteDetector.detectNote(freqDetected)));
         int[] peaks;
         peaks = noteDetector.detectPeaks(bufferFrequency, 5, AudioUtils.getAverageLevel(bufferFrequency) * 40);
-        Log.l("AdriHell:: " + peaks[0]
-                + ", " + peaks[1]
-                + ", " + peaks[2]
-                + ", " + peaks[3]
-                + ", " + peaks[4]);
-        Log.l("AdriHell:: " + noteDetector.indexToFrequency(peaks[0])
-                + ", " + noteDetector.indexToFrequency(peaks[1])
-                + ", " + noteDetector.indexToFrequency(peaks[2])
-                + ", " + noteDetector.indexToFrequency(peaks[3])
-                + ", " + noteDetector.indexToFrequency(peaks[4]));
+//        Log.l("AdriHell:: " + peaks[0]
+//                + ", " + peaks[1]
+//                + ", " + peaks[2]
+//                + ", " + peaks[3]
+//                + ", " + peaks[4]);
+//        Log.l("AdriHell:: " + noteDetector.indexToFrequency(peaks[0])
+//                + ", " + noteDetector.indexToFrequency(peaks[1])
+//                + ", " + noteDetector.indexToFrequency(peaks[2])
+//                + ", " + noteDetector.indexToFrequency(peaks[3])
+//                + ", " + noteDetector.indexToFrequency(peaks[4]));
     }
 
     void recordAudio() {

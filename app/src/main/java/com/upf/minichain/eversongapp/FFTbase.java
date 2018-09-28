@@ -110,8 +110,8 @@ public class FFTbase {
             int i2 = i / 2;
             // I used Stephen Wolfram's Mathematica as a reference so I'm going
             // to normalize the output while I'm copying the elements.
-            newArray[i] = xReal[i2] * radice;
-            newArray[i + 1] = xImag[i2] * radice;
+            newArray[i] = Math.abs(xReal[i2] * radice);
+            newArray[i + 1] = Math.abs(xImag[i2] * radice);
         }
         return newArray;
     }

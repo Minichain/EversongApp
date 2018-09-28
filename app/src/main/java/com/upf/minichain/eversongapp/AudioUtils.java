@@ -49,7 +49,7 @@ public final class AudioUtils {
     public static double getAverageLevel(double[] samples) {
         double sumOfSamples = 0;
         for (int i = 0; i < samples.length; i++) {
-            sumOfSamples += Math.abs(samples[i]);
+            sumOfSamples += samples[i];
         }
         return (sumOfSamples / (double)samples.length);
     }
@@ -63,7 +63,7 @@ public final class AudioUtils {
         for (int i = smoothingFactor; i < (function.length - smoothingFactor); i++) {
             double average = 0;
             for (int z = i - smoothingFactor; z <= i + smoothingFactor; z++) {
-                average += Math.abs(function[z]);
+                average += function[z];
             }
             average = average / (double)(smoothingFactor * 2 + 1);
             outputFunction[i] = average;
