@@ -25,18 +25,21 @@ public class NoteDetector {
         return noteDetected;
     }
 
-    public float detectFrequency(double[] buffer) {
-        int valueIndex = maxValueIndex(buffer);
-        float frequencyValue = indexToFrequency(valueIndex);
-        return frequencyValue;
+    public float detectFrequency(double[] buffer, double threshold) {
+        int valueIndex = maxValueIndex(buffer, threshold);
+        if (valueIndex != -1) {
+            return indexToFrequency(valueIndex);
+        } else {
+            return -1;
+        }
 //        Log.l("AdriHell:: Peak detected. Index: " + valueIndex + ", Freq: " + frequencyValue);
     }
 
-    public int maxValueIndex(double[] buffer) {
+    public int maxValueIndex(double[] buffer, double threshold) {
         int maxValueIndex = -1;
         double maxValue = 0.0;
         for (int i = 0; i < (buffer.length / 2); i++) {
-            if (buffer[i] > maxValue) {
+            if (buffer[i] >= threshold && buffer[i] > maxValue) {
                 maxValueIndex = i;
                 maxValue = buffer[i];
             }

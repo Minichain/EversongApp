@@ -6,4 +6,8 @@ public final class Log {
     public static void l(String string) {
         android.util.Log.v(LOG_TAG, string);
     }
+
+    public static void e(String string) {
+        android.util.Log.e(LOG_TAG, string);
+    }
 }
