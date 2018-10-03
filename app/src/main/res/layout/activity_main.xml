@@ -13,9 +13,9 @@
 
     <Button
         android:id="@+id/recording_button"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="198dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="80dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="40dp"
         android:foregroundGravity="bottom"
@@ -23,7 +23,7 @@
         android:text="@string/start_record_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.055"
+        app:layout_constraintHorizontal_bias="0.318"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView

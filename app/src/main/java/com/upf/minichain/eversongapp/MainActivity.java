@@ -97,6 +97,9 @@ public class MainActivity extends AppCompatActivity {
         mCanvas.drawColor(mColorBackground);
         mPaint.setColor(mColorBlack);
         mPaint.setStrokeWidth(5f);
+
+        int rectangleWidth = (int) ((mImageView.getWidth() - 10) * average) + 10;
+        mRect.set(10, 10, rectangleWidth,100);
         mCanvas.drawRect(mRect, mPaint);
 
         if (buffer != null && bufferFrequency != null) {
@@ -105,10 +108,11 @@ public class MainActivity extends AppCompatActivity {
                 mCanvas.drawLine(i * 2, (buffer[i] / 60) + (mCanvas.getHeight() / 2),
                         i * 2 + 1 , (buffer[i + 1] / 60) + (mCanvas.getHeight() / 2), mPaint);
 
-                mCanvas.drawLine(i * 2, ((float)bufferFrequency[i] * (-1 * 500)) + (mCanvas.getHeight()),
-                        i * 2 + 1, ((float)bufferFrequency[(i) + 1] * (-1 * 500)) + (mCanvas.getHeight()), mPaint);
+                float amplifyDrawFactor = 500f;
+                mCanvas.drawLine(i * 2, ((float)bufferFrequency[i] * (-amplifyDrawFactor)) + (mCanvas.getHeight()),
+                        i * 2 + 1, ((float)bufferFrequency[(i) + 1] * (-amplifyDrawFactor)) + (mCanvas.getHeight()), mPaint);
 
-                average = (average * -1  * 500) + mCanvas.getHeight();
+                average = (average * -amplifyDrawFactor) + mCanvas.getHeight();
                 mCanvas.drawLine(0, (float)average, mCanvas.getWidth(), (float)average, mPaint);
             }
         }
@@ -124,11 +128,11 @@ public class MainActivity extends AppCompatActivity {
     public void processAudio(short[] buffer, double[] bufferFrequency, double threshold) {
         NoteDetector noteDetector = new NoteDetector();
         float freqDetected = noteDetector.detectFrequency(bufferFrequency, threshold);
-        if (freqDetected >= 0) {
+        if (freqDetected != -1) {
             frequencyText.setText(String.valueOf((int)freqDetected + " Hz"));
             noteText.setText(String.valueOf(noteDetector.detectNote(freqDetected)));
         } else {
-            frequencyText.setText(String.valueOf("-1" + " Hz"));
+            frequencyText.setText(String.valueOf("---"));
             noteText.setText(String.valueOf(NotesEnum.NO_NOTE));
         }
 //        int[] peaks;
@@ -190,15 +194,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                     final double[] audioBufferFrequency = AudioUtils.smoothFunction(AudioUtils.bandPassFilter(AudioUtils.fft(audioBufferDouble, true), 150, 2000));
                     final double average = AudioUtils.getAverageLevel(audioBufferFrequency) * 70;
-
                     runOnUiThread(new Runnable() {
-                        final int amplitudePercentage = (int) Math.abs(((float)audioBuffer[0] / (float)MAX_SHORT_VALUE) * 100.0);
                         @Override
                         public void run() {
                             if (mCanvas != null && mPaint != null) {
-                                int rectangleWidth = (int) ((float) (mImageView.getWidth() - 10) * (Math.abs(amplitudePercentage) / 100.0)) + 10;
-//                                Log.v(LOG_TAG, "AdriHell:: setting rectangle to size: " + rectangleWidth);
-                                mRect.set(10, 10, rectangleWidth,100);
                                 updateCanvas(audioBuffer, audioBufferFrequency, average);
                                 processAudio(audioBuffer, audioBufferFrequency, average);
                             }
