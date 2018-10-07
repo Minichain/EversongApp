@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         checkCaptureAudioPermission();
+        System.loadLibrary("native-lib");
+        Log.l("AdriHell:: " + stringFromJNI()); //Testing C++ code
 
         recordingButton = this.findViewById(R.id.recording_button);
         frequencyText = this.findViewById(R.id.frequency_text);
@@ -213,4 +215,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
     }
+
+    public native String stringFromJNI();
 }
