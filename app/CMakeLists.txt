@@ -17,7 +17,8 @@ add_library( # Specifies the name of the library.
              SHARED
 
              # Provides a relative path to your source file(s).
-             src/main/cpp/native-lib.cpp )
+             src/main/cpp/native-lib.cpp
+             src/main/cpp/ProcessAudio.cpp )
 
              # Specifies a path to native header files.
              include_directories(src/main/cpp/include/)

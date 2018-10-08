@@ -1,8 +1,8 @@
 package com.upf.minichain.eversongapp;
 
 /**
+ * This code has been written by:
  * @author Orlando Selenu
- *
  */
 public class FFTbase {
     /**

@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         checkCaptureAudioPermission();
         System.loadLibrary("native-lib");
-        Log.l("AdriHell:: " + stringFromJNI()); //Testing C++ code
+        Log.l("AdriHell:: " + helloWorldTest()); //Testing C++ code
 
         recordingButton = this.findViewById(R.id.recording_button);
         frequencyText = this.findViewById(R.id.frequency_text);
@@ -195,7 +195,9 @@ public class MainActivity extends AppCompatActivity {
                         audioBufferDouble[i] = (double)audioBuffer[i] / (double)MAX_SHORT_VALUE;
                     }
                     final double[] audioBufferFrequency = AudioUtils.smoothFunction(AudioUtils.bandPassFilter(AudioUtils.fft(audioBufferDouble, true), 150, 2000));
-                    final double average = AudioUtils.getAverageLevel(audioBufferFrequency) * 70;
+//                    final double average = AudioUtils.getAverageLevel(audioBufferFrequency) * 70;
+                    final double average = getAverageLevel(audioBufferFrequency) * 70;
+                    Log.l("AdriHell:: Average level " + average);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -205,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
-//                    Log.v(LOG_TAG, "AdriHell:: reading buffer of size " + bufferSize);
+//                    Log.l("AdriHell:: reading buffer of size " + bufferSize);
                 }
 
                 record.stop();
@@ -216,5 +218,12 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
-    public native String stringFromJNI();
+
+    /*
+    * This methods are used in order
+    * to access to the C++ code of the app
+    */
+    public native String helloWorldTest();
+
+    public native double getAverageLevel(double[] samples);
 }
