@@ -42,8 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         checkCaptureAudioPermission();
-        System.loadLibrary("native-lib");
-        Log.l("AdriHell:: " + helloWorldTest()); //Testing C++ code
+        AudioUtils.initAudioUtils();
 
         recordingButton = this.findViewById(R.id.recording_button);
         frequencyText = this.findViewById(R.id.frequency_text);
@@ -137,18 +136,6 @@ public class MainActivity extends AppCompatActivity {
             frequencyText.setText(String.valueOf("---"));
             noteText.setText(String.valueOf(NotesEnum.NO_NOTE));
         }
-//        int[] peaks;
-//        peaks = noteDetector.detectPeaks(bufferFrequency, 5, AudioUtils.getAverageLevel(bufferFrequency) * 40);
-//        Log.l("AdriHell:: " + peaks[0]
-//                + ", " + peaks[1]
-//                + ", " + peaks[2]
-//                + ", " + peaks[3]
-//                + ", " + peaks[4]);
-//        Log.l("AdriHell:: " + noteDetector.indexToFrequency(peaks[0])
-//                + ", " + noteDetector.indexToFrequency(peaks[1])
-//                + ", " + noteDetector.indexToFrequency(peaks[2])
-//                + ", " + noteDetector.indexToFrequency(peaks[3])
-//                + ", " + noteDetector.indexToFrequency(peaks[4]));
     }
 
     void recordAudio() {
@@ -186,18 +173,16 @@ public class MainActivity extends AppCompatActivity {
 
                 while (mShouldContinue) {
                     final short[] audioBuffer = new short[bufferSize / 2];
-                    final short MAX_SHORT_VALUE = 32767;
                     int numberOfShort = record.read(audioBuffer, 0, audioBuffer.length);
                     shortsRead += numberOfShort;
 
                     final double[] audioBufferDouble = new double[bufferSize / 2];
                     for (int i = 0; i < audioBuffer.length;  i++) {
-                        audioBufferDouble[i] = (double)audioBuffer[i] / (double)MAX_SHORT_VALUE;
+                        audioBufferDouble[i] = (double)audioBuffer[i] / (double)Constants.MAX_SHORT_VALUE;
                     }
                     final double[] audioBufferFrequency = AudioUtils.smoothFunction(AudioUtils.bandPassFilter(AudioUtils.fft(audioBufferDouble, true), 150, 2000));
-//                    final double average = AudioUtils.getAverageLevel(audioBufferFrequency) * 70;
-                    final double average = getAverageLevel(audioBufferFrequency) * 70;
-                    Log.l("AdriHell:: Average level " + average);
+                    final double average = AudioUtils.getAverageLevel(audioBufferFrequency) * 25;
+//                    Log.l("AdriHell:: Average level " + average);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -217,13 +202,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
     }
-
-
-    /*
-    * This methods are used in order
-    * to access to the C++ code of the app
-    */
-    public native String helloWorldTest();
-
-    public native double getAverageLevel(double[] samples);
 }
