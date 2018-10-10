@@ -22,25 +22,3 @@ add_library( # Specifies the name of the library.
 
              # Specifies a path to native header files.
              include_directories(src/main/cpp/include/)
-
-find_library( # Defines the name of the path variable that stores the
-              # location of the NDK library.
-              log-lib
-
-              # Specifies the name of the NDK library that
-              # CMake needs to locate.
-              log )
-
-# Links your native library against one or more other native libraries.
-target_link_libraries( # Specifies the target library.
-              native-lib
-
-              # Links the log library to the target library.
-              ${log-lib} )
-
-add_library( app-glue
-             STATIC
-             ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c )
-
-# You need to link static libraries against your shared native library.
-target_link_libraries( native-lib app-glue ${log-lib} )
