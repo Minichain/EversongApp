@@ -22,3 +22,10 @@ add_library( # Specifies the name of the library.
 
              # Specifies a path to native header files.
              include_directories(src/main/cpp/include/)
+
+# Links your native library against one or more other native libraries.
+target_link_libraries( # Specifies the target library.
+              native-lib
+
+              # Links the log library to the target library.
+              ${log-lib} )
