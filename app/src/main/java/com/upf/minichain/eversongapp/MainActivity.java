@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         checkCaptureAudioPermission();
-        AudioUtils.initAudioUtils();
+        AudioUtils.helloWorld();
 
         recordingButton = this.findViewById(R.id.recording_button);
         frequencyText = this.findViewById(R.id.frequency_text);

@@ -4,11 +4,14 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.upf.minichain.eversongapp"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+        }
     }
     buildTypes {
         release {
@@ -24,13 +27,21 @@ android {
             path "CMakeLists.txt"
         }
     }
+    sourceSets {
+        main {
+            jni.srcDirs = []
+            jniLibs.srcDir "../../../../src/main/jniLibs/"
+        }
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'jniLibs', include: ['*.so'])
+    implementation fileTree(dir: 'jni', include: ['*.so'])
     implementation 'com.android.support:appcompat-v7:28.0.0-rc02'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+

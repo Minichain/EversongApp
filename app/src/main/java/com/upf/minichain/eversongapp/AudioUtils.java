@@ -1,12 +1,18 @@
 package com.upf.minichain.eversongapp;
 
 public final class AudioUtils {
-    public static void initAudioUtils() {
+
+    static {
+        System.loadLibrary("essentia");
         System.loadLibrary("native-lib");
     }
 
+    public static void helloWorld() {
+        helloWorldTestJni();
+    }
+
     public static double[] fft(double[] inputReal, boolean DIRECT) {
-        return fftCpp(inputReal, DIRECT);
+        return fftJni(inputReal, DIRECT);
     }
 
     public static double[] highPassFilter(double[] samples, float cutOffFreq) {
@@ -46,7 +52,7 @@ public final class AudioUtils {
     }
 
     public static double getAverageLevel(double[] samples) {
-        return getAverageLevelCpp(samples);
+        return getAverageLevelJni(samples);
     }
 
     public static double[] smoothFunction(double[] function) {
@@ -70,9 +76,9 @@ public final class AudioUtils {
      * This methods are used in order
      * to access to the C++ implementation
      **/
-    private static native String helloWorldTestCpp();
+    private static native String helloWorldTestJni();
 
-    private static native double[] fftCpp(double[] inputReal, boolean DIRECT);
+    private static native double[] fftJni(double[] inputReal, boolean DIRECT);
 
-    private static native double getAverageLevelCpp(double[] samples);
+    private static native double getAverageLevelJni(double[] samples);
 }

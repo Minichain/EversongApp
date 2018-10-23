@@ -1,0 +1,9 @@
+prefix=/Users/minichain/Dev/android/modules/essentia
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: libessentia
+Description: audio analysis library -- development files
+Version: 2.1-beta4
+Libs: -L${libdir} -lessentia -lgaia2 -lfftw3 -lyaml -lavcodec -lavformat -lavutil -lavresample -lsamplerate -ltag -lfftw3f
+Cflags: -I${includedir}/essentia -I${includedir}/essentia/scheduler -I${includedir}/essentia/streaming -I${includedir}/essentia/utils
