@@ -4,15 +4,15 @@
 
 extern "C" {
     /**
-     * Method used for TESTING purposes
+     * ProcessAudio functions
      */
-    jstring Java_com_upf_minichain_eversongapp_AudioUtils_helloWorldTestJni(JNIEnv *env, jobject) {
-        std::string helloWorld = "Hello World!";
-        ProcessAudio::essentiaTesting();
-        return env->NewStringUTF(helloWorld.c_str());
+    ProcessAudio* processAudio;
+
+    void Java_com_upf_minichain_eversongapp_AudioStack_initProcessAudioJni(JNIEnv *env, jobject, jint sample_rate, jint frame_size, jint hop_size) {
+        processAudio = new ProcessAudio(sample_rate, frame_size, hop_size);
     }
 
-    jdoubleArray Java_com_upf_minichain_eversongapp_AudioUtils_fftJni(JNIEnv *env, jobject, jdoubleArray inputReal, jboolean DIRECT) {
+    jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_fftJni(JNIEnv *env, jobject, jdoubleArray inputReal, jboolean DIRECT) {
         jsize length = env->GetArrayLength(inputReal);
         jdouble *doublePointer = env->GetDoubleArrayElements(inputReal, 0);
         double* samplesArrayTemp;
@@ -26,7 +26,7 @@ extern "C" {
         return output;
     }
 
-    jdouble Java_com_upf_minichain_eversongapp_AudioUtils_getAverageLevelJni(JNIEnv *env, jobject, jdoubleArray samples) {
+    jdouble Java_com_upf_minichain_eversongapp_AudioStack_getAverageLevelJni(JNIEnv *env, jobject, jdoubleArray samples) {
         jsize length = env->GetArrayLength(samples);
         jdouble *doublePointer = env->GetDoubleArrayElements(samples, 0);
         double* samplesArrayTemp;

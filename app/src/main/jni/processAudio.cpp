@@ -1,11 +1,9 @@
 #include "processAudio.h"
 
-void ProcessAudio::essentiaTesting() {
-    essentia::init();
-    if (essentia::isInitialized()) {
-        LOGI("ESSENTIA WORKS!");
-    }
-    essentia::shutdown();
+ProcessAudio::ProcessAudio(int sample_rate, int frame_size, int hop_size) {
+    sampleRate = sample_rate;
+    frameSize = frame_size;
+    hopSize = hop_size;
 }
 
 double ProcessAudio::getAverageLevel(double* samples, int length) {
