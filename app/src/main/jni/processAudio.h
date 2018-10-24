@@ -3,7 +3,10 @@
 
 #include <math.h>
 #include <android/log.h>
+#include <iostream>
 #include "essentia/include/essentia/essentia.h"
+#include "essentia/include/essentia/algorithmfactory.h"
+#include "essentia/include/essentia/essentiamath.h"
 #include "essentia/include/essentia/pool.h"
 
 #define  LOG_TAG    "EversongAppLog"
@@ -14,7 +17,13 @@
 
 class ProcessAudio {
 public:
-    static void essentiaTesting();
+    ProcessAudio* processAudio;
+    int sampleRate;
+    int frameSize;
+    int hopSize;
+
+    ProcessAudio(int sample_rate, int frame_size, int hop_size);
+
     static double getAverageLevel(double samples[], int length);
     static double* fft(double* inputReal, int length, bool DIRECT);
     static double* fft(double* inputReal, double* inputImag, int length, bool DIRECT);

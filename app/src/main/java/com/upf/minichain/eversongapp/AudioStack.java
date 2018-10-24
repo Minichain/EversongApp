@@ -1,14 +1,14 @@
 package com.upf.minichain.eversongapp;
 
-public final class AudioUtils {
+public final class AudioStack {
 
     static {
         System.loadLibrary("essentia");
         System.loadLibrary("native-lib");
     }
 
-    public static void helloWorld() {
-        helloWorldTestJni();
+    public static void initAudioStack() {
+        initProcessAudioJni(Constants.SAMPLE_RATE, Constants.BUFFER_SIZE, Constants.HOP_SIZE);
     }
 
     public static double[] fft(double[] inputReal, boolean DIRECT) {
@@ -76,7 +76,7 @@ public final class AudioUtils {
      * This methods are used in order
      * to access to the C++ implementation
      **/
-    private static native String helloWorldTestJni();
+    private static native void initProcessAudioJni(int sample_rate, int frame_size, int hop_size);
 
     private static native double[] fftJni(double[] inputReal, boolean DIRECT);
 
