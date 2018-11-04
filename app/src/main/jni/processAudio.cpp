@@ -7,9 +7,24 @@ ProcessAudio::ProcessAudio(int sample_rate, int frame_size, int hop_size) {
     hopSize = hop_size;
 }
 
-void ProcessAudio::chordDetection() {
-    LOGI("essentiaChordDetection sampleRate: %d", sampleRate);
-    Chromagram c (frameSize,sampleRate);
+void ProcessAudio::chordDetection(double* samples) {
+    Chromagram c(frameSize, sampleRate);
+    ChordDetector chordDetector;
+    std::vector<double> chroma(12);
+
+    c.processAudioFrame(samples);
+    if (c.isReady())
+    {
+        LOGI("\nAdriHell:: Chromagram is ready!");
+        c.setInputAudioFrameSize(frameSize);
+        c.setSamplingFrequency(sampleRate);
+        c.setChromaCalculationInterval(8192);
+
+        chordDetector.detectChord(c.getChromagram());
+    }
+
+    LOGI("\nAdriHell:: RootNote: %d", chordDetector.rootNote);
+    LOGI("\nAdriHell:: ChordQuality: %d", chordDetector.quality);
 }
 
 double ProcessAudio::getAverageLevel(double* samples, int length) {

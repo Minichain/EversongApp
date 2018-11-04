@@ -11,8 +11,11 @@ extern "C" {
         processAudio = new ProcessAudio(sample_rate, frame_size, hop_size);
     }
 
-    void Java_com_upf_minichain_eversongapp_AudioStack_chordDetectionJni(JNIEnv *env, jobject, jint sample_rate, jint frame_size, jint hop_size) {
-        processAudio->chordDetection();
+    void Java_com_upf_minichain_eversongapp_AudioStack_chordDetectionJni(JNIEnv *env, jobject, jdoubleArray samples) {
+        jdouble *doublePointer = env->GetDoubleArrayElements(samples, 0);
+        double* samplesArrayTemp;
+        samplesArrayTemp = doublePointer;
+        processAudio->chordDetection(samplesArrayTemp);
     }
 
     jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_fftJni(JNIEnv *env, jobject, jdoubleArray inputReal, jboolean DIRECT) {

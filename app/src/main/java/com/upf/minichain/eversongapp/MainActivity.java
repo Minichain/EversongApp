@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
 
         checkCaptureAudioPermission();
         AudioStack.initAudioStack();
-        AudioStack.chordDetection();
 
         recordingButton = this.findViewById(R.id.recording_button);
         frequencyText = this.findViewById(R.id.frequency_text);
@@ -182,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
                         audioBufferDouble[i] = (double)audioBuffer[i] / (double)Constants.MAX_SHORT_VALUE;
                     }
                     final double[] audioBufferFrequency = AudioStack.smoothFunction(AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 150, 2000));
+                    AudioStack.chordDetection(audioBufferDouble);
                     final double average = AudioStack.getAverageLevel(audioBufferFrequency) * 25;
 //                    Log.l("AdriHell:: Average level " + average);
                     runOnUiThread(new Runnable() {
