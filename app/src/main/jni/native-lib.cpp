@@ -1,5 +1,4 @@
 #include <jni.h>
-#include <string>
 #include "processAudio.h"
 
 extern "C" {
@@ -10,6 +9,10 @@ extern "C" {
 
     void Java_com_upf_minichain_eversongapp_AudioStack_initProcessAudioJni(JNIEnv *env, jobject, jint sample_rate, jint frame_size, jint hop_size) {
         processAudio = new ProcessAudio(sample_rate, frame_size, hop_size);
+    }
+
+    void Java_com_upf_minichain_eversongapp_AudioStack_chordDetectionJni(JNIEnv *env, jobject, jint sample_rate, jint frame_size, jint hop_size) {
+        processAudio->chordDetection();
     }
 
     jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_fftJni(JNIEnv *env, jobject, jdoubleArray inputReal, jboolean DIRECT) {

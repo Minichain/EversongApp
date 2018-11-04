@@ -21,21 +21,21 @@ add_library(# Specifies the name of the library.
             src/main/jni/processAudio.cpp
             )
 
+add_library(# Specifies the name of the library.
+            ChordDetection-lib
+
+            # Sets the library as a shared library.
+            SHARED
+
+            # Provides a relative path to your source file(s).
+            src/main/jni/ChordDetection/src/ChordDetector.cpp
+            src/main/jni/ChordDetection/src/Chromagram.cpp
+            src/main/jni/ChordDetection/src/kiss_fft.c
+            )
+
 # Specifies a path to native header files.
 include_directories(../../../../src/main/jni/include/)
-
-add_library(essentia
-            SHARED
-            IMPORTED )
-
-set_target_properties( # Specifies the target library.
-            essentia
-
-            # Specifies the parameter you want to define.
-            PROPERTIES IMPORTED_LOCATION
-
-            # Provides the path to the library you want to import.
-            ../../../../src/main/jniLibs/${ANDROID_ABI}/libessentia.so )
+include_directories(../../../../src/main/jni/ChordDetection/src/include/)
 
 find_library( # Sets the name of the path variable.
             log-lib
@@ -47,6 +47,6 @@ find_library( # Sets the name of the path variable.
 # Links your native library against one or more other native libraries.
 target_link_libraries( # Specifies the target library.
             native-lib
-            essentia
+            ChordDetection-lib
             ${log-lib}
             )

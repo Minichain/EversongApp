@@ -1,9 +1,15 @@
 #include "processAudio.h"
+#include <vector>
 
 ProcessAudio::ProcessAudio(int sample_rate, int frame_size, int hop_size) {
     sampleRate = sample_rate;
     frameSize = frame_size;
     hopSize = hop_size;
+}
+
+void ProcessAudio::chordDetection() {
+    LOGI("essentiaChordDetection sampleRate: %d", sampleRate);
+    Chromagram c (frameSize,sampleRate);
 }
 
 double ProcessAudio::getAverageLevel(double* samples, int length) {
@@ -15,7 +21,7 @@ double ProcessAudio::getAverageLevel(double* samples, int length) {
 }
 
 /**
- * This code (FFT function) is an adaptation from a code written in Java by:
+ * The following code (FFT function) is an adaptation from a code written in Java by:
  * @author Orlando Selenu
  */
 

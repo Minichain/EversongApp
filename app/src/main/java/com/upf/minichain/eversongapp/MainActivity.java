@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         checkCaptureAudioPermission();
         AudioStack.initAudioStack();
+        AudioStack.chordDetection();
 
         recordingButton = this.findViewById(R.id.recording_button);
         frequencyText = this.findViewById(R.id.frequency_text);

@@ -4,10 +4,9 @@
 #include <math.h>
 #include <android/log.h>
 #include <iostream>
-#include "essentia/include/essentia/essentia.h"
-#include "essentia/include/essentia/algorithmfactory.h"
-#include "essentia/include/essentia/essentiamath.h"
-#include "essentia/include/essentia/pool.h"
+
+#define USE_KISS_FFT
+#include "ChordDetection/src/Chromagram.h"
 
 #define  LOG_TAG    "EversongAppLog"
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
@@ -24,6 +23,7 @@ public:
 
     ProcessAudio(int sample_rate, int frame_size, int hop_size);
 
+    void chordDetection();
     static double getAverageLevel(double samples[], int length);
     static double* fft(double* inputReal, int length, bool DIRECT);
     static double* fft(double* inputReal, double* inputImag, int length, bool DIRECT);
