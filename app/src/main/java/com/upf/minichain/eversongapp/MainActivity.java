@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
                     final double[] audioBufferDouble = new double[bufferSize / 2];
                     for (int i = 0; i < audioBuffer.length;  i++) {
-                        audioBufferDouble[i] = (double)audioBuffer[i] / (double)Constants.MAX_SHORT_VALUE;
+                        audioBufferDouble[i] = (double)audioBuffer[i] / (double)Short.MAX_VALUE;
                     }
                     final double[] audioBufferFrequency = AudioStack.smoothFunction(AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 150, 2000));
                     AudioStack.chordDetection(audioBufferDouble);

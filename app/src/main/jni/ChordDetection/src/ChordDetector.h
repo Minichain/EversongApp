@@ -55,7 +55,7 @@ public:
     void detectChord (double* chroma);
 	
     /** The root note of the detected chord */
-	int rootNote;
+	int rootNote;	// C = 0, C# = 1, D = 2 ...
     
     /** The quality of the detected chord (Major, Minor, etc) */
 	int quality;

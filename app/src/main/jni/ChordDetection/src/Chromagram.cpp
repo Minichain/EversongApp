@@ -197,12 +197,21 @@ void Chromagram::setupFFT()
 #endif
 }
 
+void Chromagram::setMagnitudeSpectrum(double* spectrumSamples) {
+    for (int i = 0; i < bufferSize / 2; i++) {
+        magnitudeSpectrum.at(i) = *(spectrumSamples + i);
+    }
+}
 
 //==================================================================================
 void Chromagram::calculateChromagram()
 {
-    calculateMagnitudeSpectrum();
-    
+    /**
+     * This function is not working.
+     * Instead of using it I set the spectrum value in the processAudio class.
+     */
+//    calculateMagnitudeSpectrum();
+
     double divisorRatio = (((double) samplingFrequency) / 4.0) / ((double)bufferSize);
     
     for (int n = 0; n < 12; n++)
@@ -237,7 +246,7 @@ void Chromagram::calculateChromagram()
         
         chromagram[n] = chromaSum;
     }
-    
+
     chromaReady = true;
 }
 

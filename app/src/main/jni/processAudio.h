@@ -5,7 +5,6 @@
 #include <android/log.h>
 #include <iostream>
 
-#define USE_KISS_FFT
 #include "ChordDetection/src/Chromagram.h"
 #include "ChordDetection/src/ChordDetector.h"
 
@@ -21,6 +20,8 @@ public:
     int sampleRate;
     int frameSize;
     int hopSize;
+    Chromagram c = Chromagram(0, 0);
+    ChordDetector chordDetector;
 
     ProcessAudio(int sample_rate, int frame_size, int hop_size);
 
@@ -29,6 +30,9 @@ public:
     static double* fft(double* inputReal, int length, bool DIRECT);
     static double* fft(double* inputReal, double* inputImag, int length, bool DIRECT);
     static int bitReverseReference(int j, int nu);
+
+private:
+
 };
 
 #endif //EVERSONGAPP_PROCESSAUDIO_H

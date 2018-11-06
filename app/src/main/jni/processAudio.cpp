@@ -5,26 +5,31 @@ ProcessAudio::ProcessAudio(int sample_rate, int frame_size, int hop_size) {
     sampleRate = sample_rate;
     frameSize = frame_size;
     hopSize = hop_size;
+
+    c = Chromagram(frameSize, sampleRate);
+    c.setInputAudioFrameSize(frameSize);
+    c.setSamplingFrequency(sampleRate);
+    c.setChromaCalculationInterval(8192);
 }
 
 void ProcessAudio::chordDetection(double* samples) {
-    Chromagram c(frameSize, sampleRate);
-    ChordDetector chordDetector;
-    std::vector<double> chroma(12);
+
+    double* magnitudeSpectrum = fft(samples, frameSize, true);
+    c.setMagnitudeSpectrum(magnitudeSpectrum);
 
     c.processAudioFrame(samples);
-    if (c.isReady())
-    {
-        LOGI("\nAdriHell:: Chromagram is ready!");
-        c.setInputAudioFrameSize(frameSize);
-        c.setSamplingFrequency(sampleRate);
-        c.setChromaCalculationInterval(8192);
 
-        chordDetector.detectChord(c.getChromagram());
+    if (c.isReady()) {
+//        LOGI("\nAdriHell:: Chromagram is READY!");
+//
+        std::vector<double> chroma = c.getChromagram();
+//
+        chordDetector.detectChord(chroma);
+        LOGI("\nAdriHell:: RootNote: %d", chordDetector.rootNote);
+        LOGI("\nAdriHell:: ChordQuality: %d", chordDetector.quality);
+    } else {
+//        LOGI("\nAdriHell:: Chromagram NOT READY!");
     }
-
-    LOGI("\nAdriHell:: RootNote: %d", chordDetector.rootNote);
-    LOGI("\nAdriHell:: ChordQuality: %d", chordDetector.quality);
 }
 
 double ProcessAudio::getAverageLevel(double* samples, int length) {

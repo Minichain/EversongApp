@@ -26,6 +26,8 @@
 #include <math.h>
 #include <vector>
 
+#define USE_KISS_FFT
+
 #ifdef USE_FFTW
 #include "fftw3.h"
 #endif
@@ -92,7 +94,9 @@ public:
      * be called after processAudioFrame
      */
     bool isReady();
-    
+
+    void setMagnitudeSpectrum(double* spectrumSamples);
+
 private:
     
     void setupFFT();
