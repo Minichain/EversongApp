@@ -10,29 +10,29 @@ enum NotesEnum {
     public static NotesEnum fromInteger(int integerValue) {
         switch(integerValue) {
             case 0:
-                return A;
-            case 1:
-                return A_SHARP;
-            case 2:
-                return B;
-            case 3:
                 return C;
-            case 4:
+            case 1:
                 return C_SHARP;
-            case 5:
+            case 2:
                 return D;
-            case 6:
+            case 3:
                 return D_SHARP;
-            case 7:
+            case 4:
                 return E;
-            case 8:
+            case 5:
                 return F;
-            case 9:
+            case 6:
                 return F_SHARP;
-            case 10:
+            case 7:
                 return G;
-            case 11:
+            case 8:
                 return G_SHARP;
+            case 9:
+                return A;
+            case 10:
+                return A_SHARP;
+            case 11:
+                return B;
         }
         return null;
     }

@@ -1,7 +1,7 @@
 package com.upf.minichain.eversongapp;
 
 public enum ChordTypeEnum {
-    Minor, Major, Suspended, Dominant, Dimished5th, Augmented5th;
+    Minor, Major, Suspended, Dominant, Dimished5th, Augmented5th, Other;
 
     public static int numberOfChordTypes = 6;
 

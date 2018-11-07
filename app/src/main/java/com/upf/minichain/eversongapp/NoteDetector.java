@@ -16,7 +16,7 @@ public class NoteDetector {
             double newFreqDistance = Math.abs(tempFrequency - frequencyValue);
             if (newFreqDistance < frequencyDistance) {
                 frequencyDistance = newFreqDistance;
-                noteDetected = NotesEnum.fromInteger((i-1) % NotesEnum.numberOfNotes);
+                noteDetected = NotesEnum.fromInteger(((i-1) + 3) % NotesEnum.numberOfNotes);
             }
             i++;
         }
@@ -32,7 +32,6 @@ public class NoteDetector {
         } else {
             return -1;
         }
-//        Log.l("AdriHell:: Peak detected. Index: " + valueIndex + ", Freq: " + frequencyValue);
     }
 
     public int maxValueIndex(double[] buffer, double threshold) {

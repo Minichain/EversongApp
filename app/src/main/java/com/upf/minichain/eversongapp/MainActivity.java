@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     Button recordingButton;
     TextView frequencyText;
     TextView noteText;
+    TextView chordTypeText;
 
     //Canvas variables:
     private Canvas mCanvas;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         recordingButton = this.findViewById(R.id.recording_button);
         frequencyText = this.findViewById(R.id.frequency_text);
         noteText = this.findViewById(R.id.note_text);
+        chordTypeText = this.findViewById(R.id.chord_type);
         recordingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,15 +128,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void processAudio(short[] buffer, double[] bufferFrequency, double threshold) {
+    public void processAudio(short[] buffer, double[] bufferFrequency, double threshold, int[] chordDetected) {
         NoteDetector noteDetector = new NoteDetector();
         float freqDetected = noteDetector.detectFrequency(bufferFrequency, threshold);
         if (freqDetected != -1) {
             frequencyText.setText(String.valueOf((int)freqDetected + " Hz"));
-            noteText.setText(String.valueOf(noteDetector.detectNote(freqDetected)));
+            noteText.setText(String.valueOf(NotesEnum.fromInteger(chordDetected[0])));
+            chordTypeText.setText(String.valueOf(ChordTypeEnum.fromInteger(chordDetected[1])));
         } else {
             frequencyText.setText(String.valueOf("---"));
             noteText.setText(String.valueOf(NotesEnum.NO_NOTE));
+            chordTypeText.setText(String.valueOf(ChordTypeEnum.Other));
         }
     }
 
@@ -190,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
                             if (mCanvas != null && mPaint != null) {
                                 updateCanvas(audioBuffer, audioBufferFrequency, average);
-                                processAudio(audioBuffer, audioBufferFrequency, average);
+                                processAudio(audioBuffer, audioBufferFrequency, average, chordDetected);
                             }
                         }
                     });
