@@ -10,8 +10,8 @@ public final class AudioStack {
         initProcessAudioJni(Constants.SAMPLE_RATE, Constants.BUFFER_SIZE, Constants.HOP_SIZE);
     }
 
-    public static void chordDetection(double[] samples) {
-        chordDetectionJni(samples);
+    public static int[] chordDetection(double[] samples) {
+        return chordDetectionJni(samples);
     }
 
     public static double[] fft(double[] inputReal, boolean DIRECT) {
@@ -81,7 +81,7 @@ public final class AudioStack {
      **/
     private static native void initProcessAudioJni(int sample_rate, int frame_size, int hop_size);
 
-    private static native void chordDetectionJni(double[] samples);
+    private static native int[] chordDetectionJni(double[] samples);
 
     private static native double[] fftJni(double[] inputReal, boolean DIRECT);
 

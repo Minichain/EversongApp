@@ -12,23 +12,19 @@ ProcessAudio::ProcessAudio(int sample_rate, int frame_size, int hop_size) {
     c.setChromaCalculationInterval(8192);
 }
 
-void ProcessAudio::chordDetection(double* samples) {
-
-    double* magnitudeSpectrum = fft(samples, frameSize, true);
-    c.setMagnitudeSpectrum(magnitudeSpectrum);
-
+int* ProcessAudio::chordDetection(double* samples) {
+    int* output;
+    *output = -1;       //rootNote
+    *(output + 1) = -1; //quality
+    c.setMagnitudeSpectrum(spectrumSamples);
     c.processAudioFrame(samples);
 
     if (c.isReady()) {
-//        LOGI("\nAdriHell:: Chromagram is READY!");
-//
         std::vector<double> chroma = c.getChromagram();
-//
         chordDetector.detectChord(chroma);
-        LOGI("\nAdriHell:: RootNote: %d", chordDetector.rootNote);
-        LOGI("\nAdriHell:: ChordQuality: %d", chordDetector.quality);
-    } else {
-//        LOGI("\nAdriHell:: Chromagram NOT READY!");
+        *output = chordDetector.rootNote;
+        *(output + 1) = chordDetector.quality;
+        return output;
     }
 }
 
@@ -46,7 +42,7 @@ double ProcessAudio::getAverageLevel(double* samples, int length) {
  */
 
 double* ProcessAudio::fft(double* inputReal, int length, bool DIRECT) {
-    return ProcessAudio::fft(inputReal, NULL, length, DIRECT);
+    return fft(inputReal, NULL, length, DIRECT);
 }
 
 double* ProcessAudio::fft(double* inputReal, double* inputImag, int length, bool DIRECT) {
@@ -144,6 +140,7 @@ double* ProcessAudio::fft(double* inputReal, double* inputImag, int length, bool
             output[i + 1] = abs(xImag[i2] * radice);
         }
     }
+    spectrumSamples = output;
     return output;
 }
 
