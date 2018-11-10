@@ -2,21 +2,15 @@ package com.upf.minichain.eversongapp;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Process;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,17 +19,7 @@ public class MainActivity extends AppCompatActivity {
     TextView frequencyText;
     TextView noteText;
     TextView chordTypeText;
-
-    //Canvas variables:
-    private Canvas mCanvas;
-    private Paint mPaint = new Paint();
-    private Bitmap mBitmap;
-    private ImageView mImageView;
-    private Rect mRect = new Rect();
-    private int mColorBackground;
-    private int mColor01;
-    private int mColor02;
-    private int mColorBlack;
+    EversongCanvas canvas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,64 +47,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        initCanvas();
+        canvas =  new EversongCanvas(getResources(), this.findViewById(R.id.canvas_view));
     }
-
-    //--------------------- Canvas code ---------------------------
-    public void initCanvas() {
-        mColorBackground = ResourcesCompat.getColor(getResources(),
-                R.color.colorBackground, null);
-        mColor01 = ResourcesCompat.getColor(getResources(),
-                R.color.mColor01, null);
-        mColor02 = ResourcesCompat.getColor(getResources(),
-                R.color.mColor02, null);
-        mColorBlack = ResourcesCompat.getColor(getResources(),
-                R.color.colorBlack, null);
-
-        mPaint.setColor(mColorBackground);
-        mImageView = this.findViewById(R.id.canvas_view);
-        mImageView.post( new Runnable() {   // Whenever the view is loaded...
-            @Override
-            public void run() {    //...this is run
-                int vWidth = mImageView.getWidth();
-                int vHeight = mImageView.getHeight();
-//                Log.v(LOG_TAG, "AdriHell:: drawInCanvas with size: " + vWidth + ", " + vHeight);
-                if (vWidth > 0 && vHeight > 0) {
-                    mBitmap = Bitmap.createBitmap(vWidth, vHeight, Bitmap.Config.ARGB_8888);
-                    mImageView.setImageBitmap(mBitmap);
-                    mCanvas = new Canvas(mBitmap);
-                }
-            }
-        });
-    }
-
-    public void updateCanvas(short[] buffer, double[] bufferFrequency, double average) {
-        mImageView.setImageBitmap(mBitmap);
-        mCanvas = new Canvas(mBitmap);
-        mCanvas.drawColor(mColorBackground);
-        mPaint.setColor(mColorBlack);
-        mPaint.setStrokeWidth(5f);
-
-        int rectangleWidth = (int) ((mImageView.getWidth() - 10) * average) + 10;
-        mRect.set(10, 10, rectangleWidth,100);
-        mCanvas.drawRect(mRect, mPaint);
-
-        if (buffer != null && bufferFrequency != null) {
-            for (int i = 0; i < (bufferFrequency.length / 2) - 1; i++) {
-
-                mCanvas.drawLine(i * 2, (buffer[i] / 60) + (mCanvas.getHeight() / 2),
-                        i * 2 + 1 , (buffer[i + 1] / 60) + (mCanvas.getHeight() / 2), mPaint);
-
-                float amplifyDrawFactor = 500f;
-                mCanvas.drawLine(i * 2, ((float)bufferFrequency[i] * (-amplifyDrawFactor)) + (mCanvas.getHeight()),
-                        i * 2 + 1, ((float)bufferFrequency[(i) + 1] * (-amplifyDrawFactor)) + (mCanvas.getHeight()), mPaint);
-
-                average = (average * -amplifyDrawFactor) + mCanvas.getHeight();
-                mCanvas.drawLine(0, (float)average, mCanvas.getWidth(), (float)average, mPaint);
-            }
-        }
-    }
-    //--------------------- Canvas code ---------------------------
 
     public void checkCaptureAudioPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
@@ -184,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < audioBuffer.length;  i++) {
                         audioBufferDouble[i] = (double)audioBuffer[i] / (double)Short.MAX_VALUE;
                     }
-                    final double[] audioBufferFrequency = AudioStack.smoothFunction(AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 150, 2000));
+                    final double[] audioBufferFrequency = AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 150, 2000);
                     final int[] chordDetected = AudioStack.chordDetection(audioBufferDouble, audioBufferFrequency);
                     Log.l("AdriHell:: chordDetected. " +  chordDetected[0] + ", " +  chordDetected[1]);
                     final double average = AudioStack.getAverageLevel(audioBufferFrequency) * 25;
@@ -192,8 +120,8 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (mCanvas != null && mPaint != null) {
-                                updateCanvas(audioBuffer, audioBufferFrequency, average);
+                            if (canvas.getCanvas() != null) {
+                                canvas.updateCanvas(audioBuffer, audioBufferFrequency, average);
                                 processAudio(audioBuffer, audioBufferFrequency, average, chordDetected);
                             }
                         }

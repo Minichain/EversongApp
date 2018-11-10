@@ -8,7 +8,7 @@ ProcessAudio::ProcessAudio(int sample_rate, int frame_size, int hop_size) {
     c = Chromagram(frameSize, sampleRate);
     c.setInputAudioFrameSize(frameSize);
     c.setSamplingFrequency(sampleRate);
-    c.setChromaCalculationInterval(8192);
+    c.setChromaCalculationInterval(frameSize);
 }
 
 int* ProcessAudio::chordDetection(double* samples, double* spectrumSamples) {
