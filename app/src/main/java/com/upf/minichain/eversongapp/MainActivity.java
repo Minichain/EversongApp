@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
                         audioBufferDouble[i] = (double)audioBuffer[i] / (double)Short.MAX_VALUE;
                     }
                     final double[] audioBufferFrequency = AudioStack.smoothFunction(AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 150, 2000));
-                    final int[] chordDetected = AudioStack.chordDetection(audioBufferDouble);
+                    final int[] chordDetected = AudioStack.chordDetection(audioBufferDouble, audioBufferFrequency);
                     Log.l("AdriHell:: chordDetected. " +  chordDetected[0] + ", " +  chordDetected[1]);
                     final double average = AudioStack.getAverageLevel(audioBufferFrequency) * 25;
 //                    Log.l("AdriHell:: Average level " + average);

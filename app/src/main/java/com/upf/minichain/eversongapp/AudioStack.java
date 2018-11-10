@@ -10,8 +10,8 @@ public final class AudioStack {
         initProcessAudioJni(Constants.SAMPLE_RATE, Constants.BUFFER_SIZE, Constants.HOP_SIZE);
     }
 
-    public static int[] chordDetection(double[] samples) {
-        return chordDetectionJni(samples);
+    public static int[] chordDetection(double[] samples, double[] spectrumSamples) {
+        return chordDetectionJni(samples, spectrumSamples);
     }
 
     public static double[] fft(double[] inputReal, boolean DIRECT) {
@@ -29,22 +29,7 @@ public final class AudioStack {
     }
 
     public static double[] bandPassFilter(double[] samples, float lowCutOffFreq, float highCutOffFreq) {
-        int lowCutOffFreqIndex = (int)((lowCutOffFreq / (float)Constants.SAMPLE_RATE) * Constants.BUFFER_SIZE);
-        int highCutOffFreqIndex = (int)((highCutOffFreq / (float)Constants.SAMPLE_RATE) * Constants.BUFFER_SIZE);
-        int length = samples.length;
-        double[] tempSamples = new double[length];
-        samples = removeZeroFrequency(samples);
-        float attenuationFactor = 1.2f;
-        for (int i = 0; i < length; i++) {
-            if (lowCutOffFreqIndex > i){
-                tempSamples[i] = samples[i] / (attenuationFactor * (lowCutOffFreqIndex - i));
-            } else if (lowCutOffFreqIndex <= i && i <= highCutOffFreqIndex) {
-                tempSamples[i] = samples[i];
-            } else if (i > highCutOffFreqIndex) {
-                tempSamples[i] = samples[i] / (attenuationFactor * (i - highCutOffFreqIndex));
-            }
-        }
-        return tempSamples;
+        return bandPassFilterJni(samples, lowCutOffFreq, highCutOffFreq, Constants.SAMPLE_RATE, Constants.BUFFER_SIZE);
     }
 
     public static double[] removeZeroFrequency(double[] samples) {
@@ -81,9 +66,11 @@ public final class AudioStack {
      **/
     private static native void initProcessAudioJni(int sample_rate, int frame_size, int hop_size);
 
-    private static native int[] chordDetectionJni(double[] samples);
+    private static native int[] chordDetectionJni(double[] samples, double[] spectrumSamples);
 
     private static native double[] fftJni(double[] inputReal, boolean DIRECT);
+
+    private static native double[] bandPassFilterJni(double[] spectrumSamples, float lowCutOffFreq, float highCutOffFreq, int sampleRate, int frameSize);
 
     private static native double getAverageLevelJni(double[] samples);
 }

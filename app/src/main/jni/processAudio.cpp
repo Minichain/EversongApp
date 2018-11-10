@@ -4,7 +4,6 @@
 ProcessAudio::ProcessAudio(int sample_rate, int frame_size, int hop_size) {
     sampleRate = sample_rate;
     frameSize = frame_size;
-    hopSize = hop_size;
 
     c = Chromagram(frameSize, sampleRate);
     c.setInputAudioFrameSize(frameSize);
@@ -12,10 +11,11 @@ ProcessAudio::ProcessAudio(int sample_rate, int frame_size, int hop_size) {
     c.setChromaCalculationInterval(8192);
 }
 
-int* ProcessAudio::chordDetection(double* samples) {
+int* ProcessAudio::chordDetection(double* samples, double* spectrumSamples) {
     int* output;
     *output = -1;       //rootNote
     *(output + 1) = -1; //quality
+
     c.setMagnitudeSpectrum(spectrumSamples);
     c.processAudioFrame(samples);
 
@@ -34,6 +34,31 @@ double ProcessAudio::getAverageLevel(double* samples, int length) {
         sumOfSamples += samples[i];
     }
     return (sumOfSamples / (double)length);
+}
+
+double* ProcessAudio::bandPassFilter(double* samples, float lowCutOffFreq, float highCutOffFreq, int sampleRate, int frameSize) {
+    int lowCutOffFreqIndex = (int)((lowCutOffFreq / (float)sampleRate) * frameSize);
+    int highCutOffFreqIndex = (int)((highCutOffFreq / (float)sampleRate) * frameSize);
+    double* tempSamples = new double[frameSize];
+    samples = removeZeroFrequency(samples);
+    float attenuationFactor = 1.2f;
+    for (int i = 0; i < frameSize; i++) {
+        if (lowCutOffFreqIndex > i){
+            tempSamples[i] = samples[i] / (attenuationFactor * (lowCutOffFreqIndex - i));
+        } else if (lowCutOffFreqIndex <= i && i <= highCutOffFreqIndex) {
+            tempSamples[i] = samples[i];
+        } else if (i > highCutOffFreqIndex) {
+            tempSamples[i] = samples[i] / (attenuationFactor * (i - highCutOffFreqIndex));
+        }
+    }
+    return tempSamples;
+}
+
+double* ProcessAudio::removeZeroFrequency(double* samples) {
+    samples[0] = 0;
+    samples[1] = 0;
+    samples[2] = 0;
+    return samples;
 }
 
 /**
@@ -140,7 +165,6 @@ double* ProcessAudio::fft(double* inputReal, double* inputImag, int length, bool
             output[i + 1] = abs(xImag[i2] * radice);
         }
     }
-    spectrumSamples = output;
     return output;
 }
 
