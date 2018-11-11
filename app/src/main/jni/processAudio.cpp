@@ -8,13 +8,12 @@ ProcessAudio::ProcessAudio(int sample_rate, int frame_size, int hop_size) {
     c = Chromagram(frameSize, sampleRate);
     c.setInputAudioFrameSize(frameSize);
     c.setSamplingFrequency(sampleRate);
-    c.setChromaCalculationInterval(frameSize);
+    c.setChromaCalculationInterval(frameSize * 2);
 }
 
 int* ProcessAudio::chordDetection(double* samples, double* spectrumSamples) {
-    int* output;
-    *output = -1;       //rootNote
-    *(output + 1) = -1; //quality
+    chordDetectionOutput[0] = -1;     //rootNote
+    chordDetectionOutput[1] = -1;     //quality
 
     c.setMagnitudeSpectrum(spectrumSamples);
     c.processAudioFrame(samples);
@@ -22,10 +21,10 @@ int* ProcessAudio::chordDetection(double* samples, double* spectrumSamples) {
     if (c.isReady()) {
         std::vector<double> chroma = c.getChromagram();
         chordDetector.detectChord(chroma);
-        *output = chordDetector.rootNote;
-        *(output + 1) = chordDetector.quality;
-        return output;
+        chordDetectionOutput[0] = chordDetector.rootNote;
+        chordDetectionOutput[1] = chordDetector.quality;
     }
+    return chordDetectionOutput;
 }
 
 double ProcessAudio::getAverageLevel(double* samples, int length) {

@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         float freqDetected = noteDetector.detectFrequency(bufferFrequency, threshold);
         if (freqDetected != -1) {
             frequencyText.setText(String.valueOf((int)freqDetected + " Hz"));
-            noteText.setText(String.valueOf(NotesEnum.fromInteger(chordDetected[0])));
+            noteText.setText(NotesEnum.getString(NotesEnum.fromInteger(chordDetected[0])));
             chordTypeText.setText(String.valueOf(ChordTypeEnum.fromInteger(chordDetected[1])));
         } else {
             frequencyText.setText(String.valueOf("---"));
@@ -112,9 +112,9 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < audioBuffer.length;  i++) {
                         audioBufferDouble[i] = (double)audioBuffer[i] / (double)Short.MAX_VALUE;
                     }
-                    final double[] audioBufferFrequency = AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 150, 2000);
+                    final double[] audioBufferFrequency = AudioStack.smoothFunction(AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 150, 2000));
+//                    final double[] audioBufferFrequency = AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 150, 2000);
                     final int[] chordDetected = AudioStack.chordDetection(audioBufferDouble, audioBufferFrequency);
-                    Log.l("AdriHell:: chordDetected. " +  chordDetected[0] + ", " +  chordDetected[1]);
                     final double average = AudioStack.getAverageLevel(audioBufferFrequency) * 25;
 //                    Log.l("AdriHell:: Average level " + average);
                     runOnUiThread(new Runnable() {

@@ -224,7 +224,7 @@ void Chromagram::calculateChromagram()
             
             for (int harmonic = 1; harmonic <= numHarmonics; harmonic++)
             {
-                int centerBin = round ((noteFrequencies[n] * octave * harmonic) / divisorRatio);
+                int centerBin = (int)round((noteFrequencies[n] * octave * harmonic) / divisorRatio);
                 int minBin = centerBin - (numBinsToSearch * harmonic);
                 int maxBin = centerBin + (numBinsToSearch * harmonic);
                 

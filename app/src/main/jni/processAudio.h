@@ -21,6 +21,7 @@ public:
     int frameSize;
     Chromagram c = Chromagram(0, 0);
     ChordDetector chordDetector;
+    int* chordDetectionOutput = new int[2];
 
     ProcessAudio(int sample_rate, int frame_size, int hop_size);
 

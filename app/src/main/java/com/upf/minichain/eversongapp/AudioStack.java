@@ -32,13 +32,6 @@ public final class AudioStack {
         return bandPassFilterJni(samples, lowCutOffFreq, highCutOffFreq, Constants.SAMPLE_RATE, Constants.BUFFER_SIZE);
     }
 
-    public static double[] removeZeroFrequency(double[] samples) {
-        samples[0] = 0;
-        samples[1] = 0;
-        samples[2] = 0;
-        return samples;
-    }
-
     public static double getAverageLevel(double[] samples) {
         return getAverageLevelJni(samples);
     }

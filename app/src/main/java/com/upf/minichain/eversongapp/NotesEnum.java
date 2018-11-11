@@ -34,7 +34,7 @@ enum NotesEnum {
             case 11:
                 return B;
         }
-        return null;
+        return NO_NOTE;
     }
 
     public static float getFrequency(NotesEnum note) {
@@ -65,5 +65,35 @@ enum NotesEnum {
                 return 830.6f / 8.0f;
         }
         return 0f;
+    }
+
+    public static String getString(NotesEnum note) {
+        switch(note) {
+            case A:
+                return "A";
+            case A_SHARP:
+                return "A#";
+            case B:
+                return "B";
+            case C:
+                return "C";
+            case C_SHARP:
+                return "C#";
+            case D:
+                return "D";
+            case D_SHARP:
+                return "D#";
+            case E:
+                return "E";
+            case F:
+                return "F";
+            case F_SHARP:
+                return "F#";
+            case G:
+                return "G";
+            case G_SHARP:
+                return "G#";
+        }
+        return "---";
     }
 }
