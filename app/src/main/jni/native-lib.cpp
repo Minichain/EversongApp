@@ -8,7 +8,7 @@ extern "C" {
     ProcessAudio* processAudio;
 
     void Java_com_upf_minichain_eversongapp_AudioStack_initProcessAudioJni(JNIEnv *env, jobject, jint sample_rate, jint frame_size, jint hop_size) {
-        processAudio = new ProcessAudio(sample_rate, frame_size, hop_size);
+        processAudio = new ProcessAudio(sample_rate, frame_size);
     }
 
     jintArray Java_com_upf_minichain_eversongapp_AudioStack_chordDetectionJni(JNIEnv *env, jobject, jdoubleArray samples, jdoubleArray spectrumSamples) {
@@ -50,5 +50,11 @@ extern "C" {
         jsize length = env->GetArrayLength(samples);
         double* samplesArrayTemp = env->GetDoubleArrayElements(samples, 0);
         return ProcessAudio::getAverageLevel(samplesArrayTemp, length);
+    }
+
+    jfloat Java_com_upf_minichain_eversongapp_AudioStack_getPitchJni(JNIEnv *env, jobject, jdoubleArray samples) {
+        jsize length = env->GetArrayLength(samples);
+        double* samplesArrayTemp = env->GetDoubleArrayElements(samples, 0);
+        return processAudio->getPitch(samplesArrayTemp, length);
     }
 }

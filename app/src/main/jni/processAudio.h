@@ -7,12 +7,15 @@
 
 #include "ChordDetection/src/Chromagram.h"
 #include "ChordDetection/src/ChordDetector.h"
+extern "C" {
+    #include "PitchTracker/Yin.h"
+};
 
 #define  LOG_TAG    "EversongAppLog"
-#define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
-#define  LOGW(...)  __android_log_print(ANDROID_LOG_WARN,LOG_TAG,__VA_ARGS__)
-#define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
-#define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+#define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+#define  LOGW(...)  __android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__)
+#define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
+#define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 
 class ProcessAudio {
 public:
@@ -22,15 +25,16 @@ public:
     Chromagram c = Chromagram(0, 0);
     ChordDetector chordDetector;
     int* chordDetectionOutput = new int[2];
+    Yin yin;
     enum WindowType {
         HANNING_WINDOW,
         HAMMING_WINDOW,
         BLACKMAN_WINDOW
     };
 
-    ProcessAudio(int sample_rate, int frame_size, int hop_size);
-
+    ProcessAudio(int sample_rate, int frame_size);
     int* chordDetection(double* samples, double* spectrumSamples);
+    float getPitch(double* samples, int length);
 
     static double* bandPassFilter(double* samples, float lowCutOffFreq, float highCutOffFreq, int sampleRate, int frameSize);
     static double* removeZeroFrequency(double* samples);

@@ -14,6 +14,10 @@ public final class AudioStack {
         return chordDetectionJni(samples, spectrumSamples);
     }
 
+    public static float getPitch(double[] samples) {
+        return getPitchJni(samples);
+    }
+
     public static double[] fft(double[] inputReal, boolean DIRECT) {
         return fftJni(inputReal, DIRECT);
     }
@@ -66,4 +70,6 @@ public final class AudioStack {
     private static native double[] bandPassFilterJni(double[] spectrumSamples, float lowCutOffFreq, float highCutOffFreq, int sampleRate, int frameSize);
 
     private static native double getAverageLevelJni(double[] samples);
+
+    private static native float getPitchJni(double[] samples);
 }

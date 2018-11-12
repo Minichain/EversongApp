@@ -1,7 +1,7 @@
 #include "processAudio.h"
 #include <vector>
 
-ProcessAudio::ProcessAudio(int sample_rate, int frame_size, int hop_size) {
+ProcessAudio::ProcessAudio(int sample_rate, int frame_size) {
     sampleRate = sample_rate;
     frameSize = frame_size;
 
@@ -9,11 +9,11 @@ ProcessAudio::ProcessAudio(int sample_rate, int frame_size, int hop_size) {
     c.setInputAudioFrameSize(frameSize);
     c.setSamplingFrequency(sampleRate);
     c.setChromaCalculationInterval(frameSize * 2);
+
+    Yin_init(&yin, (int16_t)frameSize, 0.05);
 }
 
 int* ProcessAudio::chordDetection(double* samples, double* spectrumSamples) {
-    chordDetectionOutput[0] = -1;     //rootNote
-    chordDetectionOutput[1] = -1;     //quality
 
     c.setMagnitudeSpectrum(spectrumSamples);
     c.processAudioFrame(samples);
@@ -25,6 +25,16 @@ int* ProcessAudio::chordDetection(double* samples, double* spectrumSamples) {
         chordDetectionOutput[1] = chordDetector.quality;
     }
     return chordDetectionOutput;
+}
+
+float ProcessAudio::getPitch(double* samples, int length) {
+    int16_t* samplesInt16 = new int16_t[length];
+    for(int i = 0; i < length; i++) {
+        samplesInt16[i] = (int16_t)(samples[i] * SHRT_MAX);
+    }
+    float pitchDetected = Yin_getPitch(&yin, samplesInt16);
+    LOGI("AdriHell:: Pitch detected: %f", pitchDetected);
+    return pitchDetected;
 }
 
 double ProcessAudio::getAverageLevel(double* samples, int length) {

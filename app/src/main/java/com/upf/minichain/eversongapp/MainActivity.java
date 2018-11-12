@@ -56,16 +56,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void processAudio(short[] buffer, double[] bufferFrequency, double threshold, int[] chordDetected) {
-        NoteDetector noteDetector = new NoteDetector();
-        float freqDetected = noteDetector.detectFrequency(bufferFrequency, threshold);
+    public void processAudio(double[] buffer, double[] bufferFrequency, double average, int[] chordDetected) {
+        float freqDetected = AudioStack.getPitch(buffer);
         if (freqDetected != -1) {
-            frequencyText.setText(String.valueOf((int)freqDetected + " Hz"));
+            frequencyText.setText(String.valueOf("Pitch: \n" + (int)freqDetected + " Hz"));
+        } else {
+            frequencyText.setText(String.valueOf("Pitch: \n" + "---" + " Hz"));
+        }
+        if (chordDetected[0] != -1) {
             noteText.setText(NotesEnum.getString(NotesEnum.fromInteger(chordDetected[0])));
+        } else {
+            noteText.setText(String.valueOf(NotesEnum.NO_NOTE));
+        }
+        if (chordDetected[1] != -1) {
             chordTypeText.setText(String.valueOf(ChordTypeEnum.fromInteger(chordDetected[1])));
         } else {
-            frequencyText.setText(String.valueOf("---"));
-            noteText.setText(String.valueOf(NotesEnum.NO_NOTE));
             chordTypeText.setText(String.valueOf(ChordTypeEnum.Other));
         }
     }
@@ -104,16 +109,16 @@ public class MainActivity extends AppCompatActivity {
                 mShouldContinue = true;
 
                 while (mShouldContinue) {
-                    final short[] audioBuffer = new short[bufferSize / 2];
+                    final short[] audioBuffer = new short[bufferSize];
                     int numberOfShort = record.read(audioBuffer, 0, audioBuffer.length);
                     shortsRead += numberOfShort;
 
-                    final double[] audioBufferDouble = new double[bufferSize / 2];
+                    final double[] audioBufferDouble = new double[audioBuffer.length];
                     for (int i = 0; i < audioBuffer.length;  i++) {
                         audioBufferDouble[i] = (double)audioBuffer[i] / (double)Short.MAX_VALUE;
                     }
 //                    final double[] audioBufferFrequency = AudioStack.smoothFunction(AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 150, 2000));
-                    final double[] audioBufferFrequency = AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 150, 2000);
+                    final double[] audioBufferFrequency = AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 150, 4000);
                     final int[] chordDetected = AudioStack.chordDetection(audioBufferDouble, audioBufferFrequency);
                     final double average = AudioStack.getAverageLevel(audioBufferFrequency) * 25;
 //                    Log.l("AdriHell:: Average level " + average);
@@ -122,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
                             if (canvas.getCanvas() != null) {
                                 canvas.updateCanvas(audioBuffer, audioBufferFrequency, average);
-                                processAudio(audioBuffer, audioBufferFrequency, average, chordDetected);
+                                processAudio(audioBufferDouble, audioBufferFrequency, average, chordDetected);
                             }
                         }
                     });

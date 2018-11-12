@@ -33,11 +33,22 @@ add_library(# Specifies the name of the library.
             src/main/jni/ChordDetection/src/kiss_fft.c
             )
 
+add_library(# Specifies the name of the library.
+            PitchTracker-lib
+
+            # Sets the library as a shared library.
+            SHARED
+
+            # Provides a relative path to your source file(s).
+            src/main/jni/PitchTracker/Yin.c
+            )
+
 # Specifies a path to native header files.
 include_directories(../../../../src/main/jni/include/)
 include_directories(../../../../src/main/jni/ChordDetection/src/include/)
+include_directories(../../../../src/main/jni/PitchTracker/include/)
 
-find_library( # Sets the name of the path variable.
+find_library(# Sets the name of the path variable.
             log-lib
 
             # Specifies the name of the NDK library that
@@ -48,5 +59,6 @@ find_library( # Sets the name of the path variable.
 target_link_libraries( # Specifies the target library.
             native-lib
             ChordDetection-lib
+            PitchTracker-lib
             ${log-lib}
             )
