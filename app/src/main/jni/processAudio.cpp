@@ -66,11 +66,28 @@ double* ProcessAudio::removeZeroFrequency(double* samples) {
  */
 
 double* ProcessAudio::fft(double* inputReal, int length, bool DIRECT) {
-    return fft(inputReal, NULL, length, DIRECT);
+    return fft(inputReal, NULL, length, DIRECT, BLACKMAN_WINDOW);
 }
 
-double* ProcessAudio::fft(double* inputReal, double* inputImag, int length, bool DIRECT) {
+double* ProcessAudio::fft(double* inputReal, int length, bool DIRECT, WindowType windowType) {
+    return fft(inputReal, NULL, length, DIRECT, windowType);
+}
+
+double* ProcessAudio::fft(double* inputReal, double* inputImag, int length, bool DIRECT, WindowType windowType) {
     double* output = NULL;
+
+    switch(windowType) {
+        case HANNING_WINDOW:
+            inputReal = hanning(inputReal, length);
+            break;
+        case HAMMING_WINDOW:
+            inputReal = hamming(inputReal, length);
+            break;
+        case BLACKMAN_WINDOW:
+        default:
+            inputReal = blackman(inputReal, length);
+            break;
+    }
 
     double ld = log(length) / log(2.0);
 
@@ -180,4 +197,28 @@ int ProcessAudio::bitReverseReference(int j, int nu) {
         j1 = j2;
     }
     return k;
+}
+
+double* ProcessAudio::hanning(double* inputSamples, int vectorLength) {
+    double* outputSamples = new double[vectorLength];
+    for(int i = 0; i < vectorLength; i++) {
+        outputSamples[i] = (0.5 * (1.0 - cos(2.0*M_PI*(double)i/(double)(vectorLength - 1)))) * inputSamples[i];
+    }
+    return outputSamples;
+}
+
+double* ProcessAudio::hamming(double* inputSamples, int vectorLength) {
+    double* outputSamples = new double[vectorLength];
+    for(int i = 0; i < vectorLength; i++) {
+        outputSamples[i] = (0.54 - 0.46 * cos(2.0 * M_PI * (double)i/(double)(vectorLength - 1))) * inputSamples[i];
+    }
+    return outputSamples;
+}
+
+double* ProcessAudio::blackman(double* inputSamples, int vectorLength) {
+    double* outputSamples = new double[vectorLength];
+    for(int i = 0; i < vectorLength; i++) {
+        outputSamples[i] = (0.42 - 0.5 * cos(2.0*M_PI*(double)i/(double)(vectorLength-1)) + 0.08 * cos (4.0*M_PI*(double)i/(double)(vectorLength-1))) * inputSamples[i];
+    }
+    return outputSamples;
 }

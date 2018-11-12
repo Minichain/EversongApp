@@ -22,19 +22,29 @@ public:
     Chromagram c = Chromagram(0, 0);
     ChordDetector chordDetector;
     int* chordDetectionOutput = new int[2];
+    enum WindowType {
+        HANNING_WINDOW,
+        HAMMING_WINDOW,
+        BLACKMAN_WINDOW
+    };
 
     ProcessAudio(int sample_rate, int frame_size, int hop_size);
 
     int* chordDetection(double* samples, double* spectrumSamples);
 
-    static double* fft(double* inputReal, int length, bool DIRECT);
-    static double* fft(double* inputReal, double* inputImag, int length, bool DIRECT);
-    static int bitReverseReference(int j, int nu);
     static double* bandPassFilter(double* samples, float lowCutOffFreq, float highCutOffFreq, int sampleRate, int frameSize);
     static double* removeZeroFrequency(double* samples);
     static double getAverageLevel(double samples[], int length);
-private:
 
+    static double* fft(double* inputReal, int length, bool DIRECT);
+    static double* fft(double* inputReal, int length, bool DIRECT, WindowType windowType);
+    static double* fft(double* inputReal, double* inputImag, int length, bool DIRECT, WindowType windowType);
+    static int bitReverseReference(int j, int nu);
+
+private:
+    static double* hanning(double* inputSamples, int vectorLength);
+    static double* hamming(double* inputSamples, int vectorLength);
+    static double* blackman(double* inputSamples, int vectorLength);
 };
 
 #endif //EVERSONGAPP_PROCESSAUDIO_H
