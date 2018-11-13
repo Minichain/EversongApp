@@ -21,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
     TextView chordTypeText;
     EversongCanvas canvas;
 
+    float pitchDetected;
+    int[] chordDetected = new int[2];
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
 
         checkCaptureAudioPermission();
         AudioStack.initAudioStack();
+
+        pitchDetected = -1;
+        chordDetected[0] = -1;
+        chordDetected[1] = -1;
 
         recordingButton = this.findViewById(R.id.recording_button);
         frequencyText = this.findViewById(R.id.frequency_text);
@@ -56,10 +63,36 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void processAudio(double[] buffer, double[] bufferFrequency, double average, int[] chordDetected) {
-        float freqDetected = AudioStack.getPitch(buffer);
-        if (freqDetected != -1) {
-            frequencyText.setText(String.valueOf("Pitch: \n" + (int)freqDetected + " Hz"));
+    public void processAudio(final double[] buffer, final double[] bufferFrequency, double average) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final int[] chordDetectedThread = AudioStack.chordDetection(buffer, bufferFrequency);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        chordDetected = chordDetectedThread;
+                    }
+                });
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final float pitchDetectedThread = AudioStack.getPitch(buffer);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        pitchDetected = pitchDetectedThread;
+                    }
+                });
+            }
+        }).start();
+
+        if (pitchDetected != -1) {
+            frequencyText.setText(String.valueOf("Pitch: \n" + (int)pitchDetected + " Hz"));
         } else {
             frequencyText.setText(String.valueOf("Pitch: \n" + NotesEnum.getString(NotesEnum.NO_NOTE) + " Hz"));
         }
@@ -119,7 +152,6 @@ public class MainActivity extends AppCompatActivity {
                     }
 //                    final double[] audioBufferFrequency = AudioStack.smoothFunction(AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 150, 2000));
                     final double[] audioBufferFrequency = AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 150, 4000);
-                    final int[] chordDetected = AudioStack.chordDetection(audioBufferDouble, audioBufferFrequency);
                     final double average = AudioStack.getAverageLevel(audioBufferFrequency) * 25;
 //                    Log.l("AdriHell:: Average level " + average);
                     runOnUiThread(new Runnable() {
@@ -127,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
                             if (canvas.getCanvas() != null) {
                                 canvas.updateCanvas(audioBuffer, audioBufferFrequency, average);
-                                processAudio(audioBufferDouble, audioBufferFrequency, average, chordDetected);
+                                processAudio(audioBufferDouble, audioBufferFrequency, average);
                             }
                         }
                     });
