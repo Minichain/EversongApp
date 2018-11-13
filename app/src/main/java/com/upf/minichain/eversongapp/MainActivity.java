@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         if (freqDetected != -1) {
             frequencyText.setText(String.valueOf("Pitch: \n" + (int)freqDetected + " Hz"));
         } else {
-            frequencyText.setText(String.valueOf("Pitch: \n" + "---" + " Hz"));
+            frequencyText.setText(String.valueOf("Pitch: \n" + NotesEnum.getString(NotesEnum.NO_NOTE) + " Hz"));
         }
         if (chordDetected[0] != -1) {
             noteText.setText(NotesEnum.getString(NotesEnum.fromInteger(chordDetected[0])));

@@ -57,6 +57,53 @@ public final class AudioStack {
         return outputFunction;
     }
 
+    public static NotesEnum getNoteByFrequency(double frequencyValue) {
+        double frequencyDistance = 1000.0;
+        NotesEnum noteDetected = NotesEnum.NO_NOTE;
+        double tempFrequency = 0.0;
+        int i = 0;
+        float maxFreqToCheck = 10000f;
+        while (tempFrequency < maxFreqToCheck) {
+            tempFrequency = Math.pow(NotesEnum.refValue, ((double)i - 49.0)) * NotesEnum.refFreq;
+            double newFreqDistance = Math.abs(tempFrequency - frequencyValue);
+            if (newFreqDistance < frequencyDistance) {
+                frequencyDistance = newFreqDistance;
+                noteDetected = NotesEnum.fromInteger(((i - 4)) % NotesEnum.numberOfNotes);
+            }
+            i++;
+        }
+//        Log.l("AdriHell:: Freq: " + frequencyValue);
+//        Log.l("AdriHell:: Note detected: " + noteDetected);
+        return noteDetected;
+    }
+
+    public static float getFrequencyPeak(double[] buffer, double threshold) {
+        int valueIndex = getMaxValueIndex(buffer, threshold);
+        if (valueIndex != -1) {
+            return getFrequencyByIndex(valueIndex);
+        } else {
+            return -1;
+        }
+    }
+
+    public static int getMaxValueIndex(double[] buffer, double threshold) {
+        int maxValueIndex = -1;
+        double maxValue = 0.0;
+        for (int i = 0; i < (buffer.length / 2); i++) {
+            if (buffer[i] >= threshold && buffer[i] > maxValue) {
+                maxValueIndex = i;
+                maxValue = buffer[i];
+            }
+        }
+        return maxValueIndex;
+    }
+
+    public static float getFrequencyByIndex(int index) {
+        float frequencyDetected;
+        frequencyDetected = ((float)Constants.SAMPLE_RATE / 2f) * ((float)index / (Constants.BUFFER_SIZE / 2f));
+        return frequencyDetected;
+    }
+
     /**
      * This methods are used in order
      * to access to the C++ implementation
