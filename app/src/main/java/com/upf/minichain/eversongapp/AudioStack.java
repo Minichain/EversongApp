@@ -72,13 +72,11 @@ public final class AudioStack {
             }
             i++;
         }
-//        Log.l("AdriHell:: Freq: " + frequencyValue);
-//        Log.l("AdriHell:: Note detected: " + noteDetected);
         return noteDetected;
     }
 
-    public static float getFrequencyPeak(double[] buffer, double threshold) {
-        int valueIndex = getMaxValueIndex(buffer, threshold);
+    public static float getFrequencyPeak(double[] spectrum, double threshold) {
+        int valueIndex = getMaxValueIndex(spectrum, threshold);
         if (valueIndex != -1) {
             return getFrequencyByIndex(valueIndex);
         } else {
@@ -99,9 +97,11 @@ public final class AudioStack {
     }
 
     public static float getFrequencyByIndex(int index) {
-        float frequencyDetected;
-        frequencyDetected = ((float)Constants.SAMPLE_RATE / 2f) * ((float)index / (Constants.BUFFER_SIZE / 2f));
-        return frequencyDetected;
+        return (float)Constants.SAMPLE_RATE * ((float)index / Constants.BUFFER_SIZE);
+    }
+
+    public static int getIndexByFrequency(float freq) {
+        return (int)((freq * Constants.BUFFER_SIZE * 2) / Constants.SAMPLE_RATE);
     }
 
     /**

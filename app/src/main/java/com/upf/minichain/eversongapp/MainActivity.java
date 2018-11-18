@@ -7,6 +7,7 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Process;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -37,9 +38,18 @@ public class MainActivity extends AppCompatActivity {
         chordDetected[1] = -1;
 
         recordingButton = this.findViewById(R.id.recording_button);
+
         frequencyText = this.findViewById(R.id.frequency_text);
         noteText = this.findViewById(R.id.note_text);
         chordTypeText = this.findViewById(R.id.chord_type);
+
+        int color  = ResourcesCompat.getColor(getResources(), R.color.mColor01, null);
+        frequencyText.setTextColor(color);
+        noteText.setTextColor(color);
+        chordTypeText.setTextColor(color);
+
+        canvas =  new EversongCanvas(getResources(), this.findViewById(R.id.canvas_view));
+
         recordingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        canvas =  new EversongCanvas(getResources(), this.findViewById(R.id.canvas_view));
     }
 
     public void checkCaptureAudioPermission() {
@@ -63,12 +72,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void processAudio(final double[] buffer, final double[] bufferFrequency, double average) {
-
+    public void processAudio(final short[] bufferShort, final double[] bufferDouble, final double[] bufferFrequency, final double average) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final int[] chordDetectedThread = AudioStack.chordDetection(buffer, bufferFrequency);
+                final int[] chordDetectedThread = AudioStack.chordDetection(bufferDouble, bufferFrequency);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -81,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final float pitchDetectedThread = AudioStack.getPitch(buffer);
+                final float pitchDetectedThread = AudioStack.getPitch(bufferDouble);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -90,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }).start();
+
+        if (canvas.getCanvas() != null) {
+            canvas.updateCanvas(bufferShort, bufferFrequency, average, pitchDetected);
+        }
 
         if (pitchDetected != -1) {
             frequencyText.setText(String.valueOf("Pitch: \n" + (int)pitchDetected + " Hz"));
@@ -157,10 +169,7 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (canvas.getCanvas() != null) {
-                                canvas.updateCanvas(audioBuffer, audioBufferFrequency, average);
-                                processAudio(audioBufferDouble, audioBufferFrequency, average);
-                            }
+                            processAudio(audioBuffer, audioBufferDouble, audioBufferFrequency, average);
                         }
                     });
 //                    Log.l("AdriHell:: reading buffer of size " + bufferSize);
