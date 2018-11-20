@@ -3,8 +3,11 @@ package com.upf.minichain.eversongapp;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Shader;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,14 +22,18 @@ public class EversongCanvas {
     private int mColorBackground;
     private int mColor01;
     private int mColor02;
-    private int mColor03;
 
+    private Shader shader1;
 
     public EversongCanvas(Resources resources, View imageView) {
         mColorBackground = ResourcesCompat.getColor(resources, R.color.colorBackground, null);
         mColor01 = ResourcesCompat.getColor(resources, R.color.mColor01, null);
         mColor02 = ResourcesCompat.getColor(resources, R.color.mColor02, null);
-        mColor03 = ResourcesCompat.getColor(resources, R.color.mColor03, null);
+
+        int[] color01RGB = hexadecimalToRgb(resources.getString(R.color.colorBackground));
+        int[] color02RGB = hexadecimalToRgb(resources.getString(R.color.mColor02));
+        shader1 = new LinearGradient(0, 400, 0, 500, Color.rgb(color01RGB[0], color01RGB[1], color01RGB[2]),
+                Color.rgb(color02RGB[0], color02RGB[1], color02RGB[2]), Shader.TileMode.CLAMP);
 
         mPaint01.setColor(mColorBackground);
         mImageView = (ImageView) imageView;
@@ -61,19 +68,22 @@ public class EversongCanvas {
         if (buffer != null && bufferFrequency != null) {
             float amplifyDrawFactor = 500f;
             for (int i = 0; i < (bufferFrequency.length / 2) - 1; i++) {
-
+                //Time domain
                 mCanvas.drawLine(i, (buffer[i] / 60) + (mCanvas.getHeight() / 2),
                         i + 1 , (buffer[i + 1] / 60) + (mCanvas.getHeight() / 2), mPaint01);
-//
+
+                //Frequency domain
                 mCanvas.drawLine(i, ((float)bufferFrequency[i] * (-amplifyDrawFactor)) + (mCanvas.getHeight()),
                         i + 1, ((float)bufferFrequency[(i) + 1] * (-amplifyDrawFactor)) + (mCanvas.getHeight()), mPaint01);
 
             }
             average = (average * -amplifyDrawFactor) + mCanvas.getHeight();
+            //Spectrum average
             mCanvas.drawLine(0, (float)average, mCanvas.getWidth(), (float)average, mPaint01);
-
+            mPaint02.setShader(shader1);
             if (pitch > 0) {
                 int pitchIndex = AudioStack.getIndexByFrequency(pitch);
+                //Pitch
                 mCanvas.drawLine(pitchIndex, 0, pitchIndex, mCanvas.getHeight(), mPaint02);
             }
         }
@@ -81,5 +91,17 @@ public class EversongCanvas {
 
     public Canvas getCanvas() {
         return mCanvas;
+    }
+
+    public static int[] hexadecimalToRgb(String hex) {
+        hex = hex.replace("#", "");
+        if (hex.length() == 8) {
+            hex = hex.substring(2, 8);  //Transforms "FCFCFCFC" into "FCFCFC"
+        }
+        final int[] ret = new int[3];
+        for (int i = 0; i < 3; i++) {
+            ret[i] = Integer.parseInt(hex.substring(i * 2, i * 2 + 2), 16);
+        }
+        return ret;
     }
 }

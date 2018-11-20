@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         recordingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.l("AdriHell:: Button pressed! recordingButton is " + recordingButton);
+                Log.l("AdriHell:: recordingButton pressed!");
                 if (recordingButton.getText().equals(getString(R.string.start_record_button))) {
                     recordingButton.setText(R.string.stop_record_button);
                     recordAudio();
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                         bufferSize);
 
                 if (record.getState() != AudioRecord.STATE_INITIALIZED) {
-                    Log.l("AdriHell:: Audio Record can't initialize!");
+                    Log.l("AdriHell:: Audio Record cannot be initialized!");
                     return;
                 }
                 record.startRecording();
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                 record.stop();
                 record.release();
 
-                Log.l("AdriHell:: Recording stopped. Samples read: " + shortsRead);
+                Log.l("AdriHell:: Recording stopped. Num of samples read: " + shortsRead);
             }
         }).start();
     }
