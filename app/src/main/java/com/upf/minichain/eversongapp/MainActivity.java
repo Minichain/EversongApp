@@ -18,12 +18,17 @@ public class MainActivity extends AppCompatActivity {
     boolean mShouldContinue;        // Indicates if recording / playback should stop
     Button recordingButton;
     TextView frequencyText;
-    TextView noteText;
+    TextView chordNoteText;
+    TextView mostProbableChordNoteText;
     TextView chordTypeText;
+    TextView mostProbableChordTypeText;
     EversongCanvas canvas;
 
     float pitchDetected;
     int[] chordDetected = new int[2];
+    int[][] chordsDetectedBuffer = new int[Constants.CHORD_BUFFER_SIZE][2];
+    int chordBufferIterator = 0;
+    int[] mostProbableChord = new int[3];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,17 +41,23 @@ public class MainActivity extends AppCompatActivity {
         pitchDetected = -1;
         chordDetected[0] = -1;
         chordDetected[1] = -1;
+        mostProbableChord[0] = -1;
+        mostProbableChord[1] = -1;
 
         recordingButton = this.findViewById(R.id.recording_button);
 
         frequencyText = this.findViewById(R.id.frequency_text);
-        noteText = this.findViewById(R.id.note_text);
+        chordNoteText = this.findViewById(R.id.chord_note);
+        mostProbableChordNoteText = this.findViewById(R.id.most_probable_chord_note);
         chordTypeText = this.findViewById(R.id.chord_type);
+        mostProbableChordTypeText = this.findViewById(R.id.most_probable_chord_type);
 
         int color  = ResourcesCompat.getColor(getResources(), R.color.mColor01, null);
         frequencyText.setTextColor(color);
-        noteText.setTextColor(color);
+        chordNoteText.setTextColor(color);
         chordTypeText.setTextColor(color);
+        mostProbableChordNoteText.setTextColor(color);
+        mostProbableChordTypeText.setTextColor(color);
 
         canvas =  new EversongCanvas(getResources(), this.findViewById(R.id.canvas_view));
 
@@ -81,6 +92,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         chordDetected = chordDetectedThread;
+                        chordsDetectedBuffer[chordBufferIterator % Constants.CHORD_BUFFER_SIZE][0] = chordDetected[0];
+                        chordsDetectedBuffer[chordBufferIterator % Constants.CHORD_BUFFER_SIZE][1] = chordDetected[1];
+                        chordBufferIterator++;
                     }
                 });
             }
@@ -99,6 +113,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
 
+        mostProbableChord = AudioStack.getMostProbableChord(chordsDetectedBuffer);
+//        Log.l("AdriHell:: mostProbableChord: "+ NotesEnum.getString(NotesEnum.fromInteger(mostProbableChord[0]))
+//                + String.valueOf(ChordTypeEnum.fromInteger(mostProbableChord[1])) + ". Probability: " + mostProbableChord[2] + "%");
+
         if (canvas.getCanvas() != null) {
             canvas.updateCanvas(bufferShort, bufferFrequency, average, pitchDetected);
         }
@@ -109,14 +127,26 @@ public class MainActivity extends AppCompatActivity {
             frequencyText.setText(String.valueOf("Pitch: \n" + NotesEnum.getString(NotesEnum.NO_NOTE) + " Hz"));
         }
         if (chordDetected[0] != -1) {
-            noteText.setText(NotesEnum.getString(NotesEnum.fromInteger(chordDetected[0])));
+            chordNoteText.setText(NotesEnum.getString(NotesEnum.fromInteger(chordDetected[0])));
         } else {
-            noteText.setText(String.valueOf(NotesEnum.NO_NOTE));
+            chordNoteText.setText(String.valueOf(NotesEnum.NO_NOTE));
         }
         if (chordDetected[1] != -1) {
             chordTypeText.setText(String.valueOf(ChordTypeEnum.fromInteger(chordDetected[1])));
         } else {
             chordTypeText.setText(String.valueOf(ChordTypeEnum.Other));
+        }
+        if (mostProbableChord[0] != -1) {
+            mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.fromInteger(mostProbableChord[0])));
+            mostProbableChordNoteText.setAlpha((float)mostProbableChord[2] / 100f);
+        } else {
+            mostProbableChordNoteText.setText(String.valueOf(NotesEnum.NO_NOTE));
+        }
+        if (mostProbableChord[1] != -1) {
+            mostProbableChordTypeText.setText(String.valueOf(ChordTypeEnum.fromInteger(mostProbableChord[1])));
+            mostProbableChordTypeText.setAlpha((float)mostProbableChord[2] / 100f);
+        } else {
+            mostProbableChordTypeText.setText(String.valueOf(ChordTypeEnum.Other));
         }
     }
 

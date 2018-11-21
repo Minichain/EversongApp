@@ -76,7 +76,7 @@ public final class AudioStack {
     }
 
     public static float getFrequencyPeak(double[] spectrum, double threshold) {
-        int valueIndex = getMaxValueIndex(spectrum, threshold);
+        int valueIndex = getMaxSpectrumValueIndex(spectrum, threshold);
         if (valueIndex != -1) {
             return getFrequencyByIndex(valueIndex);
         } else {
@@ -84,7 +84,7 @@ public final class AudioStack {
         }
     }
 
-    public static int getMaxValueIndex(double[] buffer, double threshold) {
+    public static int getMaxSpectrumValueIndex(double[] buffer, double threshold) {
         int maxValueIndex = -1;
         double maxValue = 0.0;
         for (int i = 0; i < (buffer.length / 2); i++) {
@@ -102,6 +102,48 @@ public final class AudioStack {
 
     public static int getIndexByFrequency(float freq) {
         return (int)((freq * Constants.BUFFER_SIZE * 2) / Constants.SAMPLE_RATE);
+    }
+
+    /**
+     * This function returns the most probable chord from the list of
+     * chords stored in the ChordBuffer with size = CHORD_BUFFER_SIZE
+     * */
+    public static int[] getMostProbableChord(int[][] chordsDetectedBuffer) {
+        int[] mostProbableChord = new int[3];
+        mostProbableChord[0] = -1;
+        mostProbableChord[1] = -1;
+
+        int[] rootNoteArray = new int[NotesEnum.numberOfNotes];
+        int[] chordTypeArray = new int[ChordTypeEnum.numberOfChordTypes];
+
+        for(int i = 0; i < Constants.CHORD_BUFFER_SIZE; i++) {
+            int rootNote = chordsDetectedBuffer[i][0] % NotesEnum.numberOfNotes;
+            int chordType = chordsDetectedBuffer[i][1] % ChordTypeEnum.numberOfChordTypes;
+            if (rootNote != -1) {
+                rootNoteArray[rootNote]++;
+            }
+            if (chordType != -1) {
+                chordTypeArray[chordType]++;
+            }
+        }
+        int[] rootNoteProbability = getMaxValueAndIndex(rootNoteArray);
+        mostProbableChord[0] = rootNoteProbability[1];
+        mostProbableChord[1] = getMaxValueAndIndex(chordTypeArray)[1];
+        mostProbableChord[2] = (rootNoteProbability[0] * 100) / Constants.CHORD_BUFFER_SIZE;
+        return mostProbableChord;
+    }
+
+    public static int[] getMaxValueAndIndex(int[] buffer) {
+        int[] returnValue = new int[2];
+        returnValue[0] = 0;     //value
+        returnValue[1] = -1;    //index
+        for (int i = 0; i < buffer.length; i++) {
+            if (buffer[i] > returnValue[0]) {
+                returnValue[0] = buffer[i];
+                returnValue[1] = i;
+            }
+        }
+        return returnValue;
     }
 
     /**
