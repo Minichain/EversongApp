@@ -61,11 +61,18 @@ public class EversongCanvas {
         mPaint02.setColor(mColor02);
         mPaint02.setStrokeWidth(5f);
 
-        int rectangleWidth = (int) ((mImageView.getWidth() - 10) * average) + 10;
-        mRect.set(10, 10, rectangleWidth,100);
-        mCanvas.drawRect(mRect, mPaint01);
-
         if (buffer != null && bufferFrequency != null) {
+            mPaint02.setShader(shader1);
+            if (pitch > 0) {
+                int pitchIndex = AudioStack.getIndexByFrequency(pitch);
+                //Pitch
+                mCanvas.drawLine(pitchIndex, 0, pitchIndex, mCanvas.getHeight(), mPaint02);
+            }
+
+            int rectangleWidth = (int) ((mImageView.getWidth() - 10) * average) + 10;
+            mRect.set(10, 10, rectangleWidth,100);
+            mCanvas.drawRect(mRect, mPaint01);
+
             float amplifyDrawFactor = 500f;
             for (int i = 0; i < (bufferFrequency.length / 2) - 1; i++) {
                 //Time domain
@@ -80,12 +87,6 @@ public class EversongCanvas {
             average = (average * -amplifyDrawFactor) + mCanvas.getHeight();
             //Spectrum average
             mCanvas.drawLine(0, (float)average, mCanvas.getWidth(), (float)average, mPaint01);
-            mPaint02.setShader(shader1);
-            if (pitch > 0) {
-                int pitchIndex = AudioStack.getIndexByFrequency(pitch);
-                //Pitch
-                mCanvas.drawLine(pitchIndex, 0, pitchIndex, mCanvas.getHeight(), mPaint02);
-            }
         }
     }
 

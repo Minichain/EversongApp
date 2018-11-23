@@ -15,15 +15,14 @@
         android:id="@+id/recording_button"
         android:layout_width="198dp"
         android:layout_height="56dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="52dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="8dp"
         android:foregroundGravity="bottom"
-        android:gravity="center_horizontal|center_vertical"
+        android:gravity="center"
         android:text="@string/start_record_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.318"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -35,7 +34,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="0"
+        android:text="---"
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/recording_button"
         app:layout_constraintEnd_toEndOf="parent"
@@ -54,8 +53,8 @@
         android:layout_marginTop="16dp"
         android:text="---"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.721"
+        app:layout_constraintEnd_toStartOf="@+id/chord_type"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -79,15 +78,17 @@
 
     <TextView
         android:id="@+id/most_probable_chord_note"
-        android:layout_width="159dp"
-        android:layout_height="174dp"
+        android:layout_width="165dp"
+        android:layout_height="120dp"
         android:layout_centerInParent="true"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="136dp"
+        android:layout_marginTop="152dp"
         android:gravity="center"
         android:text="A"
         android:textSize="100sp"
+        app:layout_constraintBottom_toTopOf="@+id/most_probable_chord_type"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
@@ -109,6 +110,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.873" />
+        app:layout_constraintVertical_bias="0.735" />
 
 </android.support.constraint.ConstraintLayout>
