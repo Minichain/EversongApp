@@ -5,8 +5,8 @@
 #include <android/log.h>
 #include <iostream>
 
-#include "ChordDetection/src/Chromagram.h"
-#include "ChordDetection/src/ChordDetector.h"
+#include "ChordDetection/Chromagram.h"
+#include "ChordDetection/ChordDetector.h"
 extern "C" {
     #include "PitchTracker/Yin.h"
 };

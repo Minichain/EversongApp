@@ -46,8 +46,8 @@ double ProcessAudio::getAverageLevel(double* samples, int length) {
 }
 
 double* ProcessAudio::bandPassFilter(double* samples, float lowCutOffFreq, float highCutOffFreq, int sampleRate, int frameSize) {
-    int lowCutOffFreqIndex = (int)((lowCutOffFreq / (float)sampleRate) * frameSize);
-    int highCutOffFreqIndex = (int)((highCutOffFreq / (float)sampleRate) * frameSize);
+    int lowCutOffFreqIndex = (int)((lowCutOffFreq / (float)sampleRate) * frameSize) * 2;
+    int highCutOffFreqIndex = (int)((highCutOffFreq / (float)sampleRate) * frameSize) * 2;
     double* tempSamples = new double[frameSize];
     samples = removeZeroFrequency(samples);
     float attenuationFactor = 1.2f;

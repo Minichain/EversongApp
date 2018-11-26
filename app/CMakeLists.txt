@@ -28,9 +28,9 @@ add_library(# Specifies the name of the library.
             SHARED
 
             # Provides a relative path to your source file(s).
-            src/main/jni/ChordDetection/src/ChordDetector.cpp
-            src/main/jni/ChordDetection/src/Chromagram.cpp
-            src/main/jni/ChordDetection/src/kiss_fft.c
+            src/main/jni/ChordDetection/ChordDetector.cpp
+            src/main/jni/ChordDetection/Chromagram.cpp
+            src/main/jni/ChordDetection/kiss_fft.c
             )
 
 add_library(# Specifies the name of the library.
@@ -45,7 +45,7 @@ add_library(# Specifies the name of the library.
 
 # Specifies a path to native header files.
 include_directories(../../../../src/main/jni/include/)
-include_directories(../../../../src/main/jni/ChordDetection/src/include/)
+include_directories(../../../../src/main/jni/ChordDetection/include/)
 include_directories(../../../../src/main/jni/PitchTracker/include/)
 
 find_library(# Sets the name of the path variable.
