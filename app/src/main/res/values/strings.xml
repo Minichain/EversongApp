@@ -3,7 +3,5 @@
 
     <string name="start_record_button">Start Recording</string>
     <string name="stop_record_button">Stop Recording</string>
-
-    <string name="keep_tapping">Keep tapping.</string>
-    <string name="done">Done!</string>
+    <string name="musical_notation">Musical notation</string>
 </resources>

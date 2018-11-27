@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="10dp"
+    android:layout_width="10dp"
+    tools:context=".MainActivity">
+
+    <item android:id="@+id/musical_notation_option"
+        android:title="@string/musical_notation"
+        app:showAsAction="never"/>
+</menu>

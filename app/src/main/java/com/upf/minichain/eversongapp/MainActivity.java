@@ -10,9 +10,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     boolean mShouldContinue;        // Indicates if recording / playback should stop
@@ -211,5 +214,32 @@ public class MainActivity extends AppCompatActivity {
                 Log.l("AdriHell:: Recording stopped. Num of samples read: " + shortsRead);
             }
         }).start();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.settings_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.musical_notation_option:
+                switch(Parameters.getInstance().getMusicalNotation()) {
+                    case SOLFEGE_NOTATION:
+                        Parameters.getInstance().setMusicalNotation(MusicalNotation.ENGLISH_NOTATION);
+                        break;
+                    case ENGLISH_NOTATION:
+                    default:
+                        Parameters.getInstance().setMusicalNotation(MusicalNotation.SOLFEGE_NOTATION);
+                        break;
+                }
+                Toast.makeText(getApplicationContext(),"Musical notation changed", Toast.LENGTH_LONG).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

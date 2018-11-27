@@ -1,14 +1,14 @@
 package com.upf.minichain.eversongapp;
 
-public final class Parameters {
+public class Parameters {
+    private static final Parameters instance = new Parameters();
 
-    static {
-
+    private Parameters() {
+        musicalNotation = MusicalNotation.SOLFEGE_NOTATION;
     }
 
-    enum MusicalNotation{
-        SOLFEGE_NOTATION,
-        ENGLISH_NOTATION
+    public static Parameters getInstance() {
+        return instance;
     }
 
     /************
@@ -22,13 +22,13 @@ public final class Parameters {
     /************
      * Variables
      ************/
-    private static MusicalNotation musicalNotation = MusicalNotation.SOLFEGE_NOTATION;
+    private static MusicalNotation musicalNotation;
 
     public void setMusicalNotation(MusicalNotation notation) {
         musicalNotation = notation;
     }
 
-    public static MusicalNotation getMusicalNotation() {
+    public MusicalNotation getMusicalNotation() {
         return musicalNotation;
     }
 }
