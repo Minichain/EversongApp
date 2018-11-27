@@ -7,7 +7,7 @@ public final class AudioStack {
     }
 
     public static void initAudioStack() {
-        initProcessAudioJni(Constants.SAMPLE_RATE, Constants.BUFFER_SIZE, Constants.HOP_SIZE);
+        initProcessAudioJni(Parameters.SAMPLE_RATE, Parameters.BUFFER_SIZE, Parameters.HOP_SIZE);
     }
 
     public static int[] chordDetection(double[] samples, double[] spectrumSamples) {
@@ -33,7 +33,7 @@ public final class AudioStack {
     }
 
     public static double[] bandPassFilter(double[] samples, float lowCutOffFreq, float highCutOffFreq) {
-        return bandPassFilterJni(samples, lowCutOffFreq, highCutOffFreq, Constants.SAMPLE_RATE, Constants.BUFFER_SIZE);
+        return bandPassFilterJni(samples, lowCutOffFreq, highCutOffFreq, Parameters.SAMPLE_RATE, Parameters.BUFFER_SIZE);
     }
 
     public static double getAverageLevel(double[] samples) {
@@ -97,11 +97,11 @@ public final class AudioStack {
     }
 
     public static float getFrequencyByIndex(int index) {
-        return (float)Constants.SAMPLE_RATE * ((float)index / Constants.BUFFER_SIZE);
+        return (float)Parameters.SAMPLE_RATE * ((float)index / Parameters.BUFFER_SIZE);
     }
 
     public static int getIndexByFrequency(float freq) {
-        return (int)((freq * Constants.BUFFER_SIZE * 2) / Constants.SAMPLE_RATE);
+        return (int)((freq * Parameters.BUFFER_SIZE * 2) / Parameters.SAMPLE_RATE);
     }
 
     /**
@@ -116,7 +116,7 @@ public final class AudioStack {
         int[] rootNoteArray = new int[NotesEnum.numberOfNotes];
         int[] chordTypeArray = new int[ChordTypeEnum.numberOfChordTypes];
 
-        for(int i = 0; i < Constants.CHORD_BUFFER_SIZE; i++) {
+        for(int i = 0; i < Parameters.CHORD_BUFFER_SIZE; i++) {
             int rootNote = chordsDetectedBuffer[i][0] % NotesEnum.numberOfNotes;
             int chordType = chordsDetectedBuffer[i][1] % ChordTypeEnum.numberOfChordTypes;
             if (rootNote != -1) {
@@ -129,7 +129,7 @@ public final class AudioStack {
         int[] rootNoteProbability = getMaxValueAndIndex(rootNoteArray);
         mostProbableChord[0] = rootNoteProbability[1];
         mostProbableChord[1] = getMaxValueAndIndex(chordTypeArray)[1];
-        mostProbableChord[2] = (rootNoteProbability[0] * 100) / Constants.CHORD_BUFFER_SIZE;
+        mostProbableChord[2] = (rootNoteProbability[0] * 100) / Parameters.CHORD_BUFFER_SIZE;
         return mostProbableChord;
     }
 

@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     float pitchDetected;
     int[] chordDetected = new int[2];
-    int[][] chordsDetectedBuffer = new int[Constants.CHORD_BUFFER_SIZE][2];
+    int[][] chordsDetectedBuffer = new int[Parameters.CHORD_BUFFER_SIZE][2];
     int chordBufferIterator = 0;
     int[] mostProbableChord = new int[3];
 
@@ -92,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         chordDetected = chordDetectedThread;
-                        chordsDetectedBuffer[chordBufferIterator % Constants.CHORD_BUFFER_SIZE][0] = chordDetected[0];
-                        chordsDetectedBuffer[chordBufferIterator % Constants.CHORD_BUFFER_SIZE][1] = chordDetected[1];
+                        chordsDetectedBuffer[chordBufferIterator % Parameters.CHORD_BUFFER_SIZE][0] = chordDetected[0];
+                        chordsDetectedBuffer[chordBufferIterator % Parameters.CHORD_BUFFER_SIZE][1] = chordDetected[1];
                         chordBufferIterator++;
                     }
                 });
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         if (chordDetected[0] != -1) {
             chordNoteText.setText(NotesEnum.getString(NotesEnum.fromInteger(chordDetected[0])));
         } else {
-            chordNoteText.setText(String.valueOf(NotesEnum.NO_NOTE));
+            chordNoteText.setText(NotesEnum.getString(NotesEnum.NO_NOTE));
         }
         if (chordDetected[1] != -1) {
             chordTypeText.setText(String.valueOf(ChordTypeEnum.fromInteger(chordDetected[1])));
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
             mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.fromInteger(mostProbableChord[0])));
             mostProbableChordNoteText.setAlpha((float)mostProbableChord[2] / 100f);
         } else {
-            mostProbableChordNoteText.setText(String.valueOf(NotesEnum.NO_NOTE));
+            mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.NO_NOTE));
         }
         if (mostProbableChord[1] != -1) {
             mostProbableChordTypeText.setText(String.valueOf(ChordTypeEnum.fromInteger(mostProbableChord[1])));
@@ -157,17 +157,17 @@ public class MainActivity extends AppCompatActivity {
                 Process.setThreadPriority(Process.THREAD_PRIORITY_AUDIO);
 
                 // buffer size in bytes
-                int bufferSize = AudioRecord.getMinBufferSize(Constants.SAMPLE_RATE,
+                int bufferSize = AudioRecord.getMinBufferSize(Parameters.SAMPLE_RATE,
                         AudioFormat.CHANNEL_IN_MONO,
                         AudioFormat.ENCODING_PCM_16BIT);
 
                 if (bufferSize == AudioRecord.ERROR || bufferSize == AudioRecord.ERROR_BAD_VALUE) {
 //                    bufferSize = SAMPLE_RATE * 2;
                 }
-                bufferSize = Constants.BUFFER_SIZE;
+                bufferSize = Parameters.BUFFER_SIZE;
 
                 AudioRecord record = new AudioRecord(MediaRecorder.AudioSource.DEFAULT,
-                        Constants.SAMPLE_RATE,
+                        Parameters.SAMPLE_RATE,
                         AudioFormat.CHANNEL_IN_MONO,
                         AudioFormat.ENCODING_PCM_16BIT,
                         bufferSize);

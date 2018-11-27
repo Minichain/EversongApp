@@ -68,31 +68,60 @@ enum NotesEnum {
     }
 
     public static String getString(NotesEnum note) {
-        switch(note) {
-            case A:
-                return "A";
-            case A_SHARP:
-                return "A#";
-            case B:
-                return "B";
-            case C:
-                return "C";
-            case C_SHARP:
-                return "C#";
-            case D:
-                return "D";
-            case D_SHARP:
-                return "D#";
-            case E:
-                return "E";
-            case F:
-                return "F";
-            case F_SHARP:
-                return "F#";
-            case G:
-                return "G";
-            case G_SHARP:
-                return "G#";
+        if (Parameters.getMusicalNotation() == Parameters.MusicalNotation.SOLFEGE_NOTATION) {
+            switch(note) {
+                case A:
+                    return "La";
+                case A_SHARP:
+                    return "La#";
+                case B:
+                    return "Si";
+                case C:
+                    return "Do";
+                case C_SHARP:
+                    return "Do#";
+                case D:
+                    return "Re";
+                case D_SHARP:
+                    return "Re#";
+                case E:
+                    return "Mi";
+                case F:
+                    return "Fa";
+                case F_SHARP:
+                    return "Fa#";
+                case G:
+                    return "Sol";
+                case G_SHARP:
+                    return "Sol#";
+            }
+        } else if (Parameters.getMusicalNotation() == Parameters.MusicalNotation.ENGLISH_NOTATION) {
+            switch(note) {
+                case A:
+                    return "A";
+                case A_SHARP:
+                    return "A#";
+                case B:
+                    return "B";
+                case C:
+                    return "C";
+                case C_SHARP:
+                    return "C#";
+                case D:
+                    return "D";
+                case D_SHARP:
+                    return "D#";
+                case E:
+                    return "E";
+                case F:
+                    return "F";
+                case F_SHARP:
+                    return "F#";
+                case G:
+                    return "G";
+                case G_SHARP:
+                    return "G#";
+            }
         }
         return "---";
     }
