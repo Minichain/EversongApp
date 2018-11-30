@@ -1,6 +1,7 @@
 package com.upf.minichain.eversongapp;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
@@ -15,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     boolean mShouldContinue;        // Indicates if recording / playback should stop
@@ -37,8 +37,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         checkCaptureAudioPermission();
+        initMainActivity();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        mShouldContinue = false;
+        super.onPause();
+    }
+
+    public void initMainActivity() {
         AudioStack.initAudioStack();
 
         pitchDetected = -1;
@@ -77,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     public void checkCaptureAudioPermission() {
@@ -218,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.settings_menu, menu);
+        getMenuInflater().inflate(R.menu.dropdown_menu, menu);
         return true;
     }
 
@@ -226,20 +239,20 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id){
-            case R.id.musical_notation_option:
-                switch(Parameters.getInstance().getMusicalNotation()) {
-                    case SOLFEGE_NOTATION:
-                        Parameters.getInstance().setMusicalNotation(MusicalNotation.ENGLISH_NOTATION);
-                        break;
-                    case ENGLISH_NOTATION:
-                    default:
-                        Parameters.getInstance().setMusicalNotation(MusicalNotation.SOLFEGE_NOTATION);
-                        break;
-                }
-                Toast.makeText(getApplicationContext(),"Musical notation changed", Toast.LENGTH_LONG).show();
+            case R.id.open_settings_menu_option:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.exit_app_option:
+                closeApp();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void closeApp() {
+        this.finish();
+        System.exit(0);
     }
 }

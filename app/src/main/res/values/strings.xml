@@ -3,5 +3,11 @@
 
     <string name="start_record_button">Start Recording</string>
     <string name="stop_record_button">Stop Recording</string>
+    <string name="open_settings_menu">Settings</string>
+    <string name="close_app">Close app</string>
+
+    <!--Settings-->
     <string name="musical_notation">Musical notation</string>
+    <string name="english_notation">English notation (A, B...)</string>
+    <string name="solfege_notation">Solfège notation (La, Si...)</string>
 </resources>
