@@ -22,4 +22,26 @@ public enum ChordTypeEnum {
         }
         return null;
     }
+
+    public static String getString(ChordTypeEnum chordType) {
+        if (chordType == null) {
+            return null;
+        }
+
+        switch(chordType) {
+            case Minor:
+                return "Minor";
+            case Major:
+                return "Major";
+            case Suspended:
+                return "Suspended";
+            case Dominant:
+                return "5th";
+            case Dimished5th:
+                return "Dimished 5th";
+            case Augmented5th:
+                return "Augmented 5th";
+        }
+        return null;
+    }
 }

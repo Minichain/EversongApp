@@ -123,10 +123,10 @@ public final class AudioStack {
         for(int i = 0; i < Parameters.CHORD_BUFFER_SIZE; i++) {
             int rootNote = chordsDetectedBuffer[i][0] % NotesEnum.numberOfNotes;
             int chordType = chordsDetectedBuffer[i][1] % ChordTypeEnum.numberOfChordTypes;
-            if (rootNote != -1) {
+            if (rootNote >= 0) {
                 rootNoteArray[rootNote]++;
             }
-            if (chordType != -1) {
+            if (chordType >= 0) {
                 chordTypeArray[chordType]++;
             }
         }

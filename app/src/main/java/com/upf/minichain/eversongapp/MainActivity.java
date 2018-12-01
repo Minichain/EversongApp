@@ -77,7 +77,9 @@ public class MainActivity extends AppCompatActivity {
         chordNoteText.setTextColor(color);
         chordTypeText.setTextColor(color);
         mostProbableChordNoteText.setTextColor(color);
+        mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.A));
         mostProbableChordTypeText.setTextColor(color);
+        mostProbableChordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.Major));
 
         canvas =  new EversongCanvas(getResources(), this.findViewById(R.id.canvas_view));
 
@@ -151,9 +153,9 @@ public class MainActivity extends AppCompatActivity {
             chordNoteText.setText(NotesEnum.getString(NotesEnum.NO_NOTE));
         }
         if (chordDetected[1] != -1) {
-            chordTypeText.setText(String.valueOf(ChordTypeEnum.fromInteger(chordDetected[1])));
+            chordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(chordDetected[1])));
         } else {
-            chordTypeText.setText(String.valueOf(ChordTypeEnum.Other));
+            chordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.Other));
         }
         if (mostProbableChord[0] != -1) {
             mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.fromInteger(mostProbableChord[0])));
@@ -162,10 +164,10 @@ public class MainActivity extends AppCompatActivity {
             mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.NO_NOTE));
         }
         if (mostProbableChord[1] != -1) {
-            mostProbableChordTypeText.setText(String.valueOf(ChordTypeEnum.fromInteger(mostProbableChord[1])));
+            mostProbableChordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(mostProbableChord[1])));
             mostProbableChordTypeText.setAlpha((float)mostProbableChord[2] / 100f);
         } else {
-            mostProbableChordTypeText.setText(String.valueOf(ChordTypeEnum.Other));
+            mostProbableChordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.Other));
         }
     }
 
@@ -243,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id){
             case R.id.open_settings_menu_option:
+                this.onPause();
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 return true;
