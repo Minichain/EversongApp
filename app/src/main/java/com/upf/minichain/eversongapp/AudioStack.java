@@ -2,6 +2,7 @@ package com.upf.minichain.eversongapp;
 
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
+import com.upf.minichain.eversongapp.enums.WindowFunctionEnum;
 
 public final class AudioStack {
 
@@ -21,8 +22,8 @@ public final class AudioStack {
         return getPitchJni(samples);
     }
 
-    public static double[] fft(double[] inputReal, boolean DIRECT) {
-        return fftJni(inputReal, DIRECT);
+    public static double[] fft(double[] inputReal, boolean DIRECT, WindowFunctionEnum windowFunction) {
+        return fftJni(inputReal, DIRECT, windowFunction.getIntValue());
     }
 
     public static double[] highPassFilter(double[] samples, float cutOffFreq) {
@@ -157,7 +158,7 @@ public final class AudioStack {
 
     private static native int[] chordDetectionJni(double[] samples, double[] spectrumSamples);
 
-    private static native double[] fftJni(double[] inputReal, boolean DIRECT);
+    private static native double[] fftJni(double[] inputReal, boolean DIRECT, int windowFunction);
 
     private static native double[] bandPassFilterJni(double[] spectrumSamples, float lowCutOffFreq, float highCutOffFreq, int sampleRate, int frameSize);
 

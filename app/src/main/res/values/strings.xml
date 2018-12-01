@@ -7,7 +7,12 @@
     <string name="close_app">Close app</string>
 
     <!--Settings-->
-    <string name="musical_notation">Musical notation</string>
-    <string name="english_notation">English notation (A, B...)</string>
-    <string name="solfege_notation">Solfège notation (La, Si...)</string>
+    <string name="setting_musical_notation">Musical notation</string>
+    <string name="setting_english_notation">English notation (A, B...)</string>
+    <string name="setting_solfege_notation">Solfège notation (La, Si...)</string>
+    <string name="setting_windowing">Window function</string>
+    <string name="setting_rectangular_window">Rectangular window</string>
+    <string name="setting_hanning_window">Hanning window</string>
+    <string name="setting_hamming_window">Hamming window</string>
+    <string name="setting_blackman_window">Blackman window</string>
 </resources>

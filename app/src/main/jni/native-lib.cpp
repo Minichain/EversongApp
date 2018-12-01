@@ -21,11 +21,11 @@ extern "C" {
         return output;
     }
 
-    jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_fftJni(JNIEnv *env, jobject, jdoubleArray inputReal, jboolean DIRECT) {
+    jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_fftJni(JNIEnv *env, jobject, jdoubleArray inputReal, jboolean DIRECT, jint windowType) {
         jsize length = env->GetArrayLength(inputReal);
         double* samplesArrayTemp = env->GetDoubleArrayElements(inputReal, 0);
 
-        double* returnArray = ProcessAudio::fft(samplesArrayTemp, length, DIRECT);
+        double* returnArray = ProcessAudio::fft(samplesArrayTemp, length, DIRECT, windowType);
         jdoubleArray output = env->NewDoubleArray(length);
         env->SetDoubleArrayRegion(output, 0, length, returnArray);
         return output;

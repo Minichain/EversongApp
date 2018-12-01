@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SettingsActivity">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
+    <LinearLayout
+        android:id="@+id/musical_notation_layout"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_musical_notation"
+            android:textSize="20sp" />
 
         <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
@@ -21,15 +29,66 @@
                 android:id="@+id/english_notation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/english_notation"
-                android:onClick="onNotationSettingClicked"/>
+                android:onClick="onNotationSettingClicked"
+                android:text="@string/setting_english_notation" />
 
             <RadioButton
                 android:id="@+id/solfege_notation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/solfege_notation"
-                android:onClick="onNotationSettingClicked"/>
+                android:onClick="onNotationSettingClicked"
+                android:text="@string/setting_solfege_notation" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/musical_notation_layout">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_windowing"
+            android:textSize="20sp" />
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp">
+
+            <RadioButton
+                android:id="@+id/rectangular_window"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onWindowingSettingClicked"
+                android:text="@string/setting_rectangular_window" />
+
+            <RadioButton
+                android:id="@+id/hanning_window"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onWindowingSettingClicked"
+                android:text="@string/setting_hanning_window" />
+
+            <RadioButton
+                android:id="@+id/hamming_window"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onWindowingSettingClicked"
+                android:text="@string/setting_hamming_window" />
+
+            <RadioButton
+                android:id="@+id/blackman_window"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onWindowingSettingClicked"
+                android:text="@string/setting_blackman_window" />
         </RadioGroup>
     </LinearLayout>
 

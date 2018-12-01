@@ -79,7 +79,23 @@ double* ProcessAudio::fft(double* inputReal, int length, bool DIRECT) {
     return fft(inputReal, NULL, length, DIRECT, BLACKMAN_WINDOW);
 }
 
-double* ProcessAudio::fft(double* inputReal, int length, bool DIRECT, WindowType windowType) {
+double* ProcessAudio::fft(double* inputReal, int length, bool DIRECT, int windowTypeInt) {
+    WindowType windowType;
+    switch(windowTypeInt) {
+        case 0:
+            windowType = RECTANGULAR_WINDOW;
+            break;
+        case 1:
+            windowType = HANNING_WINDOW;
+            break;
+        case 2:
+            windowType = HAMMING_WINDOW;
+            break;
+        case 3:
+        default:
+            windowType = BLACKMAN_WINDOW;
+            break;
+    }
     return fft(inputReal, NULL, length, DIRECT, windowType);
 }
 
@@ -94,8 +110,11 @@ double* ProcessAudio::fft(double* inputReal, double* inputImag, int length, bool
             inputReal = hamming(inputReal, length);
             break;
         case BLACKMAN_WINDOW:
-        default:
             inputReal = blackman(inputReal, length);
+            break;
+        case RECTANGULAR_WINDOW:
+        default:
+            //inputReal = inputReal
             break;
     }
 
