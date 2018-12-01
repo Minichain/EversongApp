@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RadioButton;
 
+import com.upf.minichain.eversongapp.enums.MusicalNotationEnum;
+
 public class SettingsActivity extends AppCompatActivity {
 
     @Override
@@ -16,11 +18,11 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void checkNotationSetting() {
-        if (Parameters.getInstance().getMusicalNotation() == MusicalNotation.ENGLISH_NOTATION) {
+        if (Parameters.getInstance().getMusicalNotation() == MusicalNotationEnum.ENGLISH_NOTATION) {
             RadioButton view;
             view = this.findViewById(R.id.english_notation);
             view.setChecked(true);
-        } else if (Parameters.getInstance().getMusicalNotation() == MusicalNotation.SOLFEGE_NOTATION) {
+        } else if (Parameters.getInstance().getMusicalNotation() == MusicalNotationEnum.SOLFEGE_NOTATION) {
             RadioButton view;
             view = this.findViewById(R.id.solfege_notation);
             view.setChecked(true);
@@ -33,12 +35,12 @@ public class SettingsActivity extends AppCompatActivity {
         switch(view.getId()) {
             case R.id.english_notation:
                 if (checked)
-                    Parameters.getInstance().setMusicalNotation(MusicalNotation.ENGLISH_NOTATION);
+                    Parameters.getInstance().setMusicalNotation(MusicalNotationEnum.ENGLISH_NOTATION);
                     break;
             case R.id.solfege_notation:
             default:
                 if (checked)
-                    Parameters.getInstance().setMusicalNotation(MusicalNotation.SOLFEGE_NOTATION);
+                    Parameters.getInstance().setMusicalNotation(MusicalNotationEnum.SOLFEGE_NOTATION);
                     break;
         }
     }

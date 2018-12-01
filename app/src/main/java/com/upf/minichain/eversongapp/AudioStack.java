@@ -1,5 +1,8 @@
 package com.upf.minichain.eversongapp;
 
+import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
+import com.upf.minichain.eversongapp.enums.NotesEnum;
+
 public final class AudioStack {
 
     static {

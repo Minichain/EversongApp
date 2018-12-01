@@ -1,10 +1,10 @@
-package com.upf.minichain.eversongapp;
+package com.upf.minichain.eversongapp.enums;
 
-public enum MusicalNotation {
+public enum MusicalNotationEnum {
     SOLFEGE_NOTATION,
     ENGLISH_NOTATION;
 
-    public static String getString(MusicalNotation note) {
+    public static String getString(MusicalNotationEnum note) {
         switch(note) {
             case ENGLISH_NOTATION:
                 return "English notation (A, B, C...)";

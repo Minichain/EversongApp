@@ -1,6 +1,8 @@
-package com.upf.minichain.eversongapp;
+package com.upf.minichain.eversongapp.enums;
 
-enum NotesEnum {
+import com.upf.minichain.eversongapp.Parameters;
+
+public enum NotesEnum {
     A, A_SHARP, B, C, C_SHARP, D, D_SHARP, E, F, F_SHARP, G, G_SHARP, NO_NOTE;
 
     public static int numberOfNotes = 12;
@@ -68,8 +70,8 @@ enum NotesEnum {
     }
 
     public static String getString(NotesEnum note) {
-        MusicalNotation musicalNotation = Parameters.getInstance().getMusicalNotation();
-        if (musicalNotation == MusicalNotation.SOLFEGE_NOTATION) {
+        MusicalNotationEnum musicalNotation = Parameters.getInstance().getMusicalNotation();
+        if (musicalNotation == MusicalNotationEnum.SOLFEGE_NOTATION) {
             switch(note) {
                 case A:
                     return "La";
@@ -96,7 +98,7 @@ enum NotesEnum {
                 case G_SHARP:
                     return "Sol#";
             }
-        } else if (musicalNotation == MusicalNotation.ENGLISH_NOTATION) {
+        } else if (musicalNotation == MusicalNotationEnum.ENGLISH_NOTATION) {
             switch(note) {
                 case A:
                     return "A";

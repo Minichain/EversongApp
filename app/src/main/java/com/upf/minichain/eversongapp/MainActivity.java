@@ -17,6 +17,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
+import com.upf.minichain.eversongapp.enums.NotesEnum;
+
 public class MainActivity extends AppCompatActivity {
     boolean mShouldContinue;        // Indicates if recording / playback should stop
     Button recordingButton;

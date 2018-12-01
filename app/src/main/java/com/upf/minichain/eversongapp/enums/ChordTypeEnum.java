@@ -1,4 +1,4 @@
-package com.upf.minichain.eversongapp;
+package com.upf.minichain.eversongapp.enums;
 
 public enum ChordTypeEnum {
     Minor, Major, Suspended, Dominant, Dimished5th, Augmented5th, Other;
