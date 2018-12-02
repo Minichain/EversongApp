@@ -6,134 +6,139 @@
     android:layout_height="match_parent"
     tools:context=".SettingsActivity">
 
-    <LinearLayout
-        android:id="@+id/settings_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical">
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
         <LinearLayout
-            android:id="@+id/musical_notation_layout"
+            android:id="@+id/settings_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/setting_musical_notation"
-                android:textSize="20sp" />
-
-            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                tools:layout_editor_absoluteX="0dp"
-                tools:layout_editor_absoluteY="0dp">
-
-                <RadioButton
-                    android:id="@+id/english_notation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onNotationSettingClicked"
-                    android:text="@string/setting_english_notation" />
-
-                <RadioButton
-                    android:id="@+id/solfege_notation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onNotationSettingClicked"
-                    android:text="@string/setting_solfege_notation" />
-            </RadioGroup>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/window_function_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/musical_notation_layout">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/setting_windowing"
-                android:textSize="20sp" />
-
-            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                tools:layout_editor_absoluteX="0dp"
-                tools:layout_editor_absoluteY="0dp">
-
-                <RadioButton
-                    android:id="@+id/rectangular_window"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onWindowingSettingClicked"
-                    android:text="@string/setting_rectangular_window" />
-
-                <RadioButton
-                    android:id="@+id/hanning_window"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onWindowingSettingClicked"
-                    android:text="@string/setting_hanning_window" />
-
-                <RadioButton
-                    android:id="@+id/hamming_window"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onWindowingSettingClicked"
-                    android:text="@string/setting_hamming_window" />
-
-                <RadioButton
-                    android:id="@+id/blackman_window"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onWindowingSettingClicked"
-                    android:text="@string/setting_blackman_window" />
-            </RadioGroup>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/chord_buffer_size_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/window_function_layout">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/setting_chord_buffer_size"
-                android:textSize="20sp" />
-
             <LinearLayout
-                android:id="@+id/chord_buffer_size_seekbar_layout"
+                android:id="@+id/musical_notation_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <SeekBar
-                    android:id="@+id/chord_buffer_size_seekbar"
-                    android:layout_width="250dp"
-                    android:layout_height="fill_parent"
-                    android:max="20" />
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/chord_buffer_size_seekbar_text"
-                    android:layout_width="20dp"
-                    android:layout_height="fill_parent"
-                    app:layout_constraintLeft_toRightOf="@+id/chord_buffer_size_seekbar"
-                    android:textSize="15sp" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_musical_notation"
+                    android:textSize="20sp" />
+
+                <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="0dp">
+
+                    <RadioButton
+                        android:id="@+id/english_notation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onNotationSettingClicked"
+                        android:text="@string/setting_english_notation" />
+
+                    <RadioButton
+                        android:id="@+id/solfege_notation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onNotationSettingClicked"
+                        android:text="@string/setting_solfege_notation" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/window_function_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/musical_notation_layout">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_windowing"
+                    android:textSize="20sp" />
+
+                <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="0dp">
+
+                    <RadioButton
+                        android:id="@+id/rectangular_window"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onWindowingSettingClicked"
+                        android:text="@string/setting_rectangular_window" />
+
+                    <RadioButton
+                        android:id="@+id/hanning_window"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onWindowingSettingClicked"
+                        android:text="@string/setting_hanning_window" />
+
+                    <RadioButton
+                        android:id="@+id/hamming_window"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onWindowingSettingClicked"
+                        android:text="@string/setting_hamming_window" />
+
+                    <RadioButton
+                        android:id="@+id/blackman_window"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onWindowingSettingClicked"
+                        android:text="@string/setting_blackman_window" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/chord_buffer_size_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/window_function_layout">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_chord_buffer_size"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:id="@+id/chord_buffer_size_seekbar_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <SeekBar
+                        android:id="@+id/chord_buffer_size_seekbar"
+                        android:layout_width="250dp"
+                        android:layout_height="fill_parent"
+                        android:max="20" />
+
+                    <TextView
+                        android:id="@+id/chord_buffer_size_seekbar_text"
+                        android:layout_width="20dp"
+                        android:layout_height="fill_parent"
+                        app:layout_constraintLeft_toRightOf="@+id/chord_buffer_size_seekbar"
+                        android:textSize="15sp" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>
