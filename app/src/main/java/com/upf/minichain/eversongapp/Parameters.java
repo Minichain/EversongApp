@@ -7,8 +7,9 @@ public class Parameters {
     private static final Parameters instance = new Parameters();
 
     private Parameters() {
-        musicalNotation = MusicalNotationEnum.SOLFEGE_NOTATION;
-        windowingFunction = WindowFunctionEnum.HANNING_WINDOW;
+        musicalNotation = MusicalNotationEnum.ENGLISH_NOTATION;
+        windowingFunction = WindowFunctionEnum.BLACKMAN_WINDOW;
+        chordBufferSize = 15;
     }
 
     public static Parameters getInstance() {
@@ -21,13 +22,13 @@ public class Parameters {
     public static final int SAMPLE_RATE = 44100;    // The sampling rate (16000, 22050, 44100)
     public static final int BUFFER_SIZE = 8192;     // It must be a power of 2 (2048, 4096, 8192, 16384...)
     public static final int HOP_SIZE = 2048;        // It must be a power of 2
-    public static final int CHORD_BUFFER_SIZE = 15;
 
     /************
      * Variables
      ************/
     private static MusicalNotationEnum musicalNotation;
     private static WindowFunctionEnum windowingFunction;
+    private static int chordBufferSize;
 
     public void setMusicalNotation(MusicalNotationEnum notation) {
         musicalNotation = notation;
@@ -43,5 +44,13 @@ public class Parameters {
 
     public WindowFunctionEnum getWindowingFunction() {
         return windowingFunction;
+    }
+
+    public void setChordBufferSize(int newSize) {
+        chordBufferSize = newSize;
+    }
+
+    public int getChordBufferSize() {
+        return chordBufferSize;
     }
 }

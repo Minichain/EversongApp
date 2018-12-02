@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RadioButton;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.upf.minichain.eversongapp.enums.MusicalNotationEnum;
 import com.upf.minichain.eversongapp.enums.WindowFunctionEnum;
@@ -15,11 +17,12 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_menu);
 
-        checkNotationSetting();
-        checkWindowingFunctionSetting();
+        setMusicalNotationSetting();
+        setWindowingFunctionSetting();
+        setChordBufferSizeSetting();
     }
 
-    private void checkNotationSetting() {
+    private void setMusicalNotationSetting() {
         RadioButton view;
         switch (Parameters.getInstance().getMusicalNotation()) {
             case ENGLISH_NOTATION:
@@ -50,7 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    private void checkWindowingFunctionSetting() {
+    private void setWindowingFunctionSetting() {
         RadioButton view;
         switch(Parameters.getInstance().getWindowingFunction()) {
             case RECTANGULAR_WINDOW:
@@ -96,5 +99,35 @@ public class SettingsActivity extends AppCompatActivity {
                     Parameters.getInstance().setWindowingFunction(WindowFunctionEnum.BLACKMAN_WINDOW);
                 break;
         }
+    }
+
+    private void setChordBufferSizeSetting() {
+        int bufferSize = Parameters.getInstance().getChordBufferSize();
+        SeekBar seekBar = this.findViewById(R.id.chord_buffer_size_seekbar);
+        seekBar.setProgress(bufferSize);
+        final TextView textView = this.findViewById(R.id.chord_buffer_size_seekbar_text);
+        textView.setText(String.valueOf(bufferSize));
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                int min = 1;
+                if (progress < min) {
+                    progress = min;
+                    seekBar.setProgress(progress);
+                }
+                textView.setText(String.valueOf(progress));
+                Parameters.getInstance().setChordBufferSize(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 }

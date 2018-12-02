@@ -120,7 +120,7 @@ public final class AudioStack {
         int[] rootNoteArray = new int[NotesEnum.numberOfNotes];
         int[] chordTypeArray = new int[ChordTypeEnum.numberOfChordTypes];
 
-        for(int i = 0; i < Parameters.CHORD_BUFFER_SIZE; i++) {
+        for(int i = 0; i < Parameters.getInstance().getChordBufferSize(); i++) {
             int rootNote = chordsDetectedBuffer[i][0] % NotesEnum.numberOfNotes;
             int chordType = chordsDetectedBuffer[i][1] % ChordTypeEnum.numberOfChordTypes;
             if (rootNote >= 0) {
@@ -133,7 +133,7 @@ public final class AudioStack {
         int[] rootNoteProbability = getMaxValueAndIndex(rootNoteArray);
         mostProbableChord[0] = rootNoteProbability[1];
         mostProbableChord[1] = getMaxValueAndIndex(chordTypeArray)[1];
-        mostProbableChord[2] = (rootNoteProbability[0] * 100) / Parameters.CHORD_BUFFER_SIZE;
+        mostProbableChord[2] = (rootNoteProbability[0] * 100) / Parameters.getInstance().getChordBufferSize();
         return mostProbableChord;
     }
 

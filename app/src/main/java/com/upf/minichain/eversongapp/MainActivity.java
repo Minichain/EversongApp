@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     float pitchDetected;
     int[] chordDetected = new int[2];
-    int[][] chordsDetectedBuffer = new int[Parameters.CHORD_BUFFER_SIZE][2];
+    int[][] chordsDetectedBuffer;
     int chordBufferIterator = 0;
     int[] mostProbableChord = new int[3];
 
@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         chordDetected[1] = -1;
         mostProbableChord[0] = -1;
         mostProbableChord[1] = -1;
+        chordsDetectedBuffer = new int[Parameters.getInstance().getChordBufferSize()][2];
 
         recordingButton = this.findViewById(R.id.recording_button);
 
@@ -113,8 +114,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         chordDetected = chordDetectedThread;
-                        chordsDetectedBuffer[chordBufferIterator % Parameters.CHORD_BUFFER_SIZE][0] = chordDetected[0];
-                        chordsDetectedBuffer[chordBufferIterator % Parameters.CHORD_BUFFER_SIZE][1] = chordDetected[1];
+                        chordsDetectedBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][0] = chordDetected[0];
+                        chordsDetectedBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][1] = chordDetected[1];
                         chordBufferIterator++;
                     }
                 });
