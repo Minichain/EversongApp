@@ -42,7 +42,7 @@ public class EversongCanvas {
             public void run() {    //...this is run
                 int vWidth = mImageView.getWidth();
                 int vHeight = mImageView.getHeight();
-//                Log.v(LOG_TAG, "AdriHell:: drawInCanvas with size: " + vWidth + ", " + vHeight);
+//                Log.v(LOG_TAG, "EversongCanvasLog:: drawInCanvas with size: " + vWidth + ", " + vHeight);
                 if (vWidth > 0 && vHeight > 0) {
                     mBitmap = Bitmap.createBitmap(vWidth, vHeight, Bitmap.Config.ARGB_8888);
                     mImageView.setImageBitmap(mBitmap);

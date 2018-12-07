@@ -26,7 +26,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/frequency_text"
+        android:id="@+id/pitch_text"
         android:layout_width="143dp"
         android:layout_height="83dp"
         android:layout_centerInParent="true"

@@ -3,11 +3,20 @@ package com.upf.minichain.eversongapp.enums;
 import com.upf.minichain.eversongapp.Parameters;
 
 public enum NotesEnum {
-    A, A_SHARP, B, C, C_SHARP, D, D_SHARP, E, F, F_SHARP, G, G_SHARP, NO_NOTE;
+    A(9), A_SHARP(10), B(11), C(0), C_SHARP(1), D(2), D_SHARP(3), E(4), F(5), F_SHARP(6), G(7), G_SHARP(8), NO_NOTE(-1);
 
+    private final int value;
     public static int numberOfNotes = 12;
     public static double refValue = Math.pow(2.0, 1.0 / 12.0);
     public static double refFreq = 440.0f;
+
+    NotesEnum(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
 
     public static NotesEnum fromInteger(int integerValue) {
         switch(integerValue) {
@@ -35,8 +44,10 @@ public enum NotesEnum {
                 return A_SHARP;
             case 11:
                 return B;
+            case -1:
+            default:
+                return NO_NOTE;
         }
-        return NO_NOTE;
     }
 
     public static float getFrequency(NotesEnum note) {

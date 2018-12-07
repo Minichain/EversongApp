@@ -23,7 +23,7 @@ import com.upf.minichain.eversongapp.enums.NotesEnum;
 public class MainActivity extends AppCompatActivity {
     boolean mShouldContinue;        // Indicates if recording / playback should stop
     Button recordingButton;
-    TextView frequencyText;
+    TextView pitchText;
     TextView chordNoteText;
     TextView mostProbableChordNoteText;
     TextView chordTypeText;
@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     EversongCanvas canvas;
 
     float pitchDetected;
+    NotesEnum pitchNote;
     int[] chordDetected = new int[2];
     int[][] chordsDetectedBuffer;
     int chordBufferIterator = 0;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         AudioStack.initAudioStack();
 
         pitchDetected = -1;
+        pitchNote = NotesEnum.NO_NOTE;
         chordDetected[0] = -1;
         chordDetected[1] = -1;
         mostProbableChord[0] = -1;
@@ -67,14 +69,17 @@ public class MainActivity extends AppCompatActivity {
 
         recordingButton = this.findViewById(R.id.recording_button);
 
-        frequencyText = this.findViewById(R.id.frequency_text);
+        //GuitarChordChart testing
+        GuitarChordChart.getChordTab(NotesEnum.G, ChordTypeEnum.Major);
+
+        pitchText = this.findViewById(R.id.pitch_text);
         chordNoteText = this.findViewById(R.id.chord_note);
         mostProbableChordNoteText = this.findViewById(R.id.most_probable_chord_note);
         chordTypeText = this.findViewById(R.id.chord_type);
         mostProbableChordTypeText = this.findViewById(R.id.most_probable_chord_type);
 
         int color  = ResourcesCompat.getColor(getResources(), R.color.mColor01, null);
-        frequencyText.setTextColor(color);
+        pitchText.setTextColor(color);
         chordNoteText.setTextColor(color);
         chordTypeText.setTextColor(color);
         mostProbableChordNoteText.setTextColor(color);
@@ -87,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         recordingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.l("AdriHell:: recordingButton pressed!");
+                Log.l("MainActivityLog:: recordingButton pressed!");
                 if (recordingButton.getText().equals(getString(R.string.start_record_button))) {
                     recordingButton.setText(R.string.stop_record_button);
                     recordAudio();
@@ -136,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         }).start();
 
         mostProbableChord = AudioStack.getMostProbableChord(chordsDetectedBuffer);
-//        Log.l("AdriHell:: mostProbableChord: "+ NotesEnum.getString(NotesEnum.fromInteger(mostProbableChord[0]))
+//        Log.l("MainActivityLog:: mostProbableChord: "+ NotesEnum.getString(NotesEnum.fromInteger(mostProbableChord[0]))
 //                + String.valueOf(ChordTypeEnum.fromInteger(mostProbableChord[1])) + ". Probability: " + mostProbableChord[2] + "%");
 
         if (canvas.getCanvas() != null) {
@@ -144,9 +149,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (pitchDetected != -1) {
-            frequencyText.setText(String.valueOf("Pitch: \n" + (int)pitchDetected + " Hz"));
+            pitchNote = AudioStack.getNoteByFrequency((double)pitchDetected);
+            pitchText.setText(String.valueOf("Pitch: \n" + (int)pitchDetected + " Hz" + " ("
+                    + NotesEnum.getString(pitchNote) + ")"));
         } else {
-            frequencyText.setText(String.valueOf("Pitch: \n" + NotesEnum.getString(NotesEnum.NO_NOTE) + " Hz"));
+            pitchNote = NotesEnum.NO_NOTE;
+            pitchText.setText(String.valueOf("Pitch: \n" + NotesEnum.getString(pitchNote) + " Hz"));
         }
         if (chordDetected[0] != -1) {
             chordNoteText.setText(NotesEnum.getString(NotesEnum.fromInteger(chordDetected[0])));
@@ -195,12 +203,12 @@ public class MainActivity extends AppCompatActivity {
                         bufferSize);
 
                 if (record.getState() != AudioRecord.STATE_INITIALIZED) {
-                    Log.l("AdriHell:: Audio Record cannot be initialized!");
+                    Log.l("MainActivityLog:: Audio Record cannot be initialized!");
                     return;
                 }
                 record.startRecording();
 
-                Log.l("AdriHell:: Start recording");
+                Log.l("MainActivityLog:: Start recording");
 
                 long shortsRead = 0;
                 mShouldContinue = true;
@@ -217,20 +225,20 @@ public class MainActivity extends AppCompatActivity {
 //                    final double[] audioBufferFrequency = AudioStack.smoothFunction(AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 150, 2000));
                     final double[] audioBufferFrequency = AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true, Parameters.getInstance().getWindowingFunction()), 150, 4000);
                     final double average = AudioStack.getAverageLevel(audioBufferFrequency) * 25;
-//                    Log.l("AdriHell:: Average level " + average);
+//                    Log.l("MainActivityLog:: Average level " + average);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             processAudio(audioBuffer, audioBufferDouble, audioBufferFrequency, average);
                         }
                     });
-//                    Log.l("AdriHell:: reading buffer of size " + bufferSize);
+//                    Log.l("MainActivityLog:: reading buffer of size " + bufferSize);
                 }
 
                 record.stop();
                 record.release();
 
-                Log.l("AdriHell:: Recording stopped. Num of samples read: " + shortsRead);
+                Log.l("MainActivityLog:: Recording stopped. Num of samples read: " + shortsRead);
             }
         }).start();
     }

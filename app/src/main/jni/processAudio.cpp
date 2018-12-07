@@ -33,7 +33,7 @@ float ProcessAudio::getPitch(double* samples, int length) {
         samplesInt16[i] = (int16_t)(samples[i] * SHRT_MAX);
     }
     float pitchDetected = Yin_getPitch(&yin, samplesInt16);
-    LOGI("AdriHell:: Pitch detected: %f", pitchDetected);
+    LOGI("ProcessAudioLog:: Pitch detected: %f", pitchDetected);
     return pitchDetected;
 }
 
