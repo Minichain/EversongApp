@@ -8,8 +8,8 @@ public class Parameters {
 
     private Parameters() {
         musicalNotation = MusicalNotationEnum.ENGLISH_NOTATION;
-        windowingFunction = WindowFunctionEnum.BLACKMAN_WINDOW;
-        chordBufferSize = 15;
+        windowingFunction = WindowFunctionEnum.HAMMING_WINDOW;
+        chordBufferSize = 5;
     }
 
     public static Parameters getInstance() {
