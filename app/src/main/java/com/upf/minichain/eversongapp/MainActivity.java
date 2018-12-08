@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
@@ -69,9 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
         recordingButton = this.findViewById(R.id.recording_button);
 
-        //GuitarChordChart testing
-        GuitarChordChart.getChordTab(NotesEnum.G, ChordTypeEnum.Major);
-
         pitchText = this.findViewById(R.id.pitch_text);
         chordNoteText = this.findViewById(R.id.chord_note);
         mostProbableChordNoteText = this.findViewById(R.id.most_probable_chord_note);
@@ -102,6 +100,26 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setChordChart(NotesEnum tonic, ChordTypeEnum chordType, float alpha) {
+        int[] guitarChordChart = GuitarChordChart.getChordTab(tonic, chordType);
+
+        ImageView guitarChordStringView;
+        int numberOfStrings = 6;
+
+        for (int i = 1; i <= numberOfStrings; i++) {
+            int guitarChordStringViewId = getResources().getIdentifier("guitar_chord_string_0" + i, "id", getPackageName());
+            guitarChordStringView = this.findViewById(guitarChordStringViewId);
+            guitarChordStringView.setAlpha(alpha);
+            int guitarChordStringImageId;
+            if (guitarChordChart[numberOfStrings - i] == -1) {
+                guitarChordStringImageId = getResources().getIdentifier("guitar_chord_string_0", "drawable", getPackageName());
+            } else {
+                guitarChordStringImageId = getResources().getIdentifier("guitar_chord_string_0" + guitarChordChart[numberOfStrings - i], "drawable", getPackageName());
+            }
+            guitarChordStringView.setImageResource(guitarChordStringImageId);
+        }
     }
 
     public void checkCaptureAudioPermission() {
@@ -166,16 +184,15 @@ public class MainActivity extends AppCompatActivity {
         } else {
             chordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.Other));
         }
-        if (mostProbableChord[0] != -1) {
+        if (mostProbableChord[0] != -1 && mostProbableChord[1] != -1) {
             mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.fromInteger(mostProbableChord[0])));
             mostProbableChordNoteText.setAlpha((float)mostProbableChord[2] / 100f);
-        } else {
-            mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.NO_NOTE));
-        }
-        if (mostProbableChord[1] != -1) {
             mostProbableChordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(mostProbableChord[1])));
             mostProbableChordTypeText.setAlpha((float)mostProbableChord[2] / 100f);
+
+            setChordChart(NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f);
         } else {
+            mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.NO_NOTE));
             mostProbableChordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.Other));
         }
     }
