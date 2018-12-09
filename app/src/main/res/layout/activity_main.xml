@@ -116,9 +116,22 @@
         app:layout_constraintVertical_bias="0.473" />
 
     <ImageView
+        android:id="@+id/guitar_chord_chart_frets"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="48dp"
+        android:foregroundGravity="center"
+        android:src="@drawable/guitar_chord_chart_frets"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/most_probable_chord_type" />
+
+    <ImageView
         android:id="@+id/guitar_chord_string_01"
-        android:layout_width="318dp"
-        android:layout_height="23dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="48dp"
@@ -129,8 +142,8 @@
 
     <ImageView
         android:id="@+id/guitar_chord_string_02"
-        android:layout_width="318dp"
-        android:layout_height="23dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:foregroundGravity="center"
@@ -140,8 +153,8 @@
 
     <ImageView
         android:id="@+id/guitar_chord_string_03"
-        android:layout_width="318dp"
-        android:layout_height="23dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:foregroundGravity="center"
@@ -151,8 +164,8 @@
 
     <ImageView
         android:id="@+id/guitar_chord_string_04"
-        android:layout_width="318dp"
-        android:layout_height="23dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:foregroundGravity="center"
@@ -162,8 +175,8 @@
 
     <ImageView
         android:id="@+id/guitar_chord_string_05"
-        android:layout_width="318dp"
-        android:layout_height="23dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:foregroundGravity="center"
@@ -173,8 +186,8 @@
 
     <ImageView
         android:id="@+id/guitar_chord_string_06"
-        android:layout_width="318dp"
-        android:layout_height="23dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:foregroundGravity="center"
