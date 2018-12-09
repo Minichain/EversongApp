@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                         audioBufferDouble[i] = (double)audioBuffer[i] / (double)Short.MAX_VALUE;
                     }
 //                    final double[] audioBufferFrequency = AudioStack.smoothFunction(AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 150, 2000));
-                    final double[] audioBufferFrequency = AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true, Parameters.getInstance().getWindowingFunction()), 150, 4000);
+                    final double[] audioBufferFrequency = AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true, Parameters.getInstance().getWindowingFunction()), 20, 8000);
                     final double average = AudioStack.getAverageLevel(audioBufferFrequency) * 25;
 //                    Log.l("MainActivityLog:: Average level " + average);
                     runOnUiThread(new Runnable() {
