@@ -70,16 +70,21 @@ public class MainActivity extends AppCompatActivity {
 
         recordingButton = this.findViewById(R.id.recording_button);
 
-        pitchText = this.findViewById(R.id.pitch_text);
-        chordNoteText = this.findViewById(R.id.chord_note);
+        int color  = ResourcesCompat.getColor(getResources(), R.color.mColor01, null);
+
+        if (BuildConfig.FLAVOR.equals("dev")) {
+            chordNoteText = this.findViewById(R.id.chord_note);
+            chordTypeText = this.findViewById(R.id.chord_type);
+            pitchText = this.findViewById(R.id.pitch_text);
+
+            chordNoteText.setTextColor(color);
+            chordTypeText.setTextColor(color);
+            pitchText.setTextColor(color);
+        }
+
         mostProbableChordNoteText = this.findViewById(R.id.most_probable_chord_note);
-        chordTypeText = this.findViewById(R.id.chord_type);
         mostProbableChordTypeText = this.findViewById(R.id.most_probable_chord_type);
 
-        int color  = ResourcesCompat.getColor(getResources(), R.color.mColor01, null);
-        pitchText.setTextColor(color);
-        chordNoteText.setTextColor(color);
-        chordTypeText.setTextColor(color);
         mostProbableChordNoteText.setTextColor(color);
         mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.A));
         mostProbableChordTypeText.setTextColor(color);
@@ -166,24 +171,29 @@ public class MainActivity extends AppCompatActivity {
             canvas.updateCanvas(bufferShort, bufferFrequency, average, pitchDetected);
         }
 
-        if (pitchDetected != -1) {
-            pitchNote = AudioStack.getNoteByFrequency((double)pitchDetected);
-            pitchText.setText(String.valueOf("Pitch: \n" + (int)pitchDetected + " Hz" + " ("
-                    + NotesEnum.getString(pitchNote) + ")"));
-        } else {
-            pitchNote = NotesEnum.NO_NOTE;
-            pitchText.setText(String.valueOf("Pitch: \n" + NotesEnum.getString(pitchNote) + " Hz"));
+        if (BuildConfig.FLAVOR.equals("dev")) {
+            if (pitchDetected != -1) {
+                pitchNote = AudioStack.getNoteByFrequency((double)pitchDetected);
+                pitchText.setText(String.valueOf("Pitch: \n" + (int)pitchDetected + " Hz" + " ("
+                        + NotesEnum.getString(pitchNote) + ")"));
+            } else {
+                pitchNote = NotesEnum.NO_NOTE;
+                pitchText.setText(String.valueOf("Pitch: \n" + NotesEnum.getString(pitchNote) + " Hz"));
+            }
+
+            if (chordDetected[0] != -1) {
+                chordNoteText.setText(NotesEnum.getString(NotesEnum.fromInteger(chordDetected[0])));
+            } else {
+                chordNoteText.setText(NotesEnum.getString(NotesEnum.NO_NOTE));
+            }
+
+            if (chordDetected[1] != -1) {
+                chordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(chordDetected[1])));
+            } else {
+                chordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.Other));
+            }
         }
-        if (chordDetected[0] != -1) {
-            chordNoteText.setText(NotesEnum.getString(NotesEnum.fromInteger(chordDetected[0])));
-        } else {
-            chordNoteText.setText(NotesEnum.getString(NotesEnum.NO_NOTE));
-        }
-        if (chordDetected[1] != -1) {
-            chordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(chordDetected[1])));
-        } else {
-            chordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.Other));
-        }
+
         if (mostProbableChord[0] != -1 && mostProbableChord[1] != -1) {
             mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.fromInteger(mostProbableChord[0])));
             mostProbableChordNoteText.setAlpha((float)mostProbableChord[2] / 100f);
