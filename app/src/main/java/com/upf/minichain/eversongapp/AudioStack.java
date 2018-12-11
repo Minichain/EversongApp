@@ -22,8 +22,12 @@ public final class AudioStack {
         return getPitchJni(samples);
     }
 
-    public static double[] fft(double[] inputReal, boolean DIRECT, WindowFunctionEnum windowFunction) {
-        return fftJni(inputReal, DIRECT, windowFunction.getIntValue());
+    public static double[] window(double[] samples, WindowFunctionEnum windowType) {
+        return windowJni(samples, windowType.getValue());
+    }
+
+    public static double[] fft(double[] inputReal, boolean DIRECT) {
+        return fftJni(inputReal, DIRECT);
     }
 
     public static double[] highPassFilter(double[] samples, float cutOffFreq) {
@@ -42,23 +46,6 @@ public final class AudioStack {
 
     public static double getAverageLevel(double[] samples) {
         return getAverageLevelJni(samples);
-    }
-
-    public static double[] smoothFunction(double[] function) {
-        return smoothFunction(function, 2);
-    }
-
-    public static double[] smoothFunction(double[] function, int smoothingFactor) {
-        double[] outputFunction =  new double[function.length];
-        for (int i = smoothingFactor; i < (function.length - smoothingFactor); i++) {
-            double average = 0;
-            for (int z = i - smoothingFactor; z <= i + smoothingFactor; z++) {
-                average += function[z];
-            }
-            average = average / (double)(smoothingFactor * 2 + 1);
-            outputFunction[i] = average;
-        }
-        return outputFunction;
     }
 
     public static NotesEnum getNoteByFrequency(double frequencyValue) {
@@ -106,6 +93,14 @@ public final class AudioStack {
 
     public static int getIndexByFrequency(float freq) {
         return (int)((freq * Parameters.BUFFER_SIZE * 2) / Parameters.SAMPLE_RATE);
+    }
+
+    public static double[] getSamplesToDouble(short[] inputBuffer) {
+        double[] outputBuffer = new double[inputBuffer.length];
+        for (int i = 0; i < inputBuffer.length;  i++) {
+            outputBuffer[i] = (double)inputBuffer[i] / (double)Short.MAX_VALUE;
+        }
+        return outputBuffer;
     }
 
     /**
@@ -158,7 +153,9 @@ public final class AudioStack {
 
     private static native int[] chordDetectionJni(double[] samples, double[] spectrumSamples);
 
-    private static native double[] fftJni(double[] inputReal, boolean DIRECT, int windowFunction);
+    private static native double[] windowJni(double[] samples, int windowType);
+
+    private static native double[] fftJni(double[] inputReal, boolean DIRECT);
 
     private static native double[] bandPassFilterJni(double[] spectrumSamples, float lowCutOffFreq, float highCutOffFreq, int sampleRate, int frameSize);
 

@@ -76,48 +76,11 @@ double* ProcessAudio::removeZeroFrequency(double* samples) {
  */
 
 double* ProcessAudio::fft(double* inputReal, int length, bool DIRECT) {
-    return fft(inputReal, NULL, length, DIRECT, BLACKMAN_WINDOW);
+    return fft(inputReal, NULL, length, DIRECT);
 }
 
-double* ProcessAudio::fft(double* inputReal, int length, bool DIRECT, int windowTypeInt) {
-    WindowType windowType;
-    switch(windowTypeInt) {
-        case 0:
-            windowType = RECTANGULAR_WINDOW;
-            break;
-        case 1:
-            windowType = HANNING_WINDOW;
-            break;
-        case 2:
-            windowType = HAMMING_WINDOW;
-            break;
-        case 3:
-        default:
-            windowType = BLACKMAN_WINDOW;
-            break;
-    }
-    return fft(inputReal, NULL, length, DIRECT, windowType);
-}
-
-double* ProcessAudio::fft(double* inputReal, double* inputImag, int length, bool DIRECT, WindowType windowType) {
+double* ProcessAudio::fft(double* inputReal, double* inputImag, int length, bool DIRECT) {
     double* output = NULL;
-
-    switch(windowType) {
-        case HANNING_WINDOW:
-            inputReal = hanning(inputReal, length);
-            break;
-        case HAMMING_WINDOW:
-            inputReal = hamming(inputReal, length);
-            break;
-        case BLACKMAN_WINDOW:
-            inputReal = blackman(inputReal, length);
-            break;
-        case RECTANGULAR_WINDOW:
-        default:
-            //inputReal = inputReal
-            break;
-    }
-
     double ld = log(length) / log(2.0);
 
     if (((int) ld) - ld != 0) {
@@ -226,6 +189,20 @@ int ProcessAudio::bitReverseReference(int j, int nu) {
         j1 = j2;
     }
     return k;
+}
+
+double* ProcessAudio::window(double* samples, int length, int windowType) {
+    switch(windowType) {
+        case 0:
+            return samples;
+        case 1:
+            return hanning(samples, length);
+        case 2:
+            return hamming(samples, length);
+        case 3:
+        default:
+            return blackman(samples, length);
+    }
 }
 
 double* ProcessAudio::hanning(double* inputSamples, int vectorLength) {

@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void processAudio(final short[] bufferShort, final double[] bufferDouble, final double[] bufferFrequency, final double average) {
+    public void processAudio(final double[] bufferDouble, final double[] bufferFrequency, final double average) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 //                + String.valueOf(ChordTypeEnum.fromInteger(mostProbableChord[1])) + ". Probability: " + mostProbableChord[2] + "%");
 
         if (canvas.getCanvas() != null) {
-            canvas.updateCanvas(bufferShort, bufferFrequency, average, pitchDetected);
+            canvas.updateCanvas(bufferDouble, bufferFrequency, average, pitchDetected);
         }
 
         if (BuildConfig.FLAVOR.equals("dev")) {
@@ -244,19 +244,14 @@ public class MainActivity extends AppCompatActivity {
                     final short[] audioBuffer = new short[bufferSize];
                     int numberOfShort = record.read(audioBuffer, 0, audioBuffer.length);
                     shortsRead += numberOfShort;
-
-                    final double[] audioBufferDouble = new double[audioBuffer.length];
-                    for (int i = 0; i < audioBuffer.length;  i++) {
-                        audioBufferDouble[i] = (double)audioBuffer[i] / (double)Short.MAX_VALUE;
-                    }
-//                    final double[] audioBufferFrequency = AudioStack.smoothFunction(AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 150, 2000));
-                    final double[] audioBufferFrequency = AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true, Parameters.getInstance().getWindowingFunction()), 20, 8000);
+                    final double[] audioBufferDouble = AudioStack.window(AudioStack.getSamplesToDouble(audioBuffer), Parameters.getInstance().getWindowingFunction());
+                    final double[] audioBufferFrequency = AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 20, 8000);
                     final double average = AudioStack.getAverageLevel(audioBufferFrequency) * 25;
 //                    Log.l("MainActivityLog:: Average level " + average);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            processAudio(audioBuffer, audioBufferDouble, audioBufferFrequency, average);
+                            processAudio(audioBufferDouble, audioBufferFrequency, average);
                         }
                     });
 //                    Log.l("MainActivityLog:: reading buffer of size " + bufferSize);

@@ -53,7 +53,7 @@ public class EversongCanvas {
         });
     }
 
-    public void updateCanvas(short[] buffer, double[] bufferFrequency, double average, float pitch) {
+    public void updateCanvas(double[] bufferSamples, double[] bufferFrequency, double spectrumAverage, float pitch) {
         mImageView.setImageBitmap(mBitmap);
         mCanvas.drawColor(mColorBackground);    //Reset background color
         mPaint01.setColor(mColor01);
@@ -61,7 +61,7 @@ public class EversongCanvas {
         mPaint02.setColor(mColor02);
         mPaint02.setStrokeWidth(5f);
 
-        if (buffer != null && bufferFrequency != null) {
+        if (bufferSamples != null && bufferFrequency != null) {
             mPaint02.setShader(shader1);
             if (pitch > 0) {
                 int pitchIndex = AudioStack.getIndexByFrequency(pitch);
@@ -69,25 +69,33 @@ public class EversongCanvas {
                 mCanvas.drawLine(pitchIndex, 0, pitchIndex, mCanvas.getHeight(), mPaint02);
             }
 
-            int rectangleWidth = (int) ((mImageView.getWidth() - 10) * average) + 10;
+            int rectangleWidth = (int) ((mImageView.getWidth() - 10) * spectrumAverage) + 10;
             mRect.set(10, 10, rectangleWidth,100);
             mCanvas.drawRect(mRect, mPaint01);
 
-            float amplifyDrawFactor = 500f;
-            for (int i = 0; i < (bufferFrequency.length / 2) - 1; i++) {
-                //Time domain
-                mCanvas.drawLine(i, (buffer[i] / 60) + (mCanvas.getHeight() / 2),
-                        i + 1 , (buffer[i + 1] / 60) + (mCanvas.getHeight() / 2), mPaint01);
-
-                //Frequency domain
-                mCanvas.drawLine(i, ((float)bufferFrequency[i] * (-amplifyDrawFactor)) + (mCanvas.getHeight()),
-                        i + 1, ((float)bufferFrequency[(i) + 1] * (-amplifyDrawFactor)) + (mCanvas.getHeight()), mPaint01);
-
-            }
-            average = (average * -amplifyDrawFactor) + mCanvas.getHeight();
-            //Spectrum average
-            mCanvas.drawLine(0, (float)average, mCanvas.getWidth(), (float)average, mPaint01);
+            drawBufferSamples(bufferSamples, mPaint01);
+            drawSpectrum(bufferFrequency, spectrumAverage, mPaint01);
         }
+    }
+
+    public void drawBufferSamples(double[] bufferSamples, Paint paint) {
+        float amplifyDrawFactor = 250f;
+        for (int i = 0; i < bufferSamples.length - 1; i++) {
+            double smoothEffectValue = (0.5 * (1.0 - Math.cos(2.0*Math.PI*(double)i/(double)(mCanvas.getWidth() - 1))));
+            mCanvas.drawLine(i, (float) (bufferSamples[i] * 100 * smoothEffectValue * amplifyDrawFactor) + (mCanvas.getHeight() / 2),
+                    i + 1, (float) (bufferSamples[i + 1] * 100 * smoothEffectValue * amplifyDrawFactor) + (mCanvas.getHeight() / 2), paint);
+        }
+    }
+
+    public void drawSpectrum(double[] spectrumBuffer, double spectrumAverage, Paint paint) {
+        float amplifyDrawFactor = 500f;
+        for (int i = 0; i < (spectrumBuffer.length / 2) - 1; i++) {
+            mCanvas.drawLine(i, ((float)spectrumBuffer[i] * (-amplifyDrawFactor)) + (mCanvas.getHeight()),
+                    i + 1, ((float)spectrumBuffer[(i) + 1] * (-amplifyDrawFactor)) + (mCanvas.getHeight()), paint);
+        }
+        spectrumAverage = (spectrumAverage * -amplifyDrawFactor) + mCanvas.getHeight();
+        //Spectrum average
+        mCanvas.drawLine(0, (float)spectrumAverage, mCanvas.getWidth(), (float)spectrumAverage, mPaint01);
     }
 
     public Canvas getCanvas() {

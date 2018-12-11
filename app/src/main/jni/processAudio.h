@@ -26,12 +26,6 @@ public:
     ChordDetector chordDetector;
     int* chordDetectionOutput = new int[2];
     Yin yin;
-    enum WindowType {
-        RECTANGULAR_WINDOW,
-        HANNING_WINDOW,
-        HAMMING_WINDOW,
-        BLACKMAN_WINDOW
-    };
 
     ProcessAudio(int sample_rate, int frame_size);
     int* chordDetection(double* samples, double* spectrumSamples);
@@ -41,9 +35,9 @@ public:
     static double* removeZeroFrequency(double* samples);
     static double getAverageLevel(double samples[], int length);
 
+    static double* window(double* samples, int length, int windowType);
     static double* fft(double* inputReal, int length, bool DIRECT);
-    static double* fft(double* inputReal, int length, bool DIRECT, int windowType);
-    static double* fft(double* inputReal, double* inputImag, int length, bool DIRECT, WindowType windowType);
+    static double* fft(double* inputReal, double* inputImag, int length, bool DIRECT);
     static int bitReverseReference(int j, int nu);
 
 private:
