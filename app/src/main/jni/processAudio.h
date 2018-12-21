@@ -29,6 +29,7 @@ public:
 
     ProcessAudio(int sample_rate, int frame_size);
     int* chordDetection(double* samples, double* spectrumSamples);
+    double* getChromagram(double* samples, double* spectrumSamples);
     float getPitch(double* samples, int length);
 
     static double* bandPassFilter(double* samples, float lowCutOffFreq, float highCutOffFreq, int sampleRate, int frameSize);

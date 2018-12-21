@@ -37,7 +37,9 @@ public:
         Major,
         Suspended,
         Dominant,
-        Dimished5th,
+		Major7th,
+		Minor7th,
+        Diminished5th,
         Augmented5th
     };
     

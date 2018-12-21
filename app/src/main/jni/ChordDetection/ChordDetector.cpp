@@ -60,7 +60,7 @@ void ChordDetector::classifyChromagram()
 	{
 		fifth = (i+7) % 12;
 		chromagram[fifth] = chromagram[fifth] - (0.1 * chromagram[i]);
-		
+
 		if (chromagram[fifth] < 0)
 		{
 			chromagram[fifth] = 0;
@@ -143,7 +143,7 @@ void ChordDetector::classifyChromagram()
 	if ((chordindex >= 24) && (chordindex < 36))
 	{
 		rootNote = chordindex-24;
-		quality = Dimished5th;
+		quality = Diminished5th;
 		intervals = 0;
 	}
 	
@@ -175,7 +175,7 @@ void ChordDetector::classifyChromagram()
 	if ((chordindex >= 72) && (chordindex < 84))
 	{
 		rootNote = chordindex-72;
-		quality = Major;
+		quality = Major7th;
 		intervals = 7;
 	}
 	
@@ -183,7 +183,7 @@ void ChordDetector::classifyChromagram()
 	if ((chordindex >= 84) && (chordindex < 96))
 	{
 		rootNote = chordindex-84;
-		quality = Minor;
+		quality = Minor7th;
 		intervals = 7;
 	}
 	

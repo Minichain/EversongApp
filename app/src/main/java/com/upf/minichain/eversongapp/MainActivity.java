@@ -138,6 +138,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 final int[] chordDetectedThread = AudioStack.chordDetection(bufferDouble, bufferFrequency);
+
+//                /**For testing purposes**/
+//                double[] chromagram;
+//                chromagram = AudioStack.getChromagram(bufferDouble, bufferFrequency);
+//                for (int i = 0; i < 12; i++) {
+//                    Log.l("\nChromagramLog:: Note " + NotesEnum.values()[i] + ": " + chromagram[i]);
+//                }
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -245,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
                     int numberOfShort = record.read(audioBuffer, 0, audioBuffer.length);
                     shortsRead += numberOfShort;
                     final double[] audioBufferDouble = AudioStack.window(AudioStack.getSamplesToDouble(audioBuffer), Parameters.getInstance().getWindowingFunction());
-                    final double[] audioBufferFrequency = AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 20, 8000);
+                    final double[] audioBufferFrequency = AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 20, 6000);
                     final double average = AudioStack.getAverageLevel(audioBufferFrequency) * 25;
 //                    Log.l("MainActivityLog:: Average level " + average);
                     runOnUiThread(new Runnable() {

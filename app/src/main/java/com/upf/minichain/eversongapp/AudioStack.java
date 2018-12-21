@@ -18,6 +18,10 @@ public final class AudioStack {
         return chordDetectionJni(samples, spectrumSamples);
     }
 
+    public static double[] getChromagram(double[] samples, double[] spectrumSamples) {
+        return getChromagramJni(samples, spectrumSamples);
+    }
+
     public static float getPitch(double[] samples) {
         return getPitchJni(samples);
     }
@@ -109,32 +113,60 @@ public final class AudioStack {
      * */
     public static int[] getMostProbableChord(int[][] chordsDetectedBuffer) {
         int[] mostProbableChord = new int[3];
-        mostProbableChord[0] = -1;
-        mostProbableChord[1] = -1;
+        mostProbableChord[0] = -1;  //Root note
+        mostProbableChord[1] = -1;  //Chord type
+        mostProbableChord[2] = -1;  //Probability
 
-        int[] rootNoteArray = new int[NotesEnum.numberOfNotes];
-        int[] chordTypeArray = new int[ChordTypeEnum.numberOfChordTypes];
+        String[] listOfChords = new String[Parameters.getInstance().getChordBufferSize()];
+        int[] chordsProbability = new int[Parameters.getInstance().getChordBufferSize()];
+        int numOfDifferentChords = 0;
 
-        for(int i = 0; i < Parameters.getInstance().getChordBufferSize(); i++) {
-            int rootNote = chordsDetectedBuffer[i][0] % NotesEnum.numberOfNotes;
-            int chordType = chordsDetectedBuffer[i][1] % ChordTypeEnum.numberOfChordTypes;
-            if (rootNote >= 0) {
-                rootNoteArray[rootNote]++;
-            }
-            if (chordType >= 0) {
-                chordTypeArray[chordType]++;
+        for (int i = 0; i < Parameters.getInstance().getChordBufferSize(); i++) {
+            String chordName = NotesEnum.getString(NotesEnum.fromInteger(chordsDetectedBuffer[i][0]))
+                    + ChordTypeEnum.getString(ChordTypeEnum.fromInteger(chordsDetectedBuffer[i][1]));
+
+            for (int j = 0; j < Parameters.getInstance().getChordBufferSize(); j++) {
+                if (listOfChords[j] == null || listOfChords[j].equals("")) {
+                    listOfChords[j] = chordName;
+                    chordsProbability[j]++;
+                    numOfDifferentChords++;
+                    break;
+                } else if (listOfChords[j].equals(chordName)) {
+                    chordsProbability[j]++;
+                    break;
+                }
+                numOfDifferentChords++;
             }
         }
-        int[] rootNoteProbability = getMaxValueAndIndex(rootNoteArray);
-        mostProbableChord[0] = rootNoteProbability[1];
-        mostProbableChord[1] = getMaxValueAndIndex(chordTypeArray)[1];
-        mostProbableChord[2] = (rootNoteProbability[0] * 100) / Parameters.getInstance().getChordBufferSize();
+
+        String mostProbableChordString = listOfChords[getMaxValueAndIndex(chordsProbability)[1]];
+
+        mostProbableChord[0] = getChordFromString(mostProbableChordString)[0];
+        mostProbableChord[1] = getChordFromString(mostProbableChordString)[1];
+        mostProbableChord[2] = (int)(100f * (float)getMaxValueAndIndex(chordsProbability)[0] / (float)numOfDifferentChords);        //Percentage
+
         return mostProbableChord;
+    }
+
+    public static int[] getChordFromString(String chordString) {
+        int[] chord = new int[2];
+        for (int i = 0; i < NotesEnum.numberOfNotes; i++) {
+            if (chordString.startsWith(NotesEnum.getString(NotesEnum.fromInteger(i)))) {
+                chord[0] = i;
+                break;
+            }
+        }
+        for (int i = 0; i < ChordTypeEnum.numberOfChordTypes; i++) {
+            if (chordString.endsWith(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(i)))) {
+                chord[1] = i;
+            }
+        }
+        return chord;
     }
 
     public static int[] getMaxValueAndIndex(int[] buffer) {
         int[] returnValue = new int[2];
-        returnValue[0] = 0;     //value
+        returnValue[0] = -1;     //value
         returnValue[1] = -1;    //index
         for (int i = 0; i < buffer.length; i++) {
             if (buffer[i] > returnValue[0]) {
@@ -152,6 +184,8 @@ public final class AudioStack {
     private static native void initProcessAudioJni(int sample_rate, int frame_size, int hop_size);
 
     private static native int[] chordDetectionJni(double[] samples, double[] spectrumSamples);
+
+    private static native double[] getChromagramJni(double[] samples, double[] spectrumSamples);
 
     private static native double[] windowJni(double[] samples, int windowType);
 

@@ -21,6 +21,16 @@ extern "C" {
         return output;
     }
 
+    jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_getChromagramJni(JNIEnv *env, jobject, jdoubleArray samples, jdoubleArray spectrumSamples) {
+        double* samplesArrayTemp = env->GetDoubleArrayElements(samples, 0);
+        double* spectrumSamplesArrayTemp = env->GetDoubleArrayElements(spectrumSamples, 0);
+
+        double* returnArray = processAudio->getChromagram(samplesArrayTemp, spectrumSamplesArrayTemp);
+        jdoubleArray output = env->NewDoubleArray(12);
+        env->SetDoubleArrayRegion(output, 0, 12, returnArray);
+        return output;
+    }
+
     jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_fftJni(JNIEnv *env, jobject, jdoubleArray inputReal, jboolean DIRECT) {
         jsize length = env->GetArrayLength(inputReal);
         double* samplesArrayTemp = env->GetDoubleArrayElements(inputReal, 0);
