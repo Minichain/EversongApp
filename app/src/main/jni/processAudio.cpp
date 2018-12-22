@@ -30,18 +30,10 @@ int* ProcessAudio::chordDetection(double* samples, double* spectrumSamples) {
 double* ProcessAudio::getChromagram(double* samples, double* spectrumSamples) {
     std::vector<double> chroma(12, -1.0);
     double* chromaOutput = new double[12];
-//    c.setMagnitudeSpectrum(spectrumSamples);
-//    c.processAudioFrame(samples);
 
-    if (c.isReady()) {
-        chroma = c.getChromagram();
-        for (int i = 0; i < 12; i++) {
-            chromaOutput[i] = chroma.at(i);
-        }
-    } else {
-        for (int i = 0; i < 12; i++) {
-            chromaOutput[i] = -1.0;
-        }
+    chroma = c.getChromagram();
+    for (int i = 0; i < 12; i++) {
+        chromaOutput[i] = chroma.at(i);
     }
 
     return chromaOutput;

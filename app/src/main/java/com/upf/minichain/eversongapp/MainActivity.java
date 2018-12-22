@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     int[][] chordsDetectedBuffer;
     int chordBufferIterator = 0;
     int[] mostProbableChord = new int[3];
+    double[] chromagram = new double[NotesEnum.numberOfNotes];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,21 +135,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void processAudio(final double[] bufferDouble, final double[] bufferFrequency, final double average) {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 final int[] chordDetectedThread = AudioStack.chordDetection(bufferDouble, bufferFrequency);
 
-//                /**For testing purposes**/
-//                double[] chromagram;
-//                chromagram = AudioStack.getChromagram(bufferDouble, bufferFrequency);
-//                for (int i = 0; i < 12; i++) {
-//                    Log.l("\nChromagramLog:: Note " + NotesEnum.values()[i] + ": " + chromagram[i]);
-//                }
+                /**For testing purposes**/
+                final double[] finalChromagram = AudioStack.getChromagram(bufferDouble, bufferFrequency);
+                for (int i = 0; i < 12; i++) {
+                    Log.l("\nChromagramLog:: Note " + NotesEnum.values()[i] + ": " + chromagram[i]);
+                }
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        chromagram = finalChromagram;
                         chordDetected = chordDetectedThread;
                         chordsDetectedBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][0] = chordDetected[0];
                         chordsDetectedBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][1] = chordDetected[1];
@@ -172,11 +174,9 @@ public class MainActivity extends AppCompatActivity {
         }).start();
 
         mostProbableChord = AudioStack.getMostProbableChord(chordsDetectedBuffer);
-//        Log.l("MainActivityLog:: mostProbableChord: "+ NotesEnum.getString(NotesEnum.fromInteger(mostProbableChord[0]))
-//                + String.valueOf(ChordTypeEnum.fromInteger(mostProbableChord[1])) + ". Probability: " + mostProbableChord[2] + "%");
 
         if (canvas.getCanvas() != null) {
-            canvas.updateCanvas(bufferDouble, bufferFrequency, average, pitchDetected);
+            canvas.updateCanvas(bufferDouble, bufferFrequency, average, pitchDetected, chromagram);
         }
 
         if (BuildConfig.FLAVOR.equals("dev")) {

@@ -151,7 +151,7 @@ public final class AudioStack {
     public static int[] getChordFromString(String chordString) {
         int[] chord = new int[2];
         for (int i = 0; i < NotesEnum.numberOfNotes; i++) {
-            if (chordString.startsWith(NotesEnum.getString(NotesEnum.fromInteger(i)) + "#")) {
+            if (chordString.startsWith(NotesEnum.getString(NotesEnum.fromInteger(i))) && chordString.contains("#")) {
                 chord[0] = i + 1;
                 break;
             } else if (chordString.startsWith(NotesEnum.getString(NotesEnum.fromInteger(i)))) {

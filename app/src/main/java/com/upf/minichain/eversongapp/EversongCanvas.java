@@ -12,6 +12,8 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.upf.minichain.eversongapp.enums.NotesEnum;
+
 public class EversongCanvas {
     private Canvas mCanvas;
     private Paint mPaint01 = new Paint();
@@ -53,7 +55,7 @@ public class EversongCanvas {
         });
     }
 
-    public void updateCanvas(double[] bufferSamples, double[] bufferFrequency, double spectrumAverage, float pitch) {
+    public void updateCanvas(double[] bufferSamples, double[] bufferFrequency, double spectrumAverage, float pitch, double[] chromagram) {
         mImageView.setImageBitmap(mBitmap);
         mCanvas.drawColor(mColorBackground);    //Reset background color
         mPaint01.setColor(mColor01);
@@ -75,6 +77,7 @@ public class EversongCanvas {
 
             drawBufferSamples(bufferSamples, mPaint01);
             drawSpectrum(bufferFrequency, spectrumAverage, mPaint01);
+//            drawChromagram(chromagram, mPaint01);
         }
     }
 
@@ -96,6 +99,20 @@ public class EversongCanvas {
         spectrumAverage = (spectrumAverage * -amplifyDrawFactor) + mCanvas.getHeight();
         //Spectrum average
         mCanvas.drawLine(0, (float)spectrumAverage, mCanvas.getWidth(), (float)spectrumAverage, mPaint01);
+    }
+
+    public void drawChromagram(double[] chromagram, Paint paint) {
+        int notesBins = (int)((float)mCanvas.getWidth() / 12f);
+        int paddingBetweenBins = 10;
+        int bottomPadding = 300;
+        paint.setTextSize(45);
+
+        for (int i = 0; i < NotesEnum.numberOfNotes; i++) {
+            mRect.set(i * notesBins, (mCanvas.getHeight() - bottomPadding) - (int)(chromagram[i] * (double)mCanvas.getHeight()),
+                    i * notesBins + (notesBins - paddingBetweenBins), mCanvas.getHeight() - bottomPadding);
+            mCanvas.drawRect(mRect, paint);
+            mCanvas.drawText(NotesEnum.getString(NotesEnum.fromInteger(i)), i * notesBins, mCanvas.getHeight() - bottomPadding + 40, paint);
+        }
     }
 
     public Canvas getCanvas() {
