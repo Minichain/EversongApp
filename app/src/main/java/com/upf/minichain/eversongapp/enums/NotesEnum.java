@@ -3,7 +3,7 @@ package com.upf.minichain.eversongapp.enums;
 import com.upf.minichain.eversongapp.Parameters;
 
 public enum NotesEnum {
-    C(0), C_SHARP(1), D(2), D_SHARP(3), E(4), F(5), F_SHARP(6), G(7), G_SHARP(8), A(9), A_SHARP(10), B(11), NO_NOTE(-1);
+    A(0), A_SHARP(1), B(2), C(3), C_SHARP(4), D(5), D_SHARP(6), E(7), F(8), F_SHARP(9), G(10), G_SHARP(11), NO_NOTE(-1);
 
     private final int value;
     public static int numberOfNotes = 12;
@@ -21,29 +21,29 @@ public enum NotesEnum {
     public static NotesEnum fromInteger(int integerValue) {
         switch(integerValue) {
             case 0:
-                return C;
-            case 1:
-                return C_SHARP;
-            case 2:
-                return D;
-            case 3:
-                return D_SHARP;
-            case 4:
-                return E;
-            case 5:
-                return F;
-            case 6:
-                return F_SHARP;
-            case 7:
-                return G;
-            case 8:
-                return G_SHARP;
-            case 9:
                 return A;
-            case 10:
+            case 1:
                 return A_SHARP;
-            case 11:
+            case 2:
                 return B;
+            case 3:
+                return C;
+            case 4:
+                return C_SHARP;
+            case 5:
+                return D;
+            case 6:
+                return D_SHARP;
+            case 7:
+                return E;
+            case 8:
+                return F;
+            case 9:
+                return F_SHARP;
+            case 10:
+                return G;
+            case 11:
+                return G_SHARP;
             case -1:
             default:
                 return NO_NOTE;

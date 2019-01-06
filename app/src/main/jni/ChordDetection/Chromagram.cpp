@@ -23,8 +23,9 @@
 
 //==================================================================================
 Chromagram::Chromagram (int frameSize, int fs)
- :  referenceFrequency (130.81278265),
-    bufferSize (8192),
+ :  referenceFrequency (55.0),              // A2
+// :  referenceFrequency (130.81278265),       // C2
+    bufferSize (8192), // It must be a power of 2 (2048, 4096, 8192, 16384...)
     numHarmonics (2),
     numOctaves (2),
     numBinsToSearch (2)
@@ -54,7 +55,7 @@ Chromagram::Chromagram (int frameSize, int fs)
     magnitudeSpectrum.resize ((bufferSize/2)+1);
     
     // make window function
-    makeHammingWindow();
+//    makeHammingWindow();
     
     // set sampling frequency
     setSamplingFrequency (fs);

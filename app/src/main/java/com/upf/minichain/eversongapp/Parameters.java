@@ -10,6 +10,7 @@ public class Parameters {
         musicalNotation = MusicalNotationEnum.ENGLISH_NOTATION;
         windowingFunction = WindowFunctionEnum.HAMMING_WINDOW;
         chordBufferSize = 5;
+        tabSelected = TabSelected.MAIN;
     }
 
     public static Parameters getInstance() {
@@ -29,6 +30,10 @@ public class Parameters {
     private static MusicalNotationEnum musicalNotation;
     private static WindowFunctionEnum windowingFunction;
     private static int chordBufferSize;
+    enum TabSelected{
+        MAIN, CHROMAGRAM
+    }
+    private static TabSelected tabSelected;
 
     public void setMusicalNotation(MusicalNotationEnum notation) {
         musicalNotation = notation;
@@ -52,5 +57,13 @@ public class Parameters {
 
     public int getChordBufferSize() {
         return chordBufferSize;
+    }
+
+    public void setTabSelected(TabSelected tab) {
+        tabSelected = tab;
+    }
+
+    public TabSelected getTabSelected() {
+        return tabSelected;
     }
 }

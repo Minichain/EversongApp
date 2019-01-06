@@ -52,6 +52,10 @@ public final class AudioStack {
         return getAverageLevelJni(samples);
     }
 
+    public static double getDifference(double[] buffer1, double[] buffer2) {
+        return Math.abs(getAverageLevel(buffer1) - getAverageLevelJni(buffer2));
+    }
+
     public static NotesEnum getNoteByFrequency(double frequencyValue) {
         double frequencyDistance = 1000.0;
         NotesEnum noteDetected = NotesEnum.NO_NOTE;

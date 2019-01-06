@@ -75,9 +75,16 @@ public class EversongCanvas {
             mRect.set(10, 10, rectangleWidth,100);
             mCanvas.drawRect(mRect, mPaint01);
 
-            drawBufferSamples(bufferSamples, mPaint01);
-            drawSpectrum(bufferFrequency, spectrumAverage, mPaint01);
-//            drawChromagram(chromagram, mPaint01);
+            switch(Parameters.getInstance().getTabSelected()) {
+                case CHROMAGRAM:
+                    drawChromagram(chromagram, mPaint01);
+                    break;
+                case MAIN:
+                default:
+                    drawBufferSamples(bufferSamples, mPaint01);
+                    drawSpectrum(bufferFrequency, spectrumAverage, mPaint01);
+                    break;
+            }
         }
     }
 
@@ -108,7 +115,7 @@ public class EversongCanvas {
         paint.setTextSize(45);
 
         for (int i = 0; i < NotesEnum.numberOfNotes; i++) {
-            mRect.set(i * notesBins, (mCanvas.getHeight() - bottomPadding) - (int)(chromagram[i] * (double)mCanvas.getHeight()),
+            mRect.set(i * notesBins, (mCanvas.getHeight() - bottomPadding) - (int)(chromagram[i] * 0.25 * (double)mCanvas.getHeight()),
                     i * notesBins + (notesBins - paddingBetweenBins), mCanvas.getHeight() - bottomPadding);
             mCanvas.drawRect(mRect, paint);
             mCanvas.drawText(NotesEnum.getString(NotesEnum.fromInteger(i)), i * notesBins, mCanvas.getHeight() - bottomPadding + 40, paint);

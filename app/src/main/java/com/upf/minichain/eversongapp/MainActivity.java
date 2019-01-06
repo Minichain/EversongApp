@@ -39,6 +39,11 @@ public class MainActivity extends AppCompatActivity {
     int[] mostProbableChord = new int[3];
     double[] chromagram = new double[NotesEnum.numberOfNotes];
 
+    double[] audioSamplesBuffer;
+    double[] prevAudioSamplesBuffer;
+    double[] audioSpectrumBuffer;
+    double[] prevAudioSpectrumBuffer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         mostProbableChord[0] = -1;
         mostProbableChord[1] = -1;
         chordsDetectedBuffer = new int[Parameters.getInstance().getChordBufferSize()][2];
+        audioSamplesBuffer = new double[Parameters.BUFFER_SIZE];
+        audioSpectrumBuffer = new double[Parameters.BUFFER_SIZE];
 
         recordingButton = this.findViewById(R.id.recording_button);
 
@@ -118,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
             int guitarChordStringViewId = getResources().getIdentifier("guitar_chord_string_0" + i, "id", getPackageName());
             guitarChordStringView = this.findViewById(guitarChordStringViewId);
             guitarChordStringView.setAlpha(alpha);
+            guitarChordStringView.setVisibility(View.VISIBLE);
             int guitarChordStringImageId;
             if (guitarChordChart[numberOfStrings - i] == -1) {
                 guitarChordStringImageId = getResources().getIdentifier("guitar_chord_string_0", "drawable", getPackageName());
@@ -126,6 +134,21 @@ public class MainActivity extends AppCompatActivity {
             }
             guitarChordStringView.setImageResource(guitarChordStringImageId);
         }
+        ImageView fretView = this.findViewById(R.id.guitar_chord_chart_frets);
+        fretView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideChordChart() {
+        ImageView guitarChordStringView;
+        int numberOfStrings = 6;
+
+        for (int i = 1; i <= numberOfStrings; i++) {
+            int guitarChordStringViewId = getResources().getIdentifier("guitar_chord_string_0" + i, "id", getPackageName());
+            guitarChordStringView = this.findViewById(guitarChordStringViewId);
+            guitarChordStringView.setVisibility(View.GONE);
+        }
+        ImageView fretView = this.findViewById(R.id.guitar_chord_chart_frets);
+        fretView.setVisibility(View.GONE);
     }
 
     public void checkCaptureAudioPermission() {
@@ -134,18 +157,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void processAudio(final double[] bufferDouble, final double[] bufferFrequency, final double average) {
+    public void processAudio() {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final int[] chordDetectedThread = AudioStack.chordDetection(bufferDouble, bufferFrequency);
+                final int[] chordDetectedThread = AudioStack.chordDetection(audioSamplesBuffer, audioSpectrumBuffer);
 
                 /**For testing purposes**/
-                final double[] finalChromagram = AudioStack.getChromagram(bufferDouble, bufferFrequency);
-                for (int i = 0; i < 12; i++) {
-                    Log.l("\nChromagramLog:: Note " + NotesEnum.values()[i] + ": " + chromagram[i]);
-                }
+                final double[] finalChromagram = AudioStack.getChromagram(audioSamplesBuffer, audioSpectrumBuffer);
+//                for (int i = 0; i < 12; i++) {
+//                    Log.l("\nChromagramLog:: Note " + NotesEnum.values()[i] + ": " + chromagram[i]);
+//                }
+
+//                Log.l("MainActivityLog:: Spectrum diff: " + AudioStack.getDifference(audioSpectrumBuffer, prevAudioSpectrumBuffer));
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -163,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final float pitchDetectedThread = AudioStack.getPitch(bufferDouble);
+                final float pitchDetectedThread = AudioStack.getPitch(audioSamplesBuffer);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -176,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
         mostProbableChord = AudioStack.getMostProbableChord(chordsDetectedBuffer);
 
         if (canvas.getCanvas() != null) {
-            canvas.updateCanvas(bufferDouble, bufferFrequency, average, pitchDetected, chromagram);
+            canvas.updateCanvas(audioSamplesBuffer, audioSpectrumBuffer, AudioStack.getAverageLevel(audioSpectrumBuffer), pitchDetected, chromagram);
         }
 
         if (BuildConfig.FLAVOR.equals("dev")) {
@@ -208,7 +233,11 @@ public class MainActivity extends AppCompatActivity {
             mostProbableChordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(mostProbableChord[1])));
             mostProbableChordTypeText.setAlpha((float)mostProbableChord[2] / 100f);
 
-            setChordChart(NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f);
+            if (Parameters.getInstance().getTabSelected() == Parameters.TabSelected.CHROMAGRAM) {
+                hideChordChart();
+            } else {
+                setChordChart(NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f);
+            }
         } else {
             mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.NO_NOTE));
             mostProbableChordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.Other));
@@ -220,22 +249,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Process.setThreadPriority(Process.THREAD_PRIORITY_AUDIO);
-
-                // buffer size in bytes
-                int bufferSize = AudioRecord.getMinBufferSize(Parameters.SAMPLE_RATE,
-                        AudioFormat.CHANNEL_IN_MONO,
-                        AudioFormat.ENCODING_PCM_16BIT);
-
-                if (bufferSize == AudioRecord.ERROR || bufferSize == AudioRecord.ERROR_BAD_VALUE) {
-//                    bufferSize = SAMPLE_RATE * 2;
-                }
-                bufferSize = Parameters.BUFFER_SIZE;
-
+                short[] tempAudioSamples = new short[Parameters.BUFFER_SIZE];
                 AudioRecord record = new AudioRecord(MediaRecorder.AudioSource.DEFAULT,
                         Parameters.SAMPLE_RATE,
                         AudioFormat.CHANNEL_IN_MONO,
-                        AudioFormat.ENCODING_PCM_16BIT,
-                        bufferSize);
+                        AudioFormat.ENCODING_DEFAULT,
+                        Parameters.BUFFER_SIZE);
 
                 if (record.getState() != AudioRecord.STATE_INITIALIZED) {
                     Log.l("MainActivityLog:: Audio Record cannot be initialized!");
@@ -249,20 +268,21 @@ public class MainActivity extends AppCompatActivity {
                 mShouldContinue = true;
 
                 while (mShouldContinue) {
-                    final short[] audioBuffer = new short[bufferSize];
-                    int numberOfShort = record.read(audioBuffer, 0, audioBuffer.length);
+                    int numberOfShort = record.read(tempAudioSamples, 0, tempAudioSamples.length);
                     shortsRead += numberOfShort;
-                    final double[] audioBufferDouble = AudioStack.window(AudioStack.getSamplesToDouble(audioBuffer), Parameters.getInstance().getWindowingFunction());
-                    final double[] audioBufferFrequency = AudioStack.bandPassFilter(AudioStack.fft(audioBufferDouble, true), 20, 6000);
-                    final double average = AudioStack.getAverageLevel(audioBufferFrequency) * 25;
-//                    Log.l("MainActivityLog:: Average level " + average);
+                    final double[] tempAudioSamplesDouble = AudioStack.window(AudioStack.getSamplesToDouble(tempAudioSamples), Parameters.getInstance().getWindowingFunction());
+                    final double[] tempAudioSpectrum = AudioStack.bandPassFilter(AudioStack.fft(tempAudioSamplesDouble, true), 20, 8000);
+//                    final double average = AudioStack.getAverageLevel(tempAudioSpectrum) * 25;
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            processAudio(audioBufferDouble, audioBufferFrequency, average);
+                            prevAudioSpectrumBuffer = audioSpectrumBuffer;
+                            audioSamplesBuffer = tempAudioSamplesDouble;
+                            audioSpectrumBuffer = tempAudioSpectrum;
+                            processAudio();
                         }
                     });
-//                    Log.l("MainActivityLog:: reading buffer of size " + bufferSize);
+                    Log.l("MainActivityLog:: reading buffer of size " + Parameters.BUFFER_SIZE);
                 }
 
                 record.stop();
@@ -283,6 +303,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id){
+            case R.id.open_main_screen:
+                Parameters.getInstance().setTabSelected(Parameters.TabSelected.MAIN);
+                return true;
+            case R.id.open_chromagram:
+                Parameters.getInstance().setTabSelected(Parameters.TabSelected.CHROMAGRAM);
+                return true;
             case R.id.open_settings_menu_option:
                 this.onPause();
                 Intent intent = new Intent(this, SettingsActivity.class);

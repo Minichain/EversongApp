@@ -6,6 +6,12 @@
     android:layout_width="10dp"
     tools:context=".MainActivity">
 
+    <item android:id="@+id/open_main_screen"
+        android:title="@string/main_tab"
+        app:showAsAction="never"/>
+    <item android:id="@+id/open_chromagram"
+        android:title="@string/chromagram_tab"
+        app:showAsAction="never"/>
     <item android:id="@+id/open_settings_menu_option"
         android:title="@string/open_settings_menu"
         app:showAsAction="never"/>
