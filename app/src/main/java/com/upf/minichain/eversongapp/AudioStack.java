@@ -67,7 +67,7 @@ public final class AudioStack {
             double newFreqDistance = Math.abs(tempFrequency - frequencyValue);
             if (newFreqDistance < frequencyDistance) {
                 frequencyDistance = newFreqDistance;
-                noteDetected = NotesEnum.fromInteger(((i - 4)) % NotesEnum.numberOfNotes);
+                noteDetected = NotesEnum.fromInteger((i - 1) % NotesEnum.numberOfNotes);
             }
             i++;
         }
