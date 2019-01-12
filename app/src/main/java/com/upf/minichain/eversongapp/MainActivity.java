@@ -250,6 +250,8 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 Process.setThreadPriority(Process.THREAD_PRIORITY_AUDIO);
                 short[] tempAudioSamples = new short[Parameters.BUFFER_SIZE];
+                int numberOfShortRead;
+                long totalShortsRead = 0;
                 AudioRecord record = new AudioRecord(MediaRecorder.AudioSource.DEFAULT,
                         Parameters.SAMPLE_RATE,
                         AudioFormat.CHANNEL_IN_MONO,
@@ -264,31 +266,29 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.l("MainActivityLog:: Start recording");
 
-                long shortsRead = 0;
                 mShouldContinue = true;
+                final long startTime = System.currentTimeMillis();
 
                 while (mShouldContinue) {
-                    int numberOfShort = record.read(tempAudioSamples, 0, tempAudioSamples.length);
-                    shortsRead += numberOfShort;
-                    final double[] tempAudioSamplesDouble = AudioStack.window(AudioStack.getSamplesToDouble(tempAudioSamples), Parameters.getInstance().getWindowingFunction());
-                    final double[] tempAudioSpectrum = AudioStack.bandPassFilter(AudioStack.fft(tempAudioSamplesDouble, true), 20, 8000);
+                    numberOfShortRead = record.read(tempAudioSamples, 0, tempAudioSamples.length);
+                    totalShortsRead += numberOfShortRead;
+                    prevAudioSpectrumBuffer = audioSpectrumBuffer;
+                    audioSamplesBuffer = AudioStack.window(AudioStack.getSamplesToDouble(tempAudioSamples), Parameters.getInstance().getWindowingFunction());
+                    audioSpectrumBuffer = AudioStack.bandPassFilter(AudioStack.fft(audioSamplesBuffer, true), 20, 8000);
 //                    final double average = AudioStack.getAverageLevel(tempAudioSpectrum) * 25;
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            prevAudioSpectrumBuffer = audioSpectrumBuffer;
-                            audioSamplesBuffer = tempAudioSamplesDouble;
-                            audioSpectrumBuffer = tempAudioSpectrum;
                             processAudio();
                         }
                     });
-                    Log.l("MainActivityLog:: reading buffer of size " + Parameters.BUFFER_SIZE);
+                    System.gc();
+                    Log.l("MainActivityLog:: reading buffer of size " + Parameters.BUFFER_SIZE + ", Time elapsed: " + (System.currentTimeMillis() - startTime) + " ms");
                 }
-
                 record.stop();
                 record.release();
 
-                Log.l("MainActivityLog:: Recording stopped. Num of samples read: " + shortsRead);
+                Log.l("MainActivityLog:: Recording stopped. Num of samples read: " + totalShortsRead);
             }
         }).start();
     }

@@ -29,14 +29,11 @@ int* ProcessAudio::chordDetection(double* samples, double* spectrumSamples) {
 
 double* ProcessAudio::getChromagram(double* samples, double* spectrumSamples) {
     std::vector<double> chroma(12, -1.0);
-    double* chromaOutput = new double[12];
-
     chroma = c.getChromagram();
     for (int i = 0; i < 12; i++) {
-        chromaOutput[i] = chroma.at(i);
+        chromagram[i] = chroma.at(i);
     }
-
-    return chromaOutput;
+    return chromagram;
 }
 
 float ProcessAudio::getPitch(double* samples, int length) {
@@ -217,26 +214,23 @@ double* ProcessAudio::window(double* samples, int length, int windowType) {
     }
 }
 
-double* ProcessAudio::hanning(double* inputSamples, int vectorLength) {
-    double* outputSamples = new double[vectorLength];
+double* ProcessAudio::hanning(double* samples, int vectorLength) {
     for(int i = 0; i < vectorLength; i++) {
-        outputSamples[i] = (0.5 * (1.0 - cos(2.0*M_PI*(double)i/(double)(vectorLength - 1)))) * inputSamples[i];
+        samples[i] = (0.5 * (1.0 - cos(2.0*M_PI*(double)i/(double)(vectorLength - 1)))) * samples[i];
     }
-    return outputSamples;
+    return samples;
 }
 
-double* ProcessAudio::hamming(double* inputSamples, int vectorLength) {
-    double* outputSamples = new double[vectorLength];
+double* ProcessAudio::hamming(double* samples, int vectorLength) {
     for(int i = 0; i < vectorLength; i++) {
-        outputSamples[i] = (0.54 - 0.46 * cos(2.0 * M_PI * (double)i/(double)(vectorLength - 1))) * inputSamples[i];
+        samples[i] = (0.54 - 0.46 * cos(2.0 * M_PI * (double)i/(double)(vectorLength - 1))) * samples[i];
     }
-    return outputSamples;
+    return samples;
 }
 
-double* ProcessAudio::blackman(double* inputSamples, int vectorLength) {
-    double* outputSamples = new double[vectorLength];
+double* ProcessAudio::blackman(double* samples, int vectorLength) {
     for(int i = 0; i < vectorLength; i++) {
-        outputSamples[i] = (0.42 - 0.5 * cos(2.0*M_PI*(double)i/(double)(vectorLength-1)) + 0.08 * cos (4.0*M_PI*(double)i/(double)(vectorLength-1))) * inputSamples[i];
+        samples[i] = (0.42 - 0.5 * cos(2.0*M_PI*(double)i/(double)(vectorLength-1)) + 0.08 * cos (4.0*M_PI*(double)i/(double)(vectorLength-1))) * samples[i];
     }
-    return outputSamples;
+    return samples;
 }
