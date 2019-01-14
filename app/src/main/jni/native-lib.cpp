@@ -43,27 +43,29 @@ extern "C" {
 
     jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_fftJni(JNIEnv *env, jobject, jdoubleArray inputReal, jboolean DIRECT) {
         jsize length = env->GetArrayLength(inputReal);
-        double* samplesArrayTemp = env->GetDoubleArrayElements(inputReal, 0);
-        double* returnArray = ProcessAudio::fft(samplesArrayTemp, length, DIRECT);
-        jdoubleArray output = env->NewDoubleArray(length);
+        double* samplesArrayTemp = NULL;
+        double* returnArray = NULL;
+        jdoubleArray output = NULL;
+        delete[] samplesArrayTemp;
+        delete[] returnArray;
+        samplesArrayTemp = env->GetDoubleArrayElements(inputReal, 0);
+        returnArray = ProcessAudio::fft(samplesArrayTemp, length, DIRECT);
+        output = env->NewDoubleArray(length);
         env->SetDoubleArrayRegion(output, 0, length, returnArray);
-        samplesArrayTemp = NULL;
-        returnArray = NULL;
-        delete samplesArrayTemp;
-        delete returnArray;
         return output;
     }
 
     jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_windowJni(JNIEnv *env, jobject, jdoubleArray samples, jint windowType) {
         jsize length = env->GetArrayLength(samples);
-        double* samplesArrayTemp = env->GetDoubleArrayElements(samples, 0);
-        double* returnArray = ProcessAudio::window(samplesArrayTemp, length, windowType);
-        jdoubleArray output = env->NewDoubleArray(length);
+        double* samplesArrayTemp = NULL;
+        double* returnArray = NULL;
+        jdoubleArray output = NULL;
+        delete[] samplesArrayTemp;
+        delete[] returnArray;
+        samplesArrayTemp = env->GetDoubleArrayElements(samples, 0);
+        returnArray = ProcessAudio::window(samplesArrayTemp, length, windowType);
+        output = env->NewDoubleArray(length);
         env->SetDoubleArrayRegion(output, 0, length, returnArray);
-        samplesArrayTemp = NULL;
-        returnArray = NULL;
-        delete []samplesArrayTemp;
-        delete []returnArray;
         return output;
     }
 
@@ -74,14 +76,16 @@ extern "C" {
                                                                                  jint sampleRate,
                                                                                  jint frameSize) {
         jsize length = env->GetArrayLength(spectrumSamples);
-        double* spectrumSamplesArrayTemp = env->GetDoubleArrayElements(spectrumSamples, 0);
-        double* returnArray = ProcessAudio::bandPassFilter(spectrumSamplesArrayTemp, lowCutOffFreq, highCutOffFreq, sampleRate, frameSize);
-        jdoubleArray output = env->NewDoubleArray(length);
-        env->SetDoubleArrayRegion(output, 0, length, returnArray);
-        spectrumSamplesArrayTemp = NULL;
-        returnArray = NULL;
+        double* spectrumSamplesArrayTemp = NULL;
+        double* returnArray = NULL;
+        jdoubleArray output = NULL;
         delete []spectrumSamplesArrayTemp;
         delete []returnArray;
+        spectrumSamplesArrayTemp = env->GetDoubleArrayElements(spectrumSamples, 0);
+        returnArray = ProcessAudio::bandPassFilter(spectrumSamplesArrayTemp, lowCutOffFreq, highCutOffFreq, sampleRate, frameSize);
+        output = env->NewDoubleArray(length);
+        env->SetDoubleArrayRegion(output, 0, length, returnArray);
+
         return output;
     }
 

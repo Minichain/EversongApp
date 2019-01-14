@@ -169,9 +169,10 @@ double* ProcessAudio::fft(double* inputReal, double* inputImag, int length, bool
 
     // Here I have to mix xReal and xImag to have an array (yes, it should
     // be possible to do this stuff in the earlier parts of the code, but
-    // it's here to readibility).
+    // it's here to readability).
     int newArrayLength = (int)sizeof(xReal) * 2;
-    output = new double[newArrayLength];
+//    output = new double[newArrayLength];
+    output = (double*) malloc (newArrayLength);
     double radice = 1.0 / sqrt((double)length);
     for (int i = 0; i < newArrayLength; i += 2) {
         int i2 = (int)((double)i / 2.0);
