@@ -64,32 +64,26 @@ public class EversongCanvas {
         mPaint02.setStrokeWidth(5f);
 
         if (bufferSamples != null && bufferFrequency != null) {
-            mPaint02.setShader(shader1);
-            if (pitch > 0) {
-                int pitchIndex = AudioStack.getIndexByFrequency(pitch);
-                //Pitch
-                mCanvas.drawLine(pitchIndex, 0, pitchIndex, mCanvas.getHeight(), mPaint02);
-            }
-
             int rectangleWidth = (int) ((mImageView.getWidth() - 10) * spectrumAverage) + 10;
             mRect.set(10, 10, rectangleWidth,100);
             mCanvas.drawRect(mRect, mPaint01);
 
             switch(Parameters.getInstance().getTabSelected()) {
-                case CHROMAGRAM:
-                    drawChromagram(chromagram, mPaint01);
+                case GUITAR_TAB:
+                    drawBufferSamples(bufferSamples, spectrumAverage, mPaint01);
+                    drawSpectrum(bufferFrequency, spectrumAverage, pitch, mPaint01);
                     break;
-                case MAIN:
-                default:
-                    drawBufferSamples(bufferSamples, mPaint01);
-                    drawSpectrum(bufferFrequency, spectrumAverage, mPaint01);
+                case CHROMAGRAM:
+                    drawBufferSamples(bufferSamples, spectrumAverage, mPaint01);
+                    drawChromagram(chromagram, mPaint01);
                     break;
             }
         }
     }
 
-    public void drawBufferSamples(double[] bufferSamples, Paint paint) {
-        float amplifyDrawFactor = 250f;
+    public void drawBufferSamples(double[] bufferSamples, double spectrumAverage, Paint paint) {
+        Log.l("AdriHell:: average is: " + spectrumAverage);
+        float amplifyDrawFactor = 250f * 0.00025f / (float)spectrumAverage;
         for (int i = 0; i < bufferSamples.length - 1; i++) {
             double smoothEffectValue = (0.5 * (1.0 - Math.cos(2.0*Math.PI*(double)i/(double)(mCanvas.getWidth() - 1))));
             mCanvas.drawLine(i, (float) (bufferSamples[i] * 100 * smoothEffectValue * amplifyDrawFactor) + (mCanvas.getHeight() / 2),
@@ -97,8 +91,14 @@ public class EversongCanvas {
         }
     }
 
-    public void drawSpectrum(double[] spectrumBuffer, double spectrumAverage, Paint paint) {
-        float amplifyDrawFactor = 500f;
+    public void drawSpectrum(double[] spectrumBuffer, double spectrumAverage, float pitch, Paint paint) {
+        mPaint02.setShader(shader1);
+        if (pitch > 0) {    //Pitch
+            int pitchIndex = AudioStack.getIndexByFrequency(pitch);
+            mCanvas.drawLine(pitchIndex, 0, pitchIndex, mCanvas.getHeight(), mPaint02);
+        }
+
+        float amplifyDrawFactor = 700f * 0.00025f / (float)spectrumAverage;
         for (int i = 0; i < (spectrumBuffer.length / 2) - 1; i++) {
             mCanvas.drawLine(i, ((float)spectrumBuffer[i] * (-amplifyDrawFactor)) + (mCanvas.getHeight()),
                     i + 1, ((float)spectrumBuffer[(i) + 1] * (-amplifyDrawFactor)) + (mCanvas.getHeight()), paint);

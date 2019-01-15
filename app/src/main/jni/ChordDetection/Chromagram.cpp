@@ -22,14 +22,15 @@
 #include "Chromagram.h"
 
 //==================================================================================
-Chromagram::Chromagram (int frameSize, int fs)
+Chromagram::Chromagram (int frameSize, int fs, int bs)
  :  referenceFrequency (55.0),              // A2
 // :  referenceFrequency (130.81278265),       // C2
-    bufferSize (8192), // It must be a power of 2 (2048, 4096, 8192, 16384...)
     numHarmonics (2),
     numOctaves (2),
     numBinsToSearch (2)
 {
+    bufferSize = bs;    // It must be a power of 2 (2048, 4096, 8192, 16384...)
+
     // calculate note frequencies
     for (int i = 0; i < 12; i++)
     {

@@ -47,7 +47,7 @@ public:
      * @param frameSize the input audio frame size 
      * @param fs the sampling frequency
      */
-    Chromagram (int frameSize, int fs);
+    Chromagram (int frameSize, int fs, int bs);
 
     /** Destructor */
     ~Chromagram();

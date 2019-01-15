@@ -233,10 +233,13 @@ public class MainActivity extends AppCompatActivity {
             mostProbableChordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(mostProbableChord[1])));
             mostProbableChordTypeText.setAlpha((float)mostProbableChord[2] / 100f);
 
-            if (Parameters.getInstance().getTabSelected() == Parameters.TabSelected.CHROMAGRAM) {
-                hideChordChart();
-            } else {
-                setChordChart(NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f);
+            switch(Parameters.getInstance().getTabSelected()) {
+                case GUITAR_TAB:
+                    setChordChart(NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);
+                    break;
+                case CHROMAGRAM:
+                    hideChordChart();
+                    break;
             }
         } else {
             mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.NO_NOTE));
@@ -304,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id){
             case R.id.open_main_screen:
-                Parameters.getInstance().setTabSelected(Parameters.TabSelected.MAIN);
+                Parameters.getInstance().setTabSelected(Parameters.TabSelected.GUITAR_TAB);
                 return true;
             case R.id.open_chromagram:
                 Parameters.getInstance().setTabSelected(Parameters.TabSelected.CHROMAGRAM);

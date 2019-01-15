@@ -5,7 +5,7 @@ ProcessAudio::ProcessAudio(int sample_rate, int frame_size) {
     sampleRate = sample_rate;
     frameSize = frame_size;
 
-    c = Chromagram(frameSize, sampleRate);
+    c = Chromagram(frameSize, sampleRate, frameSize);
     c.setInputAudioFrameSize(frameSize);
     c.setSamplingFrequency(sampleRate);
     c.setChromaCalculationInterval(frameSize * 2);
@@ -38,6 +38,8 @@ double* ProcessAudio::getChromagram(double* samples, double* spectrumSamples) {
 
 float ProcessAudio::getPitch(double* samples, int length) {
     int16_t* samplesInt16 = new int16_t[length];
+//    int16_t* samplesInt16 = NULL;
+//    samplesInt16 = (int16_t*) malloc(length);
     for(int i = 0; i < length; i++) {
         samplesInt16[i] = (int16_t)(samples[i] * SHRT_MAX);
     }
@@ -58,6 +60,8 @@ double* ProcessAudio::bandPassFilter(double* samples, float lowCutOffFreq, float
     int lowCutOffFreqIndex = (int)((lowCutOffFreq / (float)sampleRate) * frameSize) * 2;
     int highCutOffFreqIndex = (int)((highCutOffFreq / (float)sampleRate) * frameSize) * 2;
     double* tempSamples = new double[frameSize];
+//    double* tempSamples = NULL;
+//    tempSamples = (double*) malloc(frameSize);
     samples = removeZeroFrequency(samples);
     float attenuationFactor = 1.2f;
     for (int i = 0; i < frameSize; i++) {
@@ -172,7 +176,7 @@ double* ProcessAudio::fft(double* inputReal, double* inputImag, int length, bool
     // it's here to readability).
     int newArrayLength = (int)sizeof(xReal) * 2;
 //    output = new double[newArrayLength];
-    output = (double*) malloc (newArrayLength);
+    output = (double*) malloc(newArrayLength);
     double radice = 1.0 / sqrt((double)length);
     for (int i = 0; i < newArrayLength; i += 2) {
         int i2 = (int)((double)i / 2.0);
