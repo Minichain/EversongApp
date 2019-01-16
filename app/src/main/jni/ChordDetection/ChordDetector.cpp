@@ -159,7 +159,7 @@ void ChordDetector::classifyChromagram()
 	if ((chordindex >= 48) && (chordindex < 60))
 	{
 		rootNote = chordindex-48;
-		quality = Suspended;
+		quality = Sus2;
 		intervals = 2;
 	}
 	
@@ -167,7 +167,7 @@ void ChordDetector::classifyChromagram()
 	if ((chordindex >= 60) && (chordindex < 72))
 	{
 		rootNote = chordindex-60;
-		quality = Suspended;
+		quality = Sus4;
 		intervals = 4;
 	}
 	
@@ -191,7 +191,7 @@ void ChordDetector::classifyChromagram()
 	if ((chordindex >= 96) && (chordindex < 108))
 	{
 		rootNote = chordindex-96;
-		quality = Dominant;
+		quality = Dominant7th;
 		intervals = 7;
 	}
 }

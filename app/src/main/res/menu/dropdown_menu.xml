@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <item android:id="@+id/open_main_screen"
-        android:title="@string/main_tab"
+        android:title="@string/guitar_tab"
         app:showAsAction="never"/>
     <item android:id="@+id/open_chromagram"
         android:title="@string/chromagram_tab"

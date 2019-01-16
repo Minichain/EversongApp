@@ -115,42 +115,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setChordChart(NotesEnum tonic, ChordTypeEnum chordType, float alpha) {
-        int[] guitarChordChart = GuitarChordChart.getChordTab(tonic, chordType);
-
-        ImageView guitarChordStringView;
-        int numberOfStrings = 6;
-
-        for (int i = 1; i <= numberOfStrings; i++) {
-            int guitarChordStringViewId = getResources().getIdentifier("guitar_chord_string_0" + i, "id", getPackageName());
-            guitarChordStringView = this.findViewById(guitarChordStringViewId);
-            guitarChordStringView.setAlpha(alpha);
-            guitarChordStringView.setVisibility(View.VISIBLE);
-            int guitarChordStringImageId;
-            if (guitarChordChart[numberOfStrings - i] == -1) {
-                guitarChordStringImageId = getResources().getIdentifier("guitar_chord_string_0", "drawable", getPackageName());
-            } else {
-                guitarChordStringImageId = getResources().getIdentifier("guitar_chord_string_0" + guitarChordChart[numberOfStrings - i], "drawable", getPackageName());
-            }
-            guitarChordStringView.setImageResource(guitarChordStringImageId);
-        }
-        ImageView fretView = this.findViewById(R.id.guitar_chord_chart_frets);
-        fretView.setVisibility(View.VISIBLE);
-    }
-
-    private void hideChordChart() {
-        ImageView guitarChordStringView;
-        int numberOfStrings = 6;
-
-        for (int i = 1; i <= numberOfStrings; i++) {
-            int guitarChordStringViewId = getResources().getIdentifier("guitar_chord_string_0" + i, "id", getPackageName());
-            guitarChordStringView = this.findViewById(guitarChordStringViewId);
-            guitarChordStringView.setVisibility(View.GONE);
-        }
-        ImageView fretView = this.findViewById(R.id.guitar_chord_chart_frets);
-        fretView.setVisibility(View.GONE);
-    }
-
     public void checkCaptureAudioPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0); //Check the requestCode later
@@ -235,10 +199,10 @@ public class MainActivity extends AppCompatActivity {
 
             switch(Parameters.getInstance().getTabSelected()) {
                 case GUITAR_TAB:
-                    setChordChart(NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);
+                    GuitarChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);
                     break;
                 case CHROMAGRAM:
-                    hideChordChart();
+                    GuitarChordChart.hideChordChart(this);
                     break;
             }
         } else {

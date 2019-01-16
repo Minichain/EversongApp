@@ -1,5 +1,10 @@
 package com.upf.minichain.eversongapp;
 
+import android.app.Activity;
+import android.content.Context;
+import android.view.View;
+import android.widget.ImageView;
+
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
@@ -11,7 +16,9 @@ import com.upf.minichain.eversongapp.enums.NotesEnum;
  *      for the chord "F major" it would be {1, 3, 3, 2, 1, 1}
  */
 public class GuitarChordChart {
-    private static NotesEnum[] guitarTuning = new NotesEnum[6];
+    private static int numberOfStrings = 6;
+    private static int numberOfFrets = 4;
+    private static NotesEnum[] guitarTuning = new NotesEnum[numberOfStrings];
 
     static {
         guitarTuning[0] = NotesEnum.E;
@@ -23,7 +30,7 @@ public class GuitarChordChart {
     }
 
     public static int[] getChordTab(NotesEnum tonic, ChordTypeEnum chordType) {
-        int[] chordTab = new int[6];
+        int[] chordTab = new int[numberOfStrings];
         chordTab[0] = -1;
         chordTab[1] = -1;
         chordTab[2] = -1;
@@ -32,13 +39,18 @@ public class GuitarChordChart {
         chordTab[5] = -1;
 
         NotesEnum[] chordNotes = getChordNotes(tonic, chordType);
-        Log.l("GuitarChordChartLog:: The chord is: " + tonic + ", " + chordType);
-        Log.l("GuitarChordChartLog:: The notes are: " + chordNotes[0] + ", " + chordNotes[1] + ", " + chordNotes[2]);
-        for (int i = 0; i <= 5; i++) {
-            for (int ii = 0; ii <= 5; ii++) {
+        Log.l("GuitarChordChartLog:: The chord is: " + NotesEnum.getString(tonic) + " " + chordType);
+        Log.l("GuitarChordChartLog:: The notes are: " + NotesEnum.getString(chordNotes[0]) + ", "
+                + NotesEnum.getString(chordNotes[1]) + ", "
+                + NotesEnum.getString(chordNotes[2]) + ", "
+                + NotesEnum.getString(chordNotes[3]));
+
+        for (int i = 0; i <= numberOfFrets; i++) {
+            for (int ii = 0; ii < numberOfStrings; ii++) {
                 if (chordTab[ii] == -1 && (NotesEnum.fromInteger((guitarTuning[ii].getValue() + i) % NotesEnum.numberOfNotes) == chordNotes[0]
                         || NotesEnum.fromInteger((guitarTuning[ii].getValue() + i) % NotesEnum.numberOfNotes) == chordNotes[1]
-                        || NotesEnum.fromInteger((guitarTuning[ii].getValue() + i) % NotesEnum.numberOfNotes) == chordNotes[2])) {
+                        || NotesEnum.fromInteger((guitarTuning[ii].getValue() + i) % NotesEnum.numberOfNotes) == chordNotes[2]
+                        || NotesEnum.fromInteger((guitarTuning[ii].getValue() + i) % NotesEnum.numberOfNotes) == chordNotes[3])) {
                     chordTab[ii] = i;
                 }
             }
@@ -57,10 +69,11 @@ public class GuitarChordChart {
      * and returns the notes that compose the chord [G, B, D].
      * */
     public static NotesEnum[] getChordNotes(NotesEnum tonic, ChordTypeEnum chordType) {
-        NotesEnum[] chordNotes = new NotesEnum[3];
+        NotesEnum[] chordNotes = new NotesEnum[4];
         chordNotes[0] = tonic;
         chordNotes[1] = NotesEnum.NO_NOTE;
         chordNotes[2] = NotesEnum.NO_NOTE;
+        chordNotes[3] = NotesEnum.NO_NOTE;
 
         switch(chordType) {
             case Major:
@@ -71,31 +84,72 @@ public class GuitarChordChart {
                 chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 3) % NotesEnum.numberOfNotes);    //The minor third
                 chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 7) % NotesEnum.numberOfNotes);    //The fifth
                 break;
-            case Dominant:
+            case Dominant7th:
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 4) % NotesEnum.numberOfNotes);    //The major third
                 chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 7) % NotesEnum.numberOfNotes);    //The fifth
+                chordNotes[3] = NotesEnum.fromInteger((tonic.getValue() + 10) % NotesEnum.numberOfNotes);   //The seventh
                 break;
-            case Suspended:
+            case Sus2:
                 chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 2) % NotesEnum.numberOfNotes);    //The second
                 chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 7) % NotesEnum.numberOfNotes);    //The fifth
                 break;
+            case Sus4:
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 5) % NotesEnum.numberOfNotes);    //The fourth
+                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 7) % NotesEnum.numberOfNotes);    //The fifth
+                break;
             case Major7th:
-                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 7) % NotesEnum.numberOfNotes);    //The fifth
-                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 11) % NotesEnum.numberOfNotes);   //The seventh
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 4) % NotesEnum.numberOfNotes);    //The major third
+                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 7) % NotesEnum.numberOfNotes);    //The fifth
+                chordNotes[3] = NotesEnum.fromInteger((tonic.getValue() + 11) % NotesEnum.numberOfNotes);   //The seventh
                 break;
             case Minor7th:
-                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 7) % NotesEnum.numberOfNotes);    //The fifth
-                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 10) % NotesEnum.numberOfNotes);   //The seventh
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 3) % NotesEnum.numberOfNotes);    //The minor third
+                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 7) % NotesEnum.numberOfNotes);    //The fifth
+                chordNotes[3] = NotesEnum.fromInteger((tonic.getValue() + 11) % NotesEnum.numberOfNotes);   //The seventh
                 break;
             case Diminished5th:
-                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 6) % NotesEnum.numberOfNotes);    //The diminished fifth
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 6) % NotesEnum.numberOfNotes);    //The diminished fifth
                 break;
             case Augmented5th:
-                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 8) % NotesEnum.numberOfNotes);    //The augmented fifth
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 8) % NotesEnum.numberOfNotes);    //The augmented fifth
                 break;
             case Other:
             default:
                 break;
         }
         return chordNotes;
+    }
+
+    public static void setChordChart(Context ctx, NotesEnum tonic, ChordTypeEnum chordType, float alpha) {
+        int[] guitarChordChart = GuitarChordChart.getChordTab(tonic, chordType);
+        ImageView guitarChordStringView;
+
+        for (int i = 1; i <= numberOfStrings; i++) {
+            int guitarChordStringViewId = ctx.getResources().getIdentifier("guitar_chord_string_0" + i, "id", ctx.getPackageName());
+            guitarChordStringView = ((Activity)ctx).findViewById(guitarChordStringViewId);
+            guitarChordStringView.setAlpha(alpha);
+            guitarChordStringView.setVisibility(View.VISIBLE);
+            int guitarChordStringImageId;
+            if (guitarChordChart[numberOfStrings - i] == -1) {
+                guitarChordStringImageId = ctx.getResources().getIdentifier("guitar_chord_string_0", "drawable", ctx.getPackageName());
+            } else {
+                guitarChordStringImageId = ctx.getResources().getIdentifier("guitar_chord_string_0" + guitarChordChart[numberOfStrings - i], "drawable", ctx.getPackageName());
+            }
+            guitarChordStringView.setImageResource(guitarChordStringImageId);
+        }
+        ImageView fretView = ((Activity)ctx).findViewById(R.id.guitar_chord_chart_frets);
+        fretView.setVisibility(View.VISIBLE);
+    }
+
+    public static void hideChordChart(Context ctx) {
+        ImageView guitarChordStringView;
+
+        for (int i = 1; i <= numberOfStrings; i++) {
+            int guitarChordStringViewId = ctx.getResources().getIdentifier("guitar_chord_string_0" + i, "id", ctx.getPackageName());
+            guitarChordStringView = ((Activity)ctx).findViewById(guitarChordStringViewId);
+            guitarChordStringView.setVisibility(View.GONE);
+        }
+        ImageView fretView = ((Activity)ctx).findViewById(R.id.guitar_chord_chart_frets);
+        fretView.setVisibility(View.GONE);
     }
 }

@@ -75,7 +75,7 @@ public class EversongCanvas {
                     break;
                 case CHROMAGRAM:
                     drawBufferSamples(bufferSamples, spectrumAverage, mPaint01);
-                    drawChromagram(chromagram, mPaint01);
+                    drawChromagram(chromagram, spectrumAverage, mPaint01);
                     break;
             }
         }
@@ -108,14 +108,15 @@ public class EversongCanvas {
         mCanvas.drawLine(0, (float)spectrumAverage, mCanvas.getWidth(), (float)spectrumAverage, mPaint01);
     }
 
-    public void drawChromagram(double[] chromagram, Paint paint) {
+    public void drawChromagram(double[] chromagram, double spectrumAverage, Paint paint) {
         int notesBins = (int)((float)mCanvas.getWidth() / 12f);
         int paddingBetweenBins = 10;
         int bottomPadding = 300;
         paint.setTextSize(45);
 
+        float amplifyDrawFactor = 0.25f * 0.00025f / (float)spectrumAverage;
         for (int i = 0; i < NotesEnum.numberOfNotes; i++) {
-            mRect.set(i * notesBins, (mCanvas.getHeight() - bottomPadding) - (int)(chromagram[i] * 0.25 * (double)mCanvas.getHeight()),
+            mRect.set(i * notesBins, (mCanvas.getHeight() - bottomPadding) - (int)(chromagram[i] * amplifyDrawFactor * (double)mCanvas.getHeight()),
                     i * notesBins + (notesBins - paddingBetweenBins), mCanvas.getHeight() - bottomPadding);
             mCanvas.drawRect(mRect, paint);
             mCanvas.drawText(NotesEnum.getString(NotesEnum.fromInteger(i)), i * notesBins, mCanvas.getHeight() - bottomPadding + 40, paint);
