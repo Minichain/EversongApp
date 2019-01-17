@@ -6,8 +6,11 @@
     android:layout_width="10dp"
     tools:context=".MainActivity">
 
-    <item android:id="@+id/open_main_screen"
+    <item android:id="@+id/open_guitar_tab"
         android:title="@string/guitar_tab"
+        app:showAsAction="never"/>
+    <item android:id="@+id/open_ukulele_tab"
+        android:title="@string/ukulele_tab"
         app:showAsAction="never"/>
     <item android:id="@+id/open_chromagram"
         android:title="@string/chromagram_tab"

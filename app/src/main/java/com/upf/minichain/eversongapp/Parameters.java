@@ -30,8 +30,8 @@ public class Parameters {
     private static MusicalNotationEnum musicalNotation;
     private static WindowFunctionEnum windowingFunction;
     private static int chordBufferSize;
-    enum TabSelected{
-        GUITAR_TAB, CHROMAGRAM
+    enum TabSelected {
+        GUITAR_TAB, UKULELE_TAB, CHROMAGRAM
     }
     private static TabSelected tabSelected;
 

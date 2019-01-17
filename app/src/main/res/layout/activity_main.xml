@@ -115,84 +115,35 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.473" />
 
-    <ImageView
-        android:id="@+id/guitar_chord_chart_frets"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/guitar_chord_chart_layout"
+        android:layout_width="345dp"
+        android:layout_height="172dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="48dp"
-        android:foregroundGravity="center"
-        android:src="@drawable/guitar_chord_chart_frets"
+        android:layout_marginTop="36dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/recording_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/most_probable_chord_type" />
+        app:layout_constraintTop_toBottomOf="@+id/most_probable_chord_type"
+        android:gravity="center_vertical|center_horizontal">
+    </LinearLayout>
 
-    <ImageView
-        android:id="@+id/guitar_chord_string_01"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/ukulele_chord_chart_layout"
+        android:layout_width="345dp"
+        android:layout_height="172dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="48dp"
-        android:foregroundGravity="center"
+        android:layout_marginTop="36dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/recording_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/most_probable_chord_type" />
-
-    <ImageView
-        android:id="@+id/guitar_chord_string_02"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:foregroundGravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guitar_chord_string_01" />
-
-    <ImageView
-        android:id="@+id/guitar_chord_string_03"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:foregroundGravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guitar_chord_string_02" />
-
-    <ImageView
-        android:id="@+id/guitar_chord_string_04"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:foregroundGravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guitar_chord_string_03" />
-
-    <ImageView
-        android:id="@+id/guitar_chord_string_05"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:foregroundGravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guitar_chord_string_04" />
-
-    <ImageView
-        android:id="@+id/guitar_chord_string_06"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:foregroundGravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guitar_chord_string_05" />
-
+        app:layout_constraintTop_toBottomOf="@+id/most_probable_chord_type"
+        android:gravity="center_vertical|center_horizontal">
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

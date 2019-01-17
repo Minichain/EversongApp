@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setChordChart();
         checkCaptureAudioPermission();
         initMainActivity();
     }
@@ -127,12 +129,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 final int[] chordDetectedThread = AudioStack.chordDetection(audioSamplesBuffer, audioSpectrumBuffer);
-
-                /**For testing purposes**/
                 final double[] finalChromagram = AudioStack.getChromagram(audioSamplesBuffer, audioSpectrumBuffer);
-//                for (int i = 0; i < 12; i++) {
-//                    Log.l("\nChromagramLog:: Note " + NotesEnum.values()[i] + ": " + chromagram[i]);
-//                }
 
 //                Log.l("MainActivityLog:: Spectrum diff: " + AudioStack.getDifference(audioSpectrumBuffer, prevAudioSpectrumBuffer));
 
@@ -201,8 +198,10 @@ public class MainActivity extends AppCompatActivity {
                 case GUITAR_TAB:
                     GuitarChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);
                     break;
+                case UKULELE_TAB:
+                    UkuleleChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);
+                    break;
                 case CHROMAGRAM:
-                    GuitarChordChart.hideChordChart(this);
                     break;
             }
         } else {
@@ -270,10 +269,19 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id){
-            case R.id.open_main_screen:
+            case R.id.open_guitar_tab:
                 Parameters.getInstance().setTabSelected(Parameters.TabSelected.GUITAR_TAB);
+                UkuleleChordChart.hideChordChart(this);
+                setChordChart();
+                return true;
+            case R.id.open_ukulele_tab:
+                Parameters.getInstance().setTabSelected(Parameters.TabSelected.UKULELE_TAB);
+                GuitarChordChart.hideChordChart(this);
+                setChordChart();
                 return true;
             case R.id.open_chromagram:
+                GuitarChordChart.hideChordChart(this);
+                UkuleleChordChart.hideChordChart(this);
                 Parameters.getInstance().setTabSelected(Parameters.TabSelected.CHROMAGRAM);
                 return true;
             case R.id.open_settings_menu_option:
@@ -286,6 +294,22 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void setChordChart() {
+        LinearLayout placeHolder;
+        switch(Parameters.getInstance().getTabSelected()) {
+            case GUITAR_TAB:
+                placeHolder = this.findViewById(R.id.guitar_chord_chart_layout);
+                getLayoutInflater().inflate(R.layout.guitar_chord_chart, placeHolder);
+                break;
+            case UKULELE_TAB:
+                placeHolder = this.findViewById(R.id.ukulele_chord_chart_layout);
+                getLayoutInflater().inflate(R.layout.ukulele_chord_chart, placeHolder);
+                break;
+            case CHROMAGRAM:
+                break;
         }
     }
 

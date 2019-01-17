@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
@@ -123,6 +124,8 @@ public class GuitarChordChart {
     public static void setChordChart(Context ctx, NotesEnum tonic, ChordTypeEnum chordType, float alpha) {
         int[] guitarChordChart = GuitarChordChart.getChordTab(tonic, chordType);
         ImageView guitarChordStringView;
+        LinearLayout chordChartLayout = ((Activity)ctx).findViewById(R.id.guitar_chord_chart_layout);
+        chordChartLayout.setVisibility(View.VISIBLE);
 
         for (int i = 1; i <= numberOfStrings; i++) {
             int guitarChordStringViewId = ctx.getResources().getIdentifier("guitar_chord_string_0" + i, "id", ctx.getPackageName());
@@ -142,14 +145,7 @@ public class GuitarChordChart {
     }
 
     public static void hideChordChart(Context ctx) {
-        ImageView guitarChordStringView;
-
-        for (int i = 1; i <= numberOfStrings; i++) {
-            int guitarChordStringViewId = ctx.getResources().getIdentifier("guitar_chord_string_0" + i, "id", ctx.getPackageName());
-            guitarChordStringView = ((Activity)ctx).findViewById(guitarChordStringViewId);
-            guitarChordStringView.setVisibility(View.GONE);
-        }
-        ImageView fretView = ((Activity)ctx).findViewById(R.id.guitar_chord_chart_frets);
-        fretView.setVisibility(View.GONE);
+        LinearLayout chordChartLayout = ((Activity)ctx).findViewById(R.id.guitar_chord_chart_layout);
+        chordChartLayout.setVisibility(View.GONE);
     }
 }

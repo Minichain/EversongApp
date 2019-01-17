@@ -68,13 +68,13 @@ public class EversongCanvas {
             mRect.set(10, 10, rectangleWidth,100);
             mCanvas.drawRect(mRect, mPaint01);
 
+            drawBufferSamples(bufferSamples, spectrumAverage, mPaint01);
             switch(Parameters.getInstance().getTabSelected()) {
                 case GUITAR_TAB:
-                    drawBufferSamples(bufferSamples, spectrumAverage, mPaint01);
+                case UKULELE_TAB:
                     drawSpectrum(bufferFrequency, spectrumAverage, pitch, mPaint01);
                     break;
                 case CHROMAGRAM:
-                    drawBufferSamples(bufferSamples, spectrumAverage, mPaint01);
                     drawChromagram(chromagram, spectrumAverage, mPaint01);
                     break;
             }
