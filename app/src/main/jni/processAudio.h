@@ -32,6 +32,7 @@ public:
     int* chordDetection(double* samples, double* spectrumSamples);
     double* getChromagram(double* samples, double* spectrumSamples);
     float getPitch(double* samples, int length);
+    float getPitchProbability();
 
     static double* bandPassFilter(double* samples, float lowCutOffFreq, float highCutOffFreq, int sampleRate, int frameSize);
     static double* removeZeroFrequency(double* samples);

@@ -26,6 +26,10 @@ public final class AudioStack {
         return getPitchJni(samples);
     }
 
+    public static float getPitchProbability() {
+        return getPitchProbabilityJni();
+    }
+
     public static double[] window(double[] samples, WindowFunctionEnum windowType) {
         return windowJni(samples, windowType.getValue());
     }
@@ -186,7 +190,7 @@ public final class AudioStack {
 
     /**
      * This methods are used in order
-     * to access to the C++ implementation
+     * to access to the C++ implementation (native-lib.cpp)
      **/
     private static native void initProcessAudioJni(int sample_rate, int frame_size, int hop_size);
 
@@ -203,4 +207,6 @@ public final class AudioStack {
     private static native double getAverageLevelJni(double[] samples);
 
     private static native float getPitchJni(double[] samples);
+
+    private static native float getPitchProbabilityJni();
 }

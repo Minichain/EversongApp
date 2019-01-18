@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -33,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     EversongCanvas canvas;
 
     float pitchDetected;
+    float pitchProbability;
     NotesEnum pitchNote;
     int[] chordDetected = new int[2];
     int[][] chordsDetectedBuffer;
@@ -44,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
     double[] prevAudioSamplesBuffer;
     double[] audioSpectrumBuffer;
     double[] prevAudioSpectrumBuffer;
+
+    int mColor01;
+    int mColor03;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,24 +83,25 @@ public class MainActivity extends AppCompatActivity {
 
         recordingButton = this.findViewById(R.id.recording_button);
 
-        int color  = ResourcesCompat.getColor(getResources(), R.color.mColor01, null);
+        mColor01  = ResourcesCompat.getColor(getResources(), R.color.mColor01, null);
+        mColor03  = ResourcesCompat.getColor(getResources(), R.color.mColor03, null);
 
         if (BuildConfig.FLAVOR.equals("dev")) {
             chordNoteText = this.findViewById(R.id.chord_note);
             chordTypeText = this.findViewById(R.id.chord_type);
             pitchText = this.findViewById(R.id.pitch_text);
 
-            chordNoteText.setTextColor(color);
-            chordTypeText.setTextColor(color);
-            pitchText.setTextColor(color);
+            chordNoteText.setTextColor(mColor01);
+            chordTypeText.setTextColor(mColor01);
+            pitchText.setTextColor(mColor01);
         }
 
         mostProbableChordNoteText = this.findViewById(R.id.most_probable_chord_note);
         mostProbableChordTypeText = this.findViewById(R.id.most_probable_chord_type);
 
-        mostProbableChordNoteText.setTextColor(color);
+        mostProbableChordNoteText.setTextColor(mColor01);
         mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.A));
-        mostProbableChordTypeText.setTextColor(color);
+        mostProbableChordTypeText.setTextColor(mColor01);
         mostProbableChordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.Major));
 
         canvas =  new EversongCanvas(getResources(), this.findViewById(R.id.canvas_view));
@@ -129,14 +133,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 final int[] chordDetectedThread = AudioStack.chordDetection(audioSamplesBuffer, audioSpectrumBuffer);
-                final double[] finalChromagram = AudioStack.getChromagram(audioSamplesBuffer, audioSpectrumBuffer);
+                final double[] chromagramThread = AudioStack.getChromagram(audioSamplesBuffer, audioSpectrumBuffer);
 
 //                Log.l("MainActivityLog:: Spectrum diff: " + AudioStack.getDifference(audioSpectrumBuffer, prevAudioSpectrumBuffer));
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        chromagram = finalChromagram;
+                        chromagram = chromagramThread;
                         chordDetected = chordDetectedThread;
                         chordsDetectedBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][0] = chordDetected[0];
                         chordsDetectedBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][1] = chordDetected[1];
@@ -150,10 +154,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 final float pitchDetectedThread = AudioStack.getPitch(audioSamplesBuffer);
+                final float pitchProbabilityThread = AudioStack.getPitchProbability();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         pitchDetected = pitchDetectedThread;
+                        pitchProbability = pitchProbabilityThread;
+                        Log.l("PitchLog:: Pitch detected with probability " + pitchProbability);
                     }
                 });
             }
@@ -173,6 +180,15 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 pitchNote = NotesEnum.NO_NOTE;
                 pitchText.setText(String.valueOf("Pitch: \n" + NotesEnum.getString(pitchNote) + " Hz"));
+            }
+
+            TextView musicPlayingDetector;
+            musicPlayingDetector = this.findViewById(R.id.music_playing_detector);
+            musicPlayingDetector.setVisibility(View.VISIBLE);
+            if (pitchProbability >= 0.80) {
+                musicPlayingDetector.setTextColor(mColor01);
+            } else {
+                musicPlayingDetector.setTextColor(mColor03);
             }
 
             if (chordDetected[0] != -1) {

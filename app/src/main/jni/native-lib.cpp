@@ -106,4 +106,9 @@ extern "C" {
         delete []samplesArrayTemp;
         return returnValue;
     }
+
+    jfloat Java_com_upf_minichain_eversongapp_AudioStack_getPitchProbabilityJni(JNIEnv *env, jobject) {
+        float returnValue = processAudio->getPitchProbability();
+        return returnValue;
+    }
 }

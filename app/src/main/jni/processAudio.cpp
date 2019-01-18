@@ -10,7 +10,7 @@ ProcessAudio::ProcessAudio(int sample_rate, int frame_size) {
     c.setSamplingFrequency(sampleRate);
     c.setChromaCalculationInterval(frameSize * 2);
 
-    Yin_init(&yin, (int16_t)frameSize, 0.05);
+    Yin_init(&yin, (int16_t)frameSize, 0.20);
 }
 
 int* ProcessAudio::chordDetection(double* samples, double* spectrumSamples) {
@@ -46,6 +46,10 @@ float ProcessAudio::getPitch(double* samples, int length) {
     float pitchDetected = Yin_getPitch(&yin, samplesInt16);
     LOGI("ProcessAudioLog:: Pitch detected: %f", pitchDetected);
     return pitchDetected;
+}
+
+float ProcessAudio::getPitchProbability() {
+    return Yin_getProbability(&yin);
 }
 
 double ProcessAudio::getAverageLevel(double* samples, int length) {

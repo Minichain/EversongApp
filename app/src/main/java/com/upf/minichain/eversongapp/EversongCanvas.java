@@ -64,10 +64,6 @@ public class EversongCanvas {
         mPaint02.setStrokeWidth(5f);
 
         if (bufferSamples != null && bufferFrequency != null) {
-            int rectangleWidth = (int) ((mImageView.getWidth() - 10) * spectrumAverage) + 10;
-            mRect.set(10, 10, rectangleWidth,100);
-            mCanvas.drawRect(mRect, mPaint01);
-
             drawBufferSamples(bufferSamples, spectrumAverage, mPaint01);
             switch(Parameters.getInstance().getTabSelected()) {
                 case GUITAR_TAB:
@@ -82,7 +78,6 @@ public class EversongCanvas {
     }
 
     public void drawBufferSamples(double[] bufferSamples, double spectrumAverage, Paint paint) {
-        Log.l("AdriHell:: average is: " + spectrumAverage);
         float amplifyDrawFactor = 250f * 0.00025f / (float)spectrumAverage;
         for (int i = 0; i < bufferSamples.length - 1; i++) {
             double smoothEffectValue = (0.5 * (1.0 - Math.cos(2.0*Math.PI*(double)i/(double)(mCanvas.getWidth() - 1))));
