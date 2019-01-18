@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:foregroundGravity="center"
-            android:src="@drawable/guitar_chord_chart_frets"
+            android:src="@drawable/ukulele_chord_chart_frets"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
