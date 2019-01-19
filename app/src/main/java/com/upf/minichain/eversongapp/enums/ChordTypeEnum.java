@@ -1,9 +1,18 @@
 package com.upf.minichain.eversongapp.enums;
 
 public enum ChordTypeEnum {
-    Minor, Major, Sus2, Sus4, Dominant7th, Major7th, Minor7th, Diminished5th, Augmented5th, Other;
+    Minor(0), Major(1), Sus2(2), Sus4(3), Dominant7th(4), Major7th(5), Minor7th(6), Diminished5th(7), Augmented5th(8), Other(9);
 
+    private final int value;
     public static int numberOfChordTypes = 9;
+
+    ChordTypeEnum(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
 
     public static ChordTypeEnum fromInteger(int integerValue) {
         switch(integerValue) {

@@ -22,7 +22,8 @@ import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
 public class MainActivity extends AppCompatActivity {
-    boolean mShouldContinue;        // Indicates if recording / playback should stop
+    boolean keepRecordingAudio;        // Indicates if recording / playback should stop
+    boolean keepProcessingFrame;
     Button recordingButton;
     TextView pitchText;
     TextView chordNoteText;
@@ -64,19 +65,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        mShouldContinue = false;
+        keepRecordingAudio = false;
         super.onPause();
     }
 
     public void initMainActivity() {
+        Log.l("MainActivityLog:: initMainActivity");
         AudioStack.initAudioStack();
 
         pitchDetected = -1;
         pitchNote = NotesEnum.NO_NOTE;
         chordDetected[0] = -1;
         chordDetected[1] = -1;
-        mostProbableChord[0] = -1;
-        mostProbableChord[1] = -1;
+        mostProbableChord[0] = NotesEnum.A.getValue();
+        mostProbableChord[1] = ChordTypeEnum.Major.getValue();
+        mostProbableChord[2] = 100;
         chordsDetectedBuffer = new int[Parameters.getInstance().getChordBufferSize()][2];
         audioSamplesBuffer = new double[Parameters.BUFFER_SIZE];
         audioSpectrumBuffer = new double[Parameters.BUFFER_SIZE];
@@ -106,6 +109,28 @@ public class MainActivity extends AppCompatActivity {
 
         canvas =  new EversongCanvas(getResources(), this.findViewById(R.id.canvas_view));
 
+        keepProcessingFrame = true;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(keepProcessingFrame) {
+                    Log.l("MainActivityLog:: Processing frame");
+                    Process.setThreadPriority(Process.THREAD_PRIORITY_FOREGROUND);
+                    try {
+                        Thread.sleep(1000 / Parameters.FRAMES_PER_SECOND);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                processFrame();
+                            }
+                        });
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
         recordingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                     recordAudio();
                 } else if (recordingButton.getText().equals(getString(R.string.stop_record_button))) {
                     recordingButton.setText(R.string.start_record_button);
-                    mShouldContinue = false;
+                    keepRecordingAudio = false;
                 }
             }
         });
@@ -128,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void processAudio() {
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -167,7 +191,9 @@ public class MainActivity extends AppCompatActivity {
         }).start();
 
         mostProbableChord = AudioStack.getMostProbableChord(chordsDetectedBuffer);
+    }
 
+    public void processFrame() {
         if (canvas.getCanvas() != null) {
             canvas.updateCanvas(audioSamplesBuffer, audioSpectrumBuffer, AudioStack.getAverageLevel(audioSpectrumBuffer), pitchDetected, chromagram);
         }
@@ -193,14 +219,10 @@ public class MainActivity extends AppCompatActivity {
 
             if (chordDetected[0] != -1) {
                 chordNoteText.setText(NotesEnum.getString(NotesEnum.fromInteger(chordDetected[0])));
-            } else {
-                chordNoteText.setText(NotesEnum.getString(NotesEnum.NO_NOTE));
             }
 
             if (chordDetected[1] != -1) {
                 chordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(chordDetected[1])));
-            } else {
-                chordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.Other));
             }
         }
 
@@ -209,20 +231,17 @@ public class MainActivity extends AppCompatActivity {
             mostProbableChordNoteText.setAlpha((float)mostProbableChord[2] / 100f);
             mostProbableChordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(mostProbableChord[1])));
             mostProbableChordTypeText.setAlpha((float)mostProbableChord[2] / 100f);
+        }
 
-            switch(Parameters.getInstance().getTabSelected()) {
-                case GUITAR_TAB:
-                    GuitarChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);
-                    break;
-                case UKULELE_TAB:
-                    UkuleleChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);
-                    break;
-                case CHROMAGRAM:
-                    break;
-            }
-        } else {
-            mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.NO_NOTE));
-            mostProbableChordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.Other));
+        switch(Parameters.getInstance().getTabSelected()) {
+            case GUITAR_TAB:
+                GuitarChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);
+                break;
+            case UKULELE_TAB:
+                UkuleleChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);
+                break;
+            case CHROMAGRAM:
+                break;
         }
     }
 
@@ -248,10 +267,10 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.l("MainActivityLog:: Start recording");
 
-                mShouldContinue = true;
+                keepRecordingAudio = true;
                 final long startTime = System.currentTimeMillis();
 
-                while (mShouldContinue) {
+                while (keepRecordingAudio) {
                     numberOfShortRead = record.read(tempAudioSamples, 0, tempAudioSamples.length);
                     totalShortsRead += numberOfShortRead;
                     prevAudioSpectrumBuffer = audioSpectrumBuffer;
@@ -301,11 +320,13 @@ public class MainActivity extends AppCompatActivity {
                 Parameters.getInstance().setTabSelected(Parameters.TabSelected.CHROMAGRAM);
                 return true;
             case R.id.open_settings_menu_option:
+                keepProcessingFrame = false;
                 this.onPause();
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.exit_app_option:
+                keepProcessingFrame = false;
                 closeApp();
                 return true;
             default:

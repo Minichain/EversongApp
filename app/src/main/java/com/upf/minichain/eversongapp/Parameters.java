@@ -9,7 +9,7 @@ public class Parameters {
     private Parameters() {
         musicalNotation = MusicalNotationEnum.ENGLISH_NOTATION;
         windowingFunction = WindowFunctionEnum.HAMMING_WINDOW;
-        chordBufferSize = 5;
+        chordBufferSize = 7;
         tabSelected = TabSelected.GUITAR_TAB;
     }
 
@@ -23,6 +23,7 @@ public class Parameters {
     public static final int SAMPLE_RATE = 44100;    // The sampling rate (16000, 22050, 44100)
     public static final int BUFFER_SIZE = 8192;     // It must be a power of 2 (2048, 4096, 8192, 16384...)
     public static final int HOP_SIZE = 2048;        // It must be a power of 2
+    public static final int FRAMES_PER_SECOND = 24;
 
     /************
      * Variables
