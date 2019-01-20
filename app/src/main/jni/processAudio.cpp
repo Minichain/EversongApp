@@ -10,7 +10,7 @@ ProcessAudio::ProcessAudio(int sample_rate, int frame_size) {
     c.setSamplingFrequency(sampleRate);
     c.setChromaCalculationInterval(frameSize * 2);
 
-    Yin_init(&yin, (int16_t)frameSize, 0.20);
+    Yin_init(&yin, (int16_t)frameSize, 0.30);
 }
 
 int* ProcessAudio::chordDetection(double* samples, double* spectrumSamples) {

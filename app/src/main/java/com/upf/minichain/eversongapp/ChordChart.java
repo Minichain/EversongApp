@@ -1,6 +1,8 @@
-package com.upf.minichain.eversongapp.enums;
+package com.upf.minichain.eversongapp;
 
 import com.upf.minichain.eversongapp.Log;
+import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
+import com.upf.minichain.eversongapp.enums.NotesEnum;
 
 public abstract class ChordChart {
 
@@ -24,12 +26,12 @@ public abstract class ChordChart {
             }
         }
 
-        for (int i = 0; i < 4; i++) {
-            Log.l("ChordChartLog:: chordNotes[" + i + "]: " + NotesEnum.getString(chordNotes[i]));
-        }
-        for (int i = 0; i < numberOfStrings; i++) {
-            Log.l("ChordChartLog:: chordTab[" + i + "]: " + chordTab[i]);
-        }
+//        for (int i = 0; i < 4; i++) {
+//            Log.l("ChordChartLog:: chordNotes[" + i + "]: " + NotesEnum.getString(chordNotes[i]));
+//        }
+//        for (int i = 0; i < numberOfStrings; i++) {
+//            Log.l("ChordChartLog:: chordTab[" + i + "]: " + chordTab[i]);
+//        }
 
         return chordTab;
     }
@@ -78,10 +80,12 @@ public abstract class ChordChart {
                 chordNotes[3] = NotesEnum.fromInteger((tonic.getValue() + 10) % NotesEnum.numberOfNotes);   //The dominant seventh
                 break;
             case Diminished5th:
-                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 6) % NotesEnum.numberOfNotes);    //The diminished fifth
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 3) % NotesEnum.numberOfNotes);    //The minor third
+                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 6) % NotesEnum.numberOfNotes);    //The diminished fifth
                 break;
             case Augmented5th:
-                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 8) % NotesEnum.numberOfNotes);    //The augmented fifth
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 4) % NotesEnum.numberOfNotes);    //The major third
+                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 8) % NotesEnum.numberOfNotes);    //The augmented fifth
                 break;
             case Other:
             default:

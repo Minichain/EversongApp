@@ -21,6 +21,8 @@ import android.widget.TextView;
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     boolean keepRecordingAudio;        // Indicates if recording / playback should stop
     boolean keepProcessingFrame;
@@ -36,8 +38,12 @@ public class MainActivity extends AppCompatActivity {
     float pitchProbability;
     NotesEnum pitchNote;
     int[] chordDetected = new int[2];
-    int[][] chordsDetectedBuffer;
+    int[][] mostProbableChordBuffer;
     int chordBufferIterator = 0;
+
+    ArrayList<String> arrayOfChordsDetected;
+    DetectedChordFile detectedChordsFile;
+
     int[] mostProbableChord = new int[3];
     double[] chromagram = new double[NotesEnum.numberOfNotes];
 
@@ -80,7 +86,9 @@ public class MainActivity extends AppCompatActivity {
         mostProbableChord[0] = NotesEnum.A.getValue();
         mostProbableChord[1] = ChordTypeEnum.Major.getValue();
         mostProbableChord[2] = 100;
-        chordsDetectedBuffer = new int[Parameters.getInstance().getChordBufferSize()][2];
+        mostProbableChordBuffer = new int[Parameters.getInstance().getChordBufferSize()][2];
+        arrayOfChordsDetected =  new ArrayList<>();
+        detectedChordsFile = new DetectedChordFile(getApplicationContext());
         audioSamplesBuffer = new double[Parameters.BUFFER_SIZE];
         audioSpectrumBuffer = new double[Parameters.BUFFER_SIZE];
 
@@ -166,8 +174,8 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         chromagram = chromagramThread;
                         chordDetected = chordDetectedThread;
-                        chordsDetectedBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][0] = chordDetected[0];
-                        chordsDetectedBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][1] = chordDetected[1];
+                        mostProbableChordBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][0] = chordDetected[0];
+                        mostProbableChordBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][1] = chordDetected[1];
                         chordBufferIterator++;
                     }
                 });
@@ -190,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
 
-        mostProbableChord = AudioStack.getMostProbableChord(chordsDetectedBuffer);
+        mostProbableChord = AudioStack.getMostProbableChord(mostProbableChordBuffer);
     }
 
     public void processFrame() {
@@ -201,20 +209,11 @@ public class MainActivity extends AppCompatActivity {
         if (BuildConfig.FLAVOR.equals("dev")) {
             if (pitchDetected != -1) {
                 pitchNote = AudioStack.getNoteByFrequency((double)pitchDetected);
-                pitchText.setText(String.valueOf("Pitch: \n" + (int)pitchDetected + " Hz" + " ("
+                pitchText.setText(String.valueOf("Pitch: " + (int)pitchDetected + " Hz" + " ("
                         + NotesEnum.getString(pitchNote) + ")"));
             } else {
                 pitchNote = NotesEnum.NO_NOTE;
-                pitchText.setText(String.valueOf("Pitch: \n" + NotesEnum.getString(pitchNote) + " Hz"));
-            }
-
-            TextView musicPlayingDetector;
-            musicPlayingDetector = this.findViewById(R.id.music_playing_detector);
-            musicPlayingDetector.setVisibility(View.VISIBLE);
-            if (pitchProbability >= 0.80) {
-                musicPlayingDetector.setTextColor(mColor01);
-            } else {
-                musicPlayingDetector.setTextColor(mColor03);
+                pitchText.setText(String.valueOf("Pitch: " + NotesEnum.getString(pitchNote) + " Hz"));
             }
 
             if (chordDetected[0] != -1) {
@@ -226,12 +225,24 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        TextView musicPlayingDetector;
+        musicPlayingDetector = this.findViewById(R.id.music_playing_detector);
+        musicPlayingDetector.setVisibility(View.VISIBLE);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("MUSIC PLAYING (");
+        stringBuilder.append((int)(pitchProbability * 100));
+        stringBuilder.append("%)");
+        musicPlayingDetector.setText(stringBuilder.toString());
+        musicPlayingDetector.setTextColor(mColor01);
+
         if (mostProbableChord[0] != -1 && mostProbableChord[1] != -1) {
             mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.fromInteger(mostProbableChord[0])));
             mostProbableChordNoteText.setAlpha((float)mostProbableChord[2] / 100f);
             mostProbableChordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(mostProbableChord[1])));
             mostProbableChordTypeText.setAlpha((float)mostProbableChord[2] / 100f);
         }
+
+        updateDetectedChordsList();
 
         switch(Parameters.getInstance().getTabSelected()) {
             case GUITAR_TAB:
@@ -242,6 +253,15 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case CHROMAGRAM:
                 break;
+        }
+    }
+
+    private void updateDetectedChordsList() {
+        String chord = NotesEnum.getString(NotesEnum.fromInteger(mostProbableChord[0])) + ChordTypeEnum.getString(ChordTypeEnum.fromInteger(mostProbableChord[1]));
+        if (arrayOfChordsDetected.isEmpty() || !arrayOfChordsDetected.get(arrayOfChordsDetected.size() - 1).contains(chord)) {
+            String newElement = chord + ", " + System.currentTimeMillis();
+            arrayOfChordsDetected.add(newElement);
+            detectedChordsFile.writeInFile(newElement);
         }
     }
 
@@ -327,6 +347,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.exit_app_option:
                 keepProcessingFrame = false;
+                detectedChordsFile.closeFile();
                 closeApp();
                 return true;
             default:

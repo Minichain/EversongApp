@@ -27,30 +27,30 @@
 
     <TextView
         android:id="@+id/music_playing_detector"
-        android:layout_width="162dp"
-        android:layout_height="24dp"
+        android:layout_width="160dp"
+        android:layout_height="16dp"
         android:layout_centerInParent="true"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="MUSIC PLAYING"
+        android:textSize="14sp"
         android:visibility="gone"
-        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/pitch_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/pitch_text"
-        android:layout_width="126dp"
-        android:layout_height="53dp"
+        android:layout_width="149dp"
+        android:layout_height="36dp"
         android:layout_centerInParent="true"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text=""
-        android:textSize="18sp"
+        android:text="Pitch: --- Hz"
+        android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/recording_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.033"
@@ -130,6 +130,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.473" />
 
+    <!--CHORD CHART LAYOUTS (GUITAR, UKULELE AND PIANO)-->
     <LinearLayout
         android:id="@+id/guitar_chord_chart_layout"
         android:layout_width="345dp"
@@ -145,7 +146,6 @@
         app:layout_constraintTop_toBottomOf="@+id/most_probable_chord_type"
         android:gravity="center_vertical|center_horizontal">
     </LinearLayout>
-
     <LinearLayout
         android:id="@+id/ukulele_chord_chart_layout"
         android:layout_width="345dp"
