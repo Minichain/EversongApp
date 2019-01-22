@@ -243,3 +243,30 @@ double* ProcessAudio::blackman(double* samples, int vectorLength) {
     }
     return samples;
 }
+
+double ProcessAudio::getSpectralFlatness(double* spectrumSamples, int length) {
+    double sumVal = 0.0;
+    double logSumVal = 0.0;
+    double N = (double)length;
+
+    double flatness;
+
+    for (int i = 0; i < length; i++) {
+        // add one to stop zero values making it always zero
+        double v = 1 + spectrumSamples[i];
+
+        sumVal += v;
+        logSumVal += log (v);
+    }
+
+    sumVal = sumVal / N;
+    logSumVal = logSumVal / N;
+
+    if (sumVal > 0) {
+        flatness = exp(logSumVal) / sumVal;
+    } else {
+        flatness = 0.0;
+    }
+
+    return flatness;
+}

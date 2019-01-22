@@ -98,6 +98,15 @@ extern "C" {
         return returnValue;
     }
 
+    jdouble Java_com_upf_minichain_eversongapp_AudioStack_getSpectralFlatnessJni(JNIEnv *env, jobject, jdoubleArray samples) {
+        jsize length = env->GetArrayLength(samples);
+        double* samplesArrayTemp = env->GetDoubleArrayElements(samples, 0);
+        double returnValue = ProcessAudio::getSpectralFlatness(samplesArrayTemp, length);
+        samplesArrayTemp = NULL;
+        delete []samplesArrayTemp;
+        return returnValue;
+    }
+
     jfloat Java_com_upf_minichain_eversongapp_AudioStack_getPitchJni(JNIEnv *env, jobject, jdoubleArray samples) {
         jsize length = env->GetArrayLength(samples);
         double* samplesArrayTemp = env->GetDoubleArrayElements(samples, 0);

@@ -28,22 +28,25 @@
     <TextView
         android:id="@+id/music_playing_detector"
         android:layout_width="160dp"
-        android:layout_height="16dp"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="MUSIC PLAYING"
-        android:textSize="14sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/pitch_text"
+        android:text="MUSIC PLAYING!"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/recording_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.038"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/pitch_text"
-        android:layout_width="149dp"
-        android:layout_height="36dp"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
@@ -53,10 +56,23 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/recording_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.033"
+        app:layout_constraintHorizontal_bias="0.038"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.059" />
+
+    <TextView
+        android:id="@+id/spectral_flatness_text"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Flatness: ---"
+        android:textSize="12sp"
+        app:layout_constraintHorizontal_bias="0.038"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pitch_text" />
 
     <TextView
         android:id="@+id/chord_note"

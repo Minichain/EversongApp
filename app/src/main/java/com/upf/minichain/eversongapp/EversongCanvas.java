@@ -93,7 +93,7 @@ public class EversongCanvas {
             mCanvas.drawLine(pitchIndex, 0, pitchIndex, mCanvas.getHeight(), mPaint02);
         }
 
-        float amplifyDrawFactor = 700f * 0.00025f / (float)spectrumAverage;
+        float amplifyDrawFactor = 1000f * 0.00025f / (float)spectrumAverage;
         for (int i = 0; i < (spectrumBuffer.length / 2) - 1; i++) {
             mCanvas.drawLine(i, ((float)spectrumBuffer[i] * (-amplifyDrawFactor)) + (mCanvas.getHeight()),
                     i + 1, ((float)spectrumBuffer[(i) + 1] * (-amplifyDrawFactor)) + (mCanvas.getHeight()), paint);
@@ -109,7 +109,7 @@ public class EversongCanvas {
         int bottomPadding = 300;
         paint.setTextSize(45);
 
-        float amplifyDrawFactor = 0.25f * 0.00025f / (float)spectrumAverage;
+        float amplifyDrawFactor = 0.50f * 0.00025f / (float)spectrumAverage;
         for (int i = 0; i < NotesEnum.numberOfNotes; i++) {
             mRect.set(i * notesBins, (mCanvas.getHeight() - bottomPadding) - (int)(chromagram[i] * amplifyDrawFactor * (double)mCanvas.getHeight()),
                     i * notesBins + (notesBins - paddingBetweenBins), mCanvas.getHeight() - bottomPadding);

@@ -5,7 +5,11 @@ import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
 public abstract class ChordChart {
-
+    /**
+     * This method is used to get the tabs from a given chord
+     * and some information from the instrument;
+     * Number of frets used to play the chord, number of strings of the instrument and tuning.
+     * */
     public static int[] getChordTab(NotesEnum tonic, ChordTypeEnum chordType, int numberOfFrets, int numberOfStrings, NotesEnum[] tuning) {
         int[] chordTab = new int[numberOfStrings];
         for (int i = 0; i < numberOfStrings; i++) {

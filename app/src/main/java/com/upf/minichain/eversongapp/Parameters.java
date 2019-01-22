@@ -6,13 +6,6 @@ import com.upf.minichain.eversongapp.enums.WindowFunctionEnum;
 public class Parameters {
     private static final Parameters instance = new Parameters();
 
-    private Parameters() {
-        musicalNotation = MusicalNotationEnum.ENGLISH_NOTATION;
-        windowingFunction = WindowFunctionEnum.HAMMING_WINDOW;
-        chordBufferSize = 7;
-        tabSelected = TabSelected.GUITAR_TAB;
-    }
-
     public static Parameters getInstance() {
         return instance;
     }
@@ -35,6 +28,15 @@ public class Parameters {
         GUITAR_TAB, UKULELE_TAB, CHROMAGRAM
     }
     private static TabSelected tabSelected;
+    private static boolean debugMode;
+
+    private Parameters() {
+        musicalNotation = MusicalNotationEnum.ENGLISH_NOTATION;
+        windowingFunction = WindowFunctionEnum.HAMMING_WINDOW;
+        chordBufferSize = 7;
+        tabSelected = TabSelected.GUITAR_TAB;
+        debugMode = false;
+    }
 
     public void setMusicalNotation(MusicalNotationEnum notation) {
         musicalNotation = notation;
@@ -66,5 +68,13 @@ public class Parameters {
 
     public TabSelected getTabSelected() {
         return tabSelected;
+    }
+
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
+    }
+
+    public boolean isDebugMode() {
+        return debugMode;
     }
 }

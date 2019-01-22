@@ -17,26 +17,31 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     boolean keepRecordingAudio;        // Indicates if recording / playback should stop
     boolean keepProcessingFrame;
     Button recordingButton;
     TextView pitchText;
+    TextView spectralFlatnessText;
     TextView chordNoteText;
     TextView mostProbableChordNoteText;
     TextView chordTypeText;
     TextView mostProbableChordTypeText;
+    TextView musicPlayingDetectorText;
     EversongCanvas canvas;
 
     float pitchDetected;
     float pitchProbability;
     NotesEnum pitchNote;
+    double spectralFlatnessValue;
     int[] chordDetected = new int[2];
     int[][] mostProbableChordBuffer;
     int chordBufferIterator = 0;
@@ -97,15 +102,7 @@ public class MainActivity extends AppCompatActivity {
         mColor01  = ResourcesCompat.getColor(getResources(), R.color.mColor01, null);
         mColor03  = ResourcesCompat.getColor(getResources(), R.color.mColor03, null);
 
-        if (BuildConfig.FLAVOR.equals("dev")) {
-            chordNoteText = this.findViewById(R.id.chord_note);
-            chordTypeText = this.findViewById(R.id.chord_type);
-            pitchText = this.findViewById(R.id.pitch_text);
-
-            chordNoteText.setTextColor(mColor01);
-            chordTypeText.setTextColor(mColor01);
-            pitchText.setTextColor(mColor01);
-        }
+        setDebugModeViews();
 
         mostProbableChordNoteText = this.findViewById(R.id.most_probable_chord_note);
         mostProbableChordTypeText = this.findViewById(R.id.most_probable_chord_type);
@@ -154,6 +151,33 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void setDebugModeViews() {
+        chordNoteText = this.findViewById(R.id.chord_note);
+        chordTypeText = this.findViewById(R.id.chord_type);
+        pitchText = this.findViewById(R.id.pitch_text);
+        spectralFlatnessText = this.findViewById(R.id.spectral_flatness_text);
+        musicPlayingDetectorText = this.findViewById(R.id.music_playing_detector);
+
+        if (Parameters.getInstance().isDebugMode()) {
+            chordNoteText.setVisibility(View.VISIBLE);
+            chordTypeText.setVisibility(View.VISIBLE);
+            pitchText.setVisibility(View.VISIBLE);
+            spectralFlatnessText.setVisibility(View.VISIBLE);
+            musicPlayingDetectorText.setVisibility(View.VISIBLE);
+            chordNoteText.setTextColor(mColor01);
+            chordTypeText.setTextColor(mColor01);
+            pitchText.setTextColor(mColor01);
+            spectralFlatnessText.setTextColor(mColor01);
+            musicPlayingDetectorText.setTextColor(mColor01);
+        } else {
+            chordNoteText.setVisibility(View.GONE);
+            chordTypeText.setVisibility(View.GONE);
+            pitchText.setVisibility(View.GONE);
+            spectralFlatnessText.setVisibility(View.GONE);
+            musicPlayingDetectorText.setVisibility(View.GONE);
+        }
+    }
+
     public void checkCaptureAudioPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0); //Check the requestCode later
@@ -198,6 +222,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
 
+        spectralFlatnessValue = AudioStack.getSpectralFlatness(Arrays.copyOfRange(audioSpectrumBuffer, 0, Parameters.BUFFER_SIZE / 2));
+
         mostProbableChord = AudioStack.getMostProbableChord(mostProbableChordBuffer);
     }
 
@@ -206,11 +232,14 @@ public class MainActivity extends AppCompatActivity {
             canvas.updateCanvas(audioSamplesBuffer, audioSpectrumBuffer, AudioStack.getAverageLevel(audioSpectrumBuffer), pitchDetected, chromagram);
         }
 
-        if (BuildConfig.FLAVOR.equals("dev")) {
+        if (Parameters.getInstance().isDebugMode()) {
             if (pitchDetected != -1) {
                 pitchNote = AudioStack.getNoteByFrequency((double)pitchDetected);
-                pitchText.setText(String.valueOf("Pitch: " + (int)pitchDetected + " Hz" + " ("
-                        + NotesEnum.getString(pitchNote) + ")"));
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("Pitch: ").append((int)pitchDetected).append(" Hz").append(" (")
+                        .append(NotesEnum.getString(pitchNote)).append("), ")
+                        .append((int)(pitchProbability * 100)).append("%");
+                pitchText.setText(stringBuilder.toString());
             } else {
                 pitchNote = NotesEnum.NO_NOTE;
                 pitchText.setText(String.valueOf("Pitch: " + NotesEnum.getString(pitchNote) + " Hz"));
@@ -223,17 +252,14 @@ public class MainActivity extends AppCompatActivity {
             if (chordDetected[1] != -1) {
                 chordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(chordDetected[1])));
             }
+            spectralFlatnessText.setText("Flatness: " + ((int)(spectralFlatnessValue * 10000)));
+            if (pitchProbability >= 0.80 && spectralFlatnessValue < 0.9995) { //TODO How do we detect if there's music being played??
+                musicPlayingDetectorText.setVisibility(View.VISIBLE);
+                musicPlayingDetectorText.setText("MUSIC PLAYING!");
+            } else {
+                musicPlayingDetectorText.setVisibility(View.GONE);
+            }
         }
-
-        TextView musicPlayingDetector;
-        musicPlayingDetector = this.findViewById(R.id.music_playing_detector);
-        musicPlayingDetector.setVisibility(View.VISIBLE);
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("MUSIC PLAYING (");
-        stringBuilder.append((int)(pitchProbability * 100));
-        stringBuilder.append("%)");
-        musicPlayingDetector.setText(stringBuilder.toString());
-        musicPlayingDetector.setTextColor(mColor01);
 
         if (mostProbableChord[0] != -1 && mostProbableChord[1] != -1) {
             mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.fromInteger(mostProbableChord[0])));
@@ -317,6 +343,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.dropdown_menu, menu);
+        if (!BuildConfig.FLAVOR.equals("dev")) {
+            menu.findItem(R.id.debug_mode).setVisible(false);
+        }
         return true;
     }
 
@@ -344,6 +373,15 @@ public class MainActivity extends AppCompatActivity {
                 this.onPause();
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.debug_mode:
+                GuitarChordChart.hideChordChart(this);
+                UkuleleChordChart.hideChordChart(this);
+                Parameters.getInstance().setDebugMode(!Parameters.getInstance().isDebugMode());
+                setDebugModeViews();
+                String toastString = (Parameters.getInstance().isDebugMode()) ? "Debug mode enabled" : "Debug mode disabled";
+                Toast toast = Toast.makeText(getApplicationContext(), toastString, Toast.LENGTH_SHORT);
+                toast.show();
                 return true;
             case R.id.exit_app_option:
                 keepProcessingFrame = false;

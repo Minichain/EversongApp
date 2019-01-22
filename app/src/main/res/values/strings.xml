@@ -3,12 +3,13 @@
 
     <string name="start_record_button">Start Recording</string>
     <string name="stop_record_button">Stop Recording</string>
-    <string name="open_settings_menu">Settings</string>
     <string name="guitar_tab">Guitar</string>
-    <string name="piano_tab">Piano</string>
     <string name="ukulele_tab">Ukulele</string>
+    <string name="piano_tab">Piano</string>
     <string name="chromagram_tab">Chromagram</string>
-    <string name="close_app">Close app</string>
+    <string name="open_settings_menu">Settings</string>
+    <string name="debug_mode">Debug Mode</string>
+    <string name="close_app">Close App</string>
 
     <!--Settings-->
     <string name="setting_musical_notation">Musical notation</string>

@@ -56,6 +56,10 @@ public final class AudioStack {
         return getAverageLevelJni(samples);
     }
 
+    public static double getSpectralFlatness(double[] spectralSamples) {
+        return getSpectralFlatnessJni(spectralSamples);
+    }
+
     public static double getDifference(double[] buffer1, double[] buffer2) {
         return Math.abs(getAverageLevel(buffer1) - getAverageLevelJni(buffer2));
     }
@@ -116,7 +120,7 @@ public final class AudioStack {
     }
 
     /**
-     * This function returns the most probable chord from the list of
+     * This function returns the most probable chord within the list of
      * chords stored in the ChordBuffer with size = CHORD_BUFFER_SIZE
      * */
     public static int[] getMostProbableChord(int[][] chordsDetectedBuffer) {
@@ -156,6 +160,10 @@ public final class AudioStack {
         return mostProbableChord;
     }
 
+    /**
+     * This method takes a chord in String format and returns it in int[] format,
+     * where index 0 is the rootNote (A) and index 1 is the chordType (Major)
+     * */
     public static int[] getChordFromString(String chordString) {
         int[] chord = new int[2];
         for (int i = 0; i < NotesEnum.numberOfNotes; i++) {
@@ -175,6 +183,10 @@ public final class AudioStack {
         return chord;
     }
 
+    /**
+     * This method takes a buffer of (int) samples and returns
+     * the max value within the samples and its position.
+     * */
     public static int[] getMaxValueAndIndex(int[] buffer) {
         int[] returnValue = new int[2];
         returnValue[0] = -1;     //value
@@ -189,7 +201,7 @@ public final class AudioStack {
     }
 
     /**
-     * This methods are used in order
+     * These methods are used in order
      * to access to the C++ implementation (native-lib.cpp)
      **/
     private static native void initProcessAudioJni(int sample_rate, int frame_size, int hop_size);
@@ -205,6 +217,8 @@ public final class AudioStack {
     private static native double[] bandPassFilterJni(double[] spectrumSamples, float lowCutOffFreq, float highCutOffFreq, int sampleRate, int frameSize);
 
     private static native double getAverageLevelJni(double[] samples);
+
+    private static native double getSpectralFlatnessJni(double[] samples);
 
     private static native float getPitchJni(double[] samples);
 

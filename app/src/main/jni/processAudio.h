@@ -36,12 +36,15 @@ public:
 
     static double* bandPassFilter(double* samples, float lowCutOffFreq, float highCutOffFreq, int sampleRate, int frameSize);
     static double* removeZeroFrequency(double* samples);
-    static double getAverageLevel(double samples[], int length);
 
     static double* window(double* samples, int length, int windowType);
     static double* fft(double* inputReal, int length, bool DIRECT);
     static double* fft(double* inputReal, double* inputImag, int length, bool DIRECT);
     static int bitReverseReference(int j, int nu);
+
+    /**Audio Features**/
+    static double getAverageLevel(double samples[], int length);
+    static double getSpectralFlatness(double* inputSamples, int vectorLength);
 
 private:
     static double* hanning(double* inputSamples, int vectorLength);
