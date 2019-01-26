@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.upf.minichain.eversongapp.chordChart.GuitarChordChart;
+import com.upf.minichain.eversongapp.chordChart.UkuleleChordChart;
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
@@ -82,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void initMainActivity() {
         Log.l("MainActivityLog:: initMainActivity");
+        Parameters.getInstance().setDatabaseParameters(getApplicationContext());
+        Parameters.getInstance().loadParameters(getApplicationContext());
         AudioStack.initAudioStack();
 
         pitchDetected = -1;
@@ -252,8 +256,8 @@ public class MainActivity extends AppCompatActivity {
             if (chordDetected[1] != -1) {
                 chordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(chordDetected[1])));
             }
-            spectralFlatnessText.setText("Flatness: " + ((int)(spectralFlatnessValue * 10000)));
-            if (pitchProbability >= 0.80 && spectralFlatnessValue < 0.9995) { //TODO How do we detect if there's music being played??
+            spectralFlatnessText.setText("Flatness: " + ((int)(spectralFlatnessValue * 100000)));
+            if (pitchProbability >= 0.80 && spectralFlatnessValue < 0.9998) { //TODO How do we detect if there's music being played??
                 musicPlayingDetectorText.setVisibility(View.VISIBLE);
                 musicPlayingDetectorText.setText("MUSIC PLAYING!");
             } else {
@@ -411,6 +415,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void closeApp() {
         this.finish();
-        System.exit(0);
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(1);
     }
 }

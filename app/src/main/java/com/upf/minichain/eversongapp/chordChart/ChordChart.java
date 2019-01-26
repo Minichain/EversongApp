@@ -1,4 +1,4 @@
-package com.upf.minichain.eversongapp;
+package com.upf.minichain.eversongapp.chordChart;
 
 import com.upf.minichain.eversongapp.Log;
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;

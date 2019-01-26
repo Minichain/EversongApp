@@ -1,4 +1,4 @@
-package com.upf.minichain.eversongapp;
+package com.upf.minichain.eversongapp.chordChart;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.upf.minichain.eversongapp.R;
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
