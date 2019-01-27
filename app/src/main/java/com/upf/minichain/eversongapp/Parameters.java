@@ -153,7 +153,7 @@ public class Parameters {
             case 16384:
                 return tempValue;
             default:
-                return 8192;
+                return BUFFER_SIZE;
         }
     }
 

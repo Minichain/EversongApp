@@ -17,7 +17,7 @@ public abstract class ChordChart {
         }
 
         NotesEnum[] chordNotes = getChordNotes(tonic, chordType);
-        Log.l("ChordChartLog:: The chord is: " + NotesEnum.getString(tonic) + " " + chordType);
+//        Log.l("ChordChartLog:: The chord is: " + NotesEnum.getString(tonic) + " " + chordType);
 
         for (int i = 0; i <= numberOfFrets; i++) {
             for (int ii = 0; ii < numberOfStrings; ii++) {

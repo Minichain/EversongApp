@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     TextView musicPlayingDetectorText;
     EversongCanvas canvas;
 
+    boolean musicBeingPlayed;
     float pitchDetected;
     float pitchProbability;
     NotesEnum pitchNote;
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        initMainActivity();
         super.onResume();
     }
 
@@ -87,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         Parameters.getInstance().loadParameters(getApplicationContext());
         AudioStack.initAudioStack();
 
+        musicBeingPlayed = false;
         pitchDetected = -1;
         pitchNote = NotesEnum.NO_NOTE;
         chordDetected[0] = -1;
@@ -101,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
         audioSpectrumBuffer = new double[Parameters.BUFFER_SIZE];
 
         recordingButton = this.findViewById(R.id.recording_button);
+        recordingButton.setText(R.string.start_record_button);
 
         mColor01  = ResourcesCompat.getColor(getResources(), R.color.mColor01, null);
         mColor03  = ResourcesCompat.getColor(getResources(), R.color.mColor03, null);
@@ -122,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 while(keepProcessingFrame) {
-                    Log.l("MainActivityLog:: Processing frame");
                     Process.setThreadPriority(Process.THREAD_PRIORITY_FOREGROUND);
                     try {
                         Thread.sleep(1000 / Parameters.FRAMES_PER_SECOND);
@@ -188,26 +191,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void processAudio() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final int[] chordDetectedThread = AudioStack.chordDetection(audioSamplesBufferWindowed, audioSpectrumBuffer);
-                final double[] chromagramThread = AudioStack.getChromagram(audioSamplesBufferWindowed, audioSpectrumBuffer);
+        if (musicBeingPlayed) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final int[] chordDetectedThread = AudioStack.chordDetection(audioSamplesBufferWindowed, audioSpectrumBuffer);
+                    final double[] chromagramThread = AudioStack.getChromagram(audioSamplesBufferWindowed, audioSpectrumBuffer);
 
-//                Log.l("MainActivityLog:: Spectrum diff: " + AudioStack.getDifference(audioSpectrumBuffer, prevAudioSpectrumBuffer));
+//                    Log.l("MainActivityLog:: Spectrum diff: " + AudioStack.getDifference(audioSpectrumBuffer, prevAudioSpectrumBuffer));
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        chromagram = chromagramThread;
-                        chordDetected = chordDetectedThread;
-                        mostProbableChordBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][0] = chordDetected[0];
-                        mostProbableChordBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][1] = chordDetected[1];
-                        chordBufferIterator++;
-                    }
-                });
-            }
-        }).start();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            chromagram = chromagramThread;
+                            chordDetected = chordDetectedThread;
+                            mostProbableChordBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][0] = chordDetected[0];
+                            mostProbableChordBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][1] = chordDetected[1];
+                            chordBufferIterator++;
+                        }
+                    });
+                }
+            }).start();
+        }
 
         new Thread(new Runnable() {
             @Override
@@ -219,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         pitchDetected = pitchDetectedThread;
                         pitchProbability = pitchProbabilityThread;
-                        Log.l("PitchLog:: Pitch detected with probability " + pitchProbability);
+//                        Log.l("PitchLog:: Pitch detected with probability " + pitchProbability);
                     }
                 });
             }
@@ -227,6 +232,12 @@ public class MainActivity extends AppCompatActivity {
 
         spectralFlatnessValue = AudioStack.getSpectralFlatness(Arrays.copyOfRange(audioSpectrumBuffer, 0, Parameters.BUFFER_SIZE / 2));
 
+        //TODO How do we detect if there's music being played??
+        if (pitchProbability >= 0.80 && spectralFlatnessValue < 0.99990) {
+            musicBeingPlayed = true;
+        } else {
+            musicBeingPlayed = true;
+        }
         mostProbableChord = AudioStack.getMostProbableChord(mostProbableChordBuffer);
     }
 
@@ -256,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
                 chordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(chordDetected[1])));
             }
             spectralFlatnessText.setText("Flatness: " + ((int)(spectralFlatnessValue * 100000)));
-            if (pitchProbability >= 0.80 && spectralFlatnessValue < 0.9998) { //TODO How do we detect if there's music being played??
+            if (musicBeingPlayed) {
                 musicPlayingDetectorText.setVisibility(View.VISIBLE);
                 musicPlayingDetectorText.setText("MUSIC PLAYING!");
             } else {
@@ -333,7 +344,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                     System.gc();
-                    Log.l("MainActivityLog:: reading buffer of size " + Parameters.BUFFER_SIZE + ", Time elapsed: " + (System.currentTimeMillis() - startTime) + " ms");
+//                    Log.l("MainActivityLog:: reading buffer of size " + Parameters.BUFFER_SIZE + ", Time elapsed: " + (System.currentTimeMillis() - startTime) + " ms");
                 }
                 record.stop();
                 record.release();

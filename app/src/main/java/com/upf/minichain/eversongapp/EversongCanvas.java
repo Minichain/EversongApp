@@ -37,7 +37,10 @@ public class EversongCanvas {
         shader1 = new LinearGradient(0, 400, 0, 500, Color.rgb(color01RGB[0], color01RGB[1], color01RGB[2]),
                 Color.rgb(color02RGB[0], color02RGB[1], color02RGB[2]), Shader.TileMode.CLAMP);
 
-        mPaint01.setColor(mColorBackground);
+        mPaint01.setColor(mColor01);
+        mPaint01.setStrokeWidth(5f);
+        mPaint02.setColor(mColor02);
+        mPaint02.setStrokeWidth(5f);
         mImageView = (ImageView) imageView;
         mImageView.post( new Runnable() {   // Whenever the view is loaded...
             @Override
@@ -55,20 +58,19 @@ public class EversongCanvas {
         });
     }
 
-    public void updateCanvas(double[] bufferSamples, double[] bufferFrequency, double spectrumAverage, float pitch, double[] chromagram) {
+    public void updateCanvas(final double[] bufferSamples, final double[] bufferFrequency, final double spectrumAverage, final float pitch, final double[] chromagram) {
         mImageView.setImageBitmap(mBitmap);
         mCanvas.drawColor(mColorBackground);    //Reset background color
-        mPaint01.setColor(mColor01);
-        mPaint01.setStrokeWidth(5f);
-        mPaint02.setColor(mColor02);
-        mPaint02.setStrokeWidth(5f);
 
         if (bufferSamples != null && bufferFrequency != null) {
             drawBufferSamples(bufferSamples, spectrumAverage, mPaint01);
             switch(Parameters.getInstance().getTabSelected()) {
                 case GUITAR_TAB:
                 case UKULELE_TAB:
-                    drawSpectrum(bufferFrequency, spectrumAverage, pitch, mPaint01);
+                case PIANO_TAB:
+                    if (Parameters.getInstance().isDebugMode()) {
+                        drawSpectrum(bufferFrequency, spectrumAverage, pitch, mPaint01);
+                    }
                     break;
                 case CHROMAGRAM:
                     drawChromagram(chromagram, spectrumAverage, mPaint01);

@@ -39,12 +39,13 @@ double* ProcessAudio::getChromagram(double* samples, double* spectrumSamples) {
 float ProcessAudio::getPitch(double* samples, int length) {
     int16_t* samplesInt16 = new int16_t[length];
 //    int16_t* samplesInt16 = NULL;
-//    samplesInt16 = (int16_t*) malloc(length);
+//    samplesInt16 = (int16_t*) malloc((size_t)length);
     for(int i = 0; i < length; i++) {
         samplesInt16[i] = (int16_t)(samples[i] * SHRT_MAX);
     }
     float pitchDetected = Yin_getPitch(&yin, samplesInt16);
     LOGI("ProcessAudioLog:: Pitch detected: %f", pitchDetected);
+    delete []samplesInt16;
     return pitchDetected;
 }
 
@@ -63,21 +64,18 @@ double ProcessAudio::getAverageLevel(double* samples, int length) {
 double* ProcessAudio::bandPassFilter(double* samples, float lowCutOffFreq, float highCutOffFreq, int sampleRate, int frameSize) {
     int lowCutOffFreqIndex = (int)((lowCutOffFreq / (float)sampleRate) * frameSize) * 2;
     int highCutOffFreqIndex = (int)((highCutOffFreq / (float)sampleRate) * frameSize) * 2;
-    double* tempSamples = new double[frameSize];
-//    double* tempSamples = NULL;
-//    tempSamples = (double*) malloc(frameSize);
     samples = removeZeroFrequency(samples);
     float attenuationFactor = 1.2f;
     for (int i = 0; i < frameSize; i++) {
         if (lowCutOffFreqIndex > i){
-            tempSamples[i] = samples[i] / (attenuationFactor * (lowCutOffFreqIndex - i));
+            samples[i] = samples[i] / (attenuationFactor * (lowCutOffFreqIndex - i));
         } else if (lowCutOffFreqIndex <= i && i <= highCutOffFreqIndex) {
-            tempSamples[i] = samples[i];
+            samples[i] = samples[i];
         } else if (i > highCutOffFreqIndex) {
-            tempSamples[i] = samples[i] / (attenuationFactor * (i - highCutOffFreqIndex));
+            samples[i] = samples[i] / (attenuationFactor * (i - highCutOffFreqIndex));
         }
     }
-    return tempSamples;
+    return samples;
 }
 
 double* ProcessAudio::removeZeroFrequency(double* samples) {
