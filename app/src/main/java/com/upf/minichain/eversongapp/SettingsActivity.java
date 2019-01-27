@@ -14,12 +14,14 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.l("SettingsActivityLog:: onCreating");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_menu);
 
         setMusicalNotationSetting();
         setWindowingFunctionSetting();
         setChordBufferSizeSetting();
+        setAudioBufferSizeSetting();
     }
 
     private void setMusicalNotationSetting() {
@@ -120,14 +122,47 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+    }
+
+    private void setAudioBufferSizeSetting() {
+        int seekBarProgress;
+        switch(Parameters.BUFFER_SIZE) {
+            case 2048:
+                seekBarProgress = 0;
+                break;
+            case 4096:
+                seekBarProgress = 1;
+                break;
+            case 8192:
+                seekBarProgress = 2;
+                break;
+            case 16384:
+            default:
+                seekBarProgress = 3;
+                break;
+        }
+        SeekBar seekBar = this.findViewById(R.id.audio_buffer_size_seekbar);
+        seekBar.setProgress(seekBarProgress);
+        final TextView textView = this.findViewById(R.id.audio_buffer_size_seekbar_text);
+        textView.setText(String.valueOf((int)Math.pow(2, 11 + seekBarProgress)));
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                int newAudioBufferSize = (int)Math.pow(2, 11 + progress);
+                textView.setText(String.valueOf(newAudioBufferSize));
+                Parameters.getInstance().setAudioBufferSize(newAudioBufferSize);
             }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
-            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
     }
 }

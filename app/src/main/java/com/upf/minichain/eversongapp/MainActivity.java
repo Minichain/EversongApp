@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     double[] chromagram = new double[NotesEnum.numberOfNotes];
 
     double[] audioSamplesBuffer;
-    double[] prevAudioSamplesBuffer;
+    double[] audioSamplesBufferWindowed;
     double[] audioSpectrumBuffer;
     double[] prevAudioSpectrumBuffer;
 
@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void initMainActivity() {
         Log.l("MainActivityLog:: initMainActivity");
-        Parameters.getInstance().setDatabaseParameters(getApplicationContext());
         Parameters.getInstance().loadParameters(getApplicationContext());
         AudioStack.initAudioStack();
 
@@ -192,8 +191,8 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final int[] chordDetectedThread = AudioStack.chordDetection(audioSamplesBuffer, audioSpectrumBuffer);
-                final double[] chromagramThread = AudioStack.getChromagram(audioSamplesBuffer, audioSpectrumBuffer);
+                final int[] chordDetectedThread = AudioStack.chordDetection(audioSamplesBufferWindowed, audioSpectrumBuffer);
+                final double[] chromagramThread = AudioStack.getChromagram(audioSamplesBufferWindowed, audioSpectrumBuffer);
 
 //                Log.l("MainActivityLog:: Spectrum diff: " + AudioStack.getDifference(audioSpectrumBuffer, prevAudioSpectrumBuffer));
 
@@ -213,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final float pitchDetectedThread = AudioStack.getPitch(audioSamplesBuffer);
+                final float pitchDetectedThread = AudioStack.getPitch(audioSamplesBufferWindowed);
                 final float pitchProbabilityThread = AudioStack.getPitchProbability();
                 runOnUiThread(new Runnable() {
                     @Override
@@ -324,9 +323,9 @@ public class MainActivity extends AppCompatActivity {
                     numberOfShortRead = record.read(tempAudioSamples, 0, tempAudioSamples.length);
                     totalShortsRead += numberOfShortRead;
                     prevAudioSpectrumBuffer = audioSpectrumBuffer;
-                    audioSamplesBuffer = AudioStack.window(AudioStack.getSamplesToDouble(tempAudioSamples), Parameters.getInstance().getWindowingFunction());
-                    audioSpectrumBuffer = AudioStack.bandPassFilter(AudioStack.fft(audioSamplesBuffer, true), 20, 8000);
-//                    final double average = AudioStack.getAverageLevel(tempAudioSpectrum) * 25;
+                    audioSamplesBuffer = AudioStack.getSamplesToDouble(tempAudioSamples);
+                    audioSamplesBufferWindowed = AudioStack.window(audioSamplesBuffer, Parameters.getInstance().getWindowingFunction());
+                    audioSpectrumBuffer = AudioStack.bandPassFilter(AudioStack.fft(audioSamplesBufferWindowed, true), 20, 8000);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

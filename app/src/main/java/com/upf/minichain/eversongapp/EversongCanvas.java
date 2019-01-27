@@ -78,11 +78,22 @@ public class EversongCanvas {
     }
 
     public void drawBufferSamples(double[] bufferSamples, double spectrumAverage, Paint paint) {
-        float amplifyDrawFactor = 250f * 0.00025f / (float)spectrumAverage;
-        for (int i = 0; i < bufferSamples.length - 1; i++) {
-            double smoothEffectValue = (0.5 * (1.0 - Math.cos(2.0*Math.PI*(double)i/(double)(mCanvas.getWidth() - 1))));
-            mCanvas.drawLine(i, (float) (bufferSamples[i] * 100 * smoothEffectValue * amplifyDrawFactor) + (mCanvas.getHeight() / 2),
-                    i + 1, (float) (bufferSamples[i + 1] * 100 * smoothEffectValue * amplifyDrawFactor) + (mCanvas.getHeight() / 2), paint);
+        float amplifyDrawFactor = 100f * 0.00025f / (float)spectrumAverage;
+        double smoothEffectValue;
+        int numberOfSamplesToPaint;
+        int firstSampleToPaint;
+
+        if (mCanvas.getWidth() < bufferSamples.length) {
+            numberOfSamplesToPaint = mCanvas.getWidth();
+        } else {
+            numberOfSamplesToPaint = bufferSamples.length - 1;
+        }
+        firstSampleToPaint = (bufferSamples.length / 2) - (numberOfSamplesToPaint / 2);
+
+        for (int i = firstSampleToPaint; i < numberOfSamplesToPaint + firstSampleToPaint; i++) {
+            smoothEffectValue = (0.5 * (1.0 - Math.cos(2.0*Math.PI*(double)(i - firstSampleToPaint)/(double)(mCanvas.getWidth() - 1))));
+            mCanvas.drawLine(i - firstSampleToPaint, (float) (bufferSamples[i] * 100 * smoothEffectValue * amplifyDrawFactor) + (mCanvas.getHeight() / 2),
+                    i + 1 - firstSampleToPaint, (float) (bufferSamples[i + 1] * 100 * smoothEffectValue * amplifyDrawFactor) + (mCanvas.getHeight() / 2), paint);
         }
     }
 

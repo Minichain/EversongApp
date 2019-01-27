@@ -17,27 +17,33 @@ public class Parameters {
         return instance;
     }
 
-    /************
-     * Constants
+    /*************
+     * PARAMETERS
      ************/
-    public static int SAMPLE_RATE = 44100;    // The sampling rate (16000, 22050, 44100)
-    public static int BUFFER_SIZE = 8192;     // It must be a power of 2 (2048, 4096, 8192, 16384...)
-    public static int HOP_SIZE = 2048;        // It must be a power of 2
-    public static int FRAMES_PER_SECOND = 10;
+    public static int SAMPLE_RATE;          // The sampling rate (16000, 22050, 44100)
+    public static int BUFFER_SIZE;          // It must be a power of 2 (2048, 4096, 8192, 16384...)
+    public static int HOP_SIZE;             // It must be a power of 2
+    public static int FRAMES_PER_SECOND;
 
-    /************
-     * Variables
-     ************/
     private static MusicalNotationEnum musicalNotation;
     private static WindowFunctionEnum windowingFunction;
     private static int chordBufferSize;
-    enum TabSelected {
-        GUITAR_TAB, UKULELE_TAB, CHROMAGRAM
-    }
     private static TabSelected tabSelected;
     private static boolean debugMode;
 
+    enum TabSelected {
+        GUITAR_TAB, UKULELE_TAB, PIANO_TAB, CHROMAGRAM
+    }
+
+    /******************
+     * INIT PARAMETERS
+     *****************/
     private Parameters() {
+        SAMPLE_RATE = 44100;
+        BUFFER_SIZE = 8192;
+        HOP_SIZE = 2048;
+        FRAMES_PER_SECOND = 10;
+
         musicalNotation = MusicalNotationEnum.ENGLISH_NOTATION;
         windowingFunction = WindowFunctionEnum.HAMMING_WINDOW;
         chordBufferSize = 7;
@@ -57,7 +63,7 @@ public class Parameters {
             SAMPLE_RATE = (tempValue != -1) ? tempValue : SAMPLE_RATE;
 
             tempValue = loadParameter("BUFFER_SIZE");
-            BUFFER_SIZE = (tempValue != -1) ? tempValue : BUFFER_SIZE;
+            BUFFER_SIZE = checkAudioBufferValue(tempValue);
 
             tempValue = loadParameter("HOP_SIZE");
             HOP_SIZE = (tempValue != -1) ? tempValue : HOP_SIZE;
@@ -91,15 +97,15 @@ public class Parameters {
         return parameterValue;
     }
 
-    public void setDatabaseParameters(Context context) {
-        ParametersDatabaseHelper parametersDbHelper = new ParametersDatabaseHelper(context);
-        parametersDatabase = parametersDbHelper.getWritableDatabase();
-
-        setParameterInDataBase("SAMPLE_RATE", SAMPLE_RATE);
-        setParameterInDataBase("BUFFER_SIZE", BUFFER_SIZE);
-        setParameterInDataBase("HOP_SIZE", HOP_SIZE);
-        setParameterInDataBase("FRAMES_PER_SECOND", FRAMES_PER_SECOND);
-    }
+//    public void setDatabaseParameters(Context context) {
+//        ParametersDatabaseHelper parametersDbHelper = new ParametersDatabaseHelper(context);
+//        parametersDatabase = parametersDbHelper.getWritableDatabase();
+//
+//        setParameterInDataBase("SAMPLE_RATE", SAMPLE_RATE);
+//        setParameterInDataBase("BUFFER_SIZE", BUFFER_SIZE);
+//        setParameterInDataBase("HOP_SIZE", HOP_SIZE);
+//        setParameterInDataBase("FRAMES_PER_SECOND", FRAMES_PER_SECOND);
+//    }
 
     public void setParameterInDataBase(String parameter, int value) {
         if (parametersDatabase != null) {
@@ -128,6 +134,27 @@ public class Parameters {
             return false;
         }
         return false;
+    }
+
+    public void setAudioBufferSize(int newSize) {
+        setParameterInDataBase("BUFFER_SIZE", newSize);
+        BUFFER_SIZE = newSize;
+    }
+
+    public int getAudioBufferSize() {
+        return BUFFER_SIZE;
+    }
+
+    private int checkAudioBufferValue(int tempValue) {
+        switch(tempValue) {
+            case 2048:
+            case 4096:
+            case 8192:
+            case 16384:
+                return tempValue;
+            default:
+                return 8192;
+        }
     }
 
     public void setMusicalNotation(MusicalNotationEnum notation) {

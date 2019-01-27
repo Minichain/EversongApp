@@ -133,10 +133,45 @@
 
                     <TextView
                         android:id="@+id/chord_buffer_size_seekbar_text"
-                        android:layout_width="20dp"
+                        android:layout_width="100dp"
                         android:layout_height="fill_parent"
-                        app:layout_constraintLeft_toRightOf="@+id/chord_buffer_size_seekbar"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toRightOf="@+id/chord_buffer_size_seekbar" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/audio_buffer_size_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/chord_buffer_size_layout">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_audio_buffer_size"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:id="@+id/audio_buffer_size_seekbar_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <SeekBar
+                        android:id="@+id/audio_buffer_size_seekbar"
+                        android:layout_width="250dp"
+                        android:layout_height="fill_parent"
+                        android:max="3" />
+
+                    <TextView
+                        android:id="@+id/audio_buffer_size_seekbar_text"
+                        android:layout_width="100dp"
+                        android:layout_height="fill_parent"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toRightOf="@+id/audio_buffer_size_seekbar" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

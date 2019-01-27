@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 public class ParametersDatabaseHelper extends SQLiteOpenHelper {
-    // If you change the database schema, you must increment the database version.
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Eversong.db";
     private static final String SQL_CREATE_ENTRIES =
@@ -29,8 +28,6 @@ public class ParametersDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // This database is only a cache for online data, so its upgrade policy is
-        // to simply to discard the data and start over
         db.execSQL(SQL_DELETE_ENTRIES);
         onCreate(db);
     }
@@ -39,7 +36,9 @@ public class ParametersDatabaseHelper extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
 
-    /* Inner class that defines the table contents */
+    /*******************
+     * PARAMETERS TABLE
+     ******************/
     public static class ParametersColumns implements BaseColumns {
         public static final String PARAMETERS_TABLE_NAME = "ParametersTable";
         public static final String COLUMN_PARAMETER = "Parameter";
