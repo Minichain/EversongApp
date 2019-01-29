@@ -12,60 +12,30 @@ extern "C" {
     }
 
     jintArray Java_com_upf_minichain_eversongapp_AudioStack_chordDetectionJni(JNIEnv *env, jobject, jdoubleArray samples, jdoubleArray spectrumSamples) {
-        double* samplesArrayTemp = env->GetDoubleArrayElements(samples, 0);
-        double* spectrumSamplesArrayTemp = env->GetDoubleArrayElements(spectrumSamples, 0);
-        int* returnArray = processAudio->chordDetection(samplesArrayTemp, spectrumSamplesArrayTemp);
         jintArray output = env->NewIntArray(2);
-        env->SetIntArrayRegion(output, 0, 2, returnArray);
-        samplesArrayTemp = NULL;
-        spectrumSamplesArrayTemp = NULL;
-        returnArray = NULL;
-        delete []samplesArrayTemp;
-        delete []spectrumSamplesArrayTemp;
-        delete []returnArray;
+        env->SetIntArrayRegion(output, 0, 2, processAudio->chordDetection(env->GetDoubleArrayElements(samples, 0), env->GetDoubleArrayElements(spectrumSamples, 0)));
         return output;
     }
 
     jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_getChromagramJni(JNIEnv *env, jobject, jdoubleArray samples, jdoubleArray spectrumSamples) {
-        double* samplesArrayTemp = env->GetDoubleArrayElements(samples, 0);
-        double* spectrumSamplesArrayTemp = env->GetDoubleArrayElements(spectrumSamples, 0);
-        double* returnArray = processAudio->getChromagram(samplesArrayTemp, spectrumSamplesArrayTemp);
         jdoubleArray output = env->NewDoubleArray(12);
-        env->SetDoubleArrayRegion(output, 0, 12, returnArray);
-        samplesArrayTemp = NULL;
-        spectrumSamplesArrayTemp = NULL;
-        returnArray = NULL;
-        delete []samplesArrayTemp;
-        delete []spectrumSamplesArrayTemp;
-        delete []returnArray;
+        env->SetDoubleArrayRegion(output, 0, 12, processAudio->getChromagram(env->GetDoubleArrayElements(samples, 0), env->GetDoubleArrayElements(spectrumSamples, 0)));
         return output;
     }
 
     jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_fftJni(JNIEnv *env, jobject, jdoubleArray inputReal, jboolean DIRECT) {
         jsize length = env->GetArrayLength(inputReal);
-        double* samplesArrayTemp = NULL;
-        double* returnArray = NULL;
         jdoubleArray output = NULL;
-        delete[] samplesArrayTemp;
-        delete[] returnArray;
-        samplesArrayTemp = env->GetDoubleArrayElements(inputReal, 0);
-        returnArray = ProcessAudio::fft(samplesArrayTemp, length, DIRECT);
         output = env->NewDoubleArray(length);
-        env->SetDoubleArrayRegion(output, 0, length, returnArray);
+        env->SetDoubleArrayRegion(output, 0, length, ProcessAudio::fft(env->GetDoubleArrayElements(inputReal, 0), length, DIRECT));
         return output;
     }
 
     jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_windowJni(JNIEnv *env, jobject, jdoubleArray samples, jint windowType) {
         jsize length = env->GetArrayLength(samples);
-        double* samplesArrayTemp = NULL;
-        double* returnArray = NULL;
         jdoubleArray output = NULL;
-        delete[] samplesArrayTemp;
-        delete[] returnArray;
-        samplesArrayTemp = env->GetDoubleArrayElements(samples, 0);
-        returnArray = ProcessAudio::window(samplesArrayTemp, length, windowType);
         output = env->NewDoubleArray(length);
-        env->SetDoubleArrayRegion(output, 0, length, returnArray);
+        env->SetDoubleArrayRegion(output, 0, length, ProcessAudio::window(env->GetDoubleArrayElements(samples, 0), length, windowType));
         return output;
     }
 
@@ -76,48 +46,28 @@ extern "C" {
                                                                                  jint sampleRate,
                                                                                  jint frameSize) {
         jsize length = env->GetArrayLength(spectrumSamples);
-        double* spectrumSamplesArrayTemp = NULL;
-        double* returnArray = NULL;
         jdoubleArray output = NULL;
-        delete []spectrumSamplesArrayTemp;
-        delete []returnArray;
-        spectrumSamplesArrayTemp = env->GetDoubleArrayElements(spectrumSamples, 0);
-        returnArray = ProcessAudio::bandPassFilter(spectrumSamplesArrayTemp, lowCutOffFreq, highCutOffFreq, sampleRate, frameSize);
         output = env->NewDoubleArray(length);
-        env->SetDoubleArrayRegion(output, 0, length, returnArray);
-
+        env->SetDoubleArrayRegion(output, 0, length, ProcessAudio::bandPassFilter(env->GetDoubleArrayElements(spectrumSamples, 0), lowCutOffFreq, highCutOffFreq, sampleRate, frameSize));
         return output;
     }
 
     jdouble Java_com_upf_minichain_eversongapp_AudioStack_getAverageLevelJni(JNIEnv *env, jobject, jdoubleArray samples) {
         jsize length = env->GetArrayLength(samples);
-        double* samplesArrayTemp = env->GetDoubleArrayElements(samples, 0);
-        double returnValue = ProcessAudio::getAverageLevel(samplesArrayTemp, length);
-        samplesArrayTemp = NULL;
-        delete []samplesArrayTemp;
-        return returnValue;
+        return ProcessAudio::getAverageLevel(env->GetDoubleArrayElements(samples, 0), length);
     }
 
     jdouble Java_com_upf_minichain_eversongapp_AudioStack_getSpectralFlatnessJni(JNIEnv *env, jobject, jdoubleArray samples) {
         jsize length = env->GetArrayLength(samples);
-        double* samplesArrayTemp = env->GetDoubleArrayElements(samples, 0);
-        double returnValue = ProcessAudio::getSpectralFlatness(samplesArrayTemp, length);
-        samplesArrayTemp = NULL;
-        delete []samplesArrayTemp;
-        return returnValue;
+        return ProcessAudio::getSpectralFlatness(env->GetDoubleArrayElements(samples, 0), length);
     }
 
     jfloat Java_com_upf_minichain_eversongapp_AudioStack_getPitchJni(JNIEnv *env, jobject, jdoubleArray samples) {
         jsize length = env->GetArrayLength(samples);
-        double* samplesArrayTemp = env->GetDoubleArrayElements(samples, 0);
-        float returnValue = processAudio->getPitch(samplesArrayTemp, length);
-        samplesArrayTemp = NULL;
-        delete []samplesArrayTemp;
-        return returnValue;
+        return processAudio->getPitch(env->GetDoubleArrayElements(samples, 0), length);
     }
 
     jfloat Java_com_upf_minichain_eversongapp_AudioStack_getPitchProbabilityJni(JNIEnv *env, jobject) {
-        float returnValue = processAudio->getPitchProbability();
-        return returnValue;
+        return processAudio->getPitchProbability();
     }
 }

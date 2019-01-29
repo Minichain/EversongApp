@@ -27,8 +27,8 @@
 
     <TextView
         android:id="@+id/music_playing_detector"
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
+        android:layout_width="226dp"
+        android:layout_height="15dp"
         android:layout_centerInParent="true"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"

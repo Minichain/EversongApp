@@ -26,6 +26,9 @@ import com.upf.minichain.eversongapp.enums.NotesEnum;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     boolean keepRecordingAudio;        // Indicates if recording / playback should stop
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     EversongCanvas canvas;
 
     boolean musicBeingPlayed;
+    boolean polytonalMusicBeingPlayed;
     float pitchDetected;
     float pitchProbability;
     NotesEnum pitchNote;
@@ -90,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         AudioStack.initAudioStack();
 
         musicBeingPlayed = false;
+        polytonalMusicBeingPlayed = false;
         pitchDetected = -1;
         pitchNote = NotesEnum.NO_NOTE;
         chordDetected[0] = -1;
@@ -233,10 +238,16 @@ public class MainActivity extends AppCompatActivity {
         spectralFlatnessValue = AudioStack.getSpectralFlatness(Arrays.copyOfRange(audioSpectrumBuffer, 0, Parameters.BUFFER_SIZE / 2));
 
         //TODO How do we detect if there's music being played??
-        if (pitchProbability >= 0.80 && spectralFlatnessValue < 0.99990) {
+        if (pitchProbability >= 0.80 && spectralFlatnessValue < 0.99990 && !musicBeingPlayed) {
+            polytonalMusicBeingPlayed = (pitchProbability < 0.90) ? true : false;
             musicBeingPlayed = true;
-        } else {
-            musicBeingPlayed = true;
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+            executor.schedule(new Runnable() {
+                @Override
+                public void run(){
+                    musicBeingPlayed = false;
+                }
+            }, 2000, TimeUnit.MILLISECONDS);
         }
         mostProbableChord = AudioStack.getMostProbableChord(mostProbableChordBuffer);
     }
@@ -269,7 +280,11 @@ public class MainActivity extends AppCompatActivity {
             spectralFlatnessText.setText("Flatness: " + ((int)(spectralFlatnessValue * 100000)));
             if (musicBeingPlayed) {
                 musicPlayingDetectorText.setVisibility(View.VISIBLE);
-                musicPlayingDetectorText.setText("MUSIC PLAYING!");
+                if (polytonalMusicBeingPlayed) {
+                    musicPlayingDetectorText.setText("POLYTONAL MUSIC PLAYING!");
+                } else {
+                    musicPlayingDetectorText.setText("MONOTONAL MUSIC PLAYING!");
+                }
             } else {
                 musicPlayingDetectorText.setVisibility(View.GONE);
             }
