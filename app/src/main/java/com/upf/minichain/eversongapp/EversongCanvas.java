@@ -68,6 +68,7 @@ public class EversongCanvas {
                 case GUITAR_TAB:
                 case UKULELE_TAB:
                 case PIANO_TAB:
+                case STAFF_TAB:
                     if (Parameters.getInstance().isDebugMode()) {
                         drawSpectrum(bufferFrequency, spectrumAverage, pitch, mPaint01);
                     }

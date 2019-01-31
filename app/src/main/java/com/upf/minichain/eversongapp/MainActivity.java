@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.upf.minichain.eversongapp.chordChart.GuitarChordChart;
+import com.upf.minichain.eversongapp.chordChart.StaffChordChart;
 import com.upf.minichain.eversongapp.chordChart.UkuleleChordChart;
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
@@ -306,6 +307,11 @@ public class MainActivity extends AppCompatActivity {
             case UKULELE_TAB:
                 UkuleleChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);
                 break;
+            case PIANO_TAB:
+                break;
+            case STAFF_TAB:
+                StaffChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);
+                break;
             case CHROMAGRAM:
                 break;
         }
@@ -385,16 +391,25 @@ public class MainActivity extends AppCompatActivity {
             case R.id.open_guitar_tab:
                 Parameters.getInstance().setTabSelected(Parameters.TabSelected.GUITAR_TAB);
                 UkuleleChordChart.hideChordChart(this);
+                StaffChordChart.hideChordChart(this);
                 setChordChart();
                 return true;
             case R.id.open_ukulele_tab:
                 Parameters.getInstance().setTabSelected(Parameters.TabSelected.UKULELE_TAB);
                 GuitarChordChart.hideChordChart(this);
+                StaffChordChart.hideChordChart(this);
+                setChordChart();
+                return true;
+            case R.id.open_staff_tab:
+                Parameters.getInstance().setTabSelected(Parameters.TabSelected.STAFF_TAB);
+                GuitarChordChart.hideChordChart(this);
+                UkuleleChordChart.hideChordChart(this);
                 setChordChart();
                 return true;
             case R.id.open_chromagram:
                 GuitarChordChart.hideChordChart(this);
                 UkuleleChordChart.hideChordChart(this);
+                StaffChordChart.hideChordChart(this);
                 Parameters.getInstance().setTabSelected(Parameters.TabSelected.CHROMAGRAM);
                 return true;
             case R.id.open_settings_menu_option:
@@ -432,6 +447,10 @@ public class MainActivity extends AppCompatActivity {
             case UKULELE_TAB:
                 placeHolder = this.findViewById(R.id.ukulele_chord_chart_layout);
                 getLayoutInflater().inflate(R.layout.ukulele_chord_chart, placeHolder);
+                break;
+            case STAFF_TAB:
+                placeHolder = this.findViewById(R.id.staff_chord_chart_layout);
+                getLayoutInflater().inflate(R.layout.staff_chord_chart, placeHolder);
                 break;
             case CHROMAGRAM:
                 break;

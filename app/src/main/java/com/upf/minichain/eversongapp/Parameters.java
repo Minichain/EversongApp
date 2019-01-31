@@ -32,7 +32,7 @@ public class Parameters {
     private static boolean debugMode;
 
     enum TabSelected {
-        GUITAR_TAB, UKULELE_TAB, PIANO_TAB, CHROMAGRAM
+        GUITAR_TAB, UKULELE_TAB, PIANO_TAB, STAFF_TAB, CHROMAGRAM
     }
 
     /******************
