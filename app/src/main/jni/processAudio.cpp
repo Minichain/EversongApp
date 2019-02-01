@@ -22,7 +22,7 @@ int* ProcessAudio::chordDetection(double* samples, double* spectrumSamples) {
         std::vector<double> chroma = c.getChromagram();
         chordDetector.detectChord(chroma);
         chordDetectionOutput[0] = chordDetector.rootNote;
-        chordDetectionOutput[1] = chordDetector.quality;
+        chordDetectionOutput[1] = chordDetector.chordType;
     }
     return chordDetectionOutput;
 }

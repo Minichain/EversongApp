@@ -127,72 +127,63 @@ void ChordDetector::classifyChromagram()
 	if (chordindex < 12)
 	{
 		rootNote = chordindex;
-		quality = Major;
-		intervals = 0;
+		chordType = Major;
 	}
 	
 	// minor
 	if ((chordindex >= 12) && (chordindex < 24))
 	{
 		rootNote = chordindex-12;
-		quality = Minor;
-		intervals = 0;
+		chordType = Minor;
 	}
 	
 	// diminished 5th
 	if ((chordindex >= 24) && (chordindex < 36))
 	{
 		rootNote = chordindex-24;
-		quality = Diminished5th;
-		intervals = 0;
+		chordType = Diminished5th;
 	}
 	
 	// augmented 5th
 	if ((chordindex >= 36) && (chordindex < 48))
 	{
 		rootNote = chordindex-36;
-		quality = Augmented5th;
-		intervals = 0;
+		chordType = Augmented5th;
 	}
 	
 	// sus2
 	if ((chordindex >= 48) && (chordindex < 60))
 	{
 		rootNote = chordindex-48;
-		quality = Sus2;
-		intervals = 2;
+		chordType = Sus2;
 	}
 	
 	// sus4
 	if ((chordindex >= 60) && (chordindex < 72))
 	{
 		rootNote = chordindex-60;
-		quality = Sus4;
-		intervals = 4;
+		chordType = Sus4;
 	}
 	
 	// major 7th
 	if ((chordindex >= 72) && (chordindex < 84))
 	{
 		rootNote = chordindex-72;
-		quality = Major7th;
-		intervals = 7;
+		chordType = Major7th;
 	}
 	
 	// minor 7th
 	if ((chordindex >= 84) && (chordindex < 96))
 	{
 		rootNote = chordindex-84;
-		quality = Minor7th;
-		intervals = 7;
+		chordType = Minor7th;
 	}
 	
 	// dominant 7th
 	if ((chordindex >= 96) && (chordindex < 108))
 	{
 		rootNote = chordindex-96;
-		quality = Dominant7th;
-		intervals = 7;
+		chordType = Dominant7th;
 	}
 }
 

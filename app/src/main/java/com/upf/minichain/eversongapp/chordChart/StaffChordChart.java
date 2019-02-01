@@ -52,7 +52,18 @@ public class StaffChordChart extends ChordChart {
                 }
 
                 ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) staffNoteView.getLayoutParams();
-                params.setMargins(0, 0, 0, (int)Utils.convertDpToPixel((float)(initialPadding + i * paddingBetweenNotes), ctx));
+
+                if (i > 0 && chordChart[i - 1] != 0) {  //To avoid notes overlap we set a margin on the left
+                    params.setMargins((int)Utils.convertDpToPixel((float)(40), ctx),
+                            0,
+                            0,
+                            (int)Utils.convertDpToPixel((float)(initialPadding + i * paddingBetweenNotes), ctx));
+                } else {
+                    params.setMargins(0,
+                            0,
+                            0,
+                            (int)Utils.convertDpToPixel((float)(initialPadding + i * paddingBetweenNotes), ctx));
+                }
                 staffNoteView.setLayoutParams(params);
             }
         }
