@@ -166,6 +166,7 @@ public final class AudioStack {
      * */
     public static int[] getChordFromString(String chordString) {
         int[] chord = new int[2];
+        chord[1] = 0;   //NoChord as default ChordType
         for (int i = 0; i < NotesEnum.numberOfNotes; i++) {
             if (chordString.startsWith(NotesEnum.getString(NotesEnum.fromInteger(i))) && chordString.contains("#")) {
                 chord[0] = i + 1;

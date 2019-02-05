@@ -91,7 +91,7 @@ public abstract class ChordChart {
                 chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 4) % NotesEnum.numberOfNotes);    //The major third
                 chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 8) % NotesEnum.numberOfNotes);    //The augmented fifth
                 break;
-            case Other:
+            case NoChord:
             default:
                 break;
         }

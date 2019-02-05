@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
             pitchText.setVisibility(View.VISIBLE);
             spectralFlatnessText.setVisibility(View.VISIBLE);
             musicPlayingDetectorText.setVisibility(View.VISIBLE);
+
             chordNoteText.setTextColor(mColor01);
             chordTypeText.setTextColor(mColor01);
             pitchText.setTextColor(mColor01);
@@ -239,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
         spectralFlatnessValue = AudioStack.getSpectralFlatness(Arrays.copyOfRange(audioSpectrumBuffer, 0, Parameters.BUFFER_SIZE / 2));
 
         //TODO How do we detect if there's music being played??
-        if (pitchProbability >= 0.80 && spectralFlatnessValue < 0.99990 && !musicBeingPlayed) {
+        if (pitchProbability >= 0.70 && spectralFlatnessValue < 0.99996 && !musicBeingPlayed) {
             polytonalMusicBeingPlayed = (pitchProbability < 0.90) ? true : false;
             musicBeingPlayed = true;
             ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
@@ -278,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
             if (chordDetected[1] != -1) {
                 chordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(chordDetected[1])));
             }
-            spectralFlatnessText.setText("Flatness: " + ((int)(spectralFlatnessValue * 100000)));
+            spectralFlatnessText.setText("Flatness: 0." + ((int)(spectralFlatnessValue * 1000000)));
             if (musicBeingPlayed) {
                 musicPlayingDetectorText.setVisibility(View.VISIBLE);
                 if (polytonalMusicBeingPlayed) {
@@ -308,6 +309,7 @@ public class MainActivity extends AppCompatActivity {
                 UkuleleChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);
                 break;
             case PIANO_TAB:
+                //TODO
                 break;
             case STAFF_TAB:
                 StaffChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);

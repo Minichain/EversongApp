@@ -23,12 +23,13 @@ public class StaffChordChart extends ChordChart {
 
     public static void setChordChart(Context ctx, NotesEnum tonic, ChordTypeEnum chordType, float alpha) {
         int[] chordChart = getStaffChordTab(tonic, chordType);
+        int staffNoteViewId;
         ConstraintLayout staffNoteView;
+        int staffSharpViewId;
         ImageView staffSharpView;
-        int notesPainted = 0;
+        int notesPainted = 1;
         final int initialPadding = 21;
         final int paddingBetweenNotes = 11;
-
 //        for (int i = 0; i < numberOfNotes; i++) {
 //            Log.l("StaffChordChartLog:: chordChart[" + i + "]: " + chordChart[i]);
 //        }
@@ -36,14 +37,13 @@ public class StaffChordChart extends ChordChart {
         LinearLayout chordChartLayout = ((Activity)ctx).findViewById(R.id.staff_chord_chart_layout);
         chordChartLayout.setVisibility(View.VISIBLE);
 
-        for (int i = 0; (i < numberOfNotes) && (notesPainted < 4); i++) {
+        for (int i = 0; (i < numberOfNotes) && (notesPainted <= 4); i++) {
             if (chordChart[i] != 0) {
-                notesPainted++;
-                int staffNoteViewId = ctx.getResources().getIdentifier("staff_chord_chart_note_layout_" + notesPainted, "id", ctx.getPackageName());
+                staffNoteViewId = ctx.getResources().getIdentifier("staff_chord_chart_note_layout_" + notesPainted, "id", ctx.getPackageName());
                 staffNoteView = ((Activity)ctx).findViewById(staffNoteViewId);
                 staffNoteView.setVisibility(View.VISIBLE);
 
-                int staffSharpViewId = ctx.getResources().getIdentifier("staff_chord_chart_sharp_" + notesPainted, "id", ctx.getPackageName());
+                staffSharpViewId = ctx.getResources().getIdentifier("staff_chord_chart_sharp_" + notesPainted, "id", ctx.getPackageName());
                 staffSharpView = ((Activity)ctx).findViewById(staffSharpViewId);
                 if (chordChart[i] == 1) {           //Not sharp note
                     staffSharpView.setVisibility(View.GONE);
@@ -65,7 +65,17 @@ public class StaffChordChart extends ChordChart {
                             (int)Utils.convertDpToPixel((float)(initialPadding + i * paddingBetweenNotes), ctx));
                 }
                 staffNoteView.setLayoutParams(params);
+                notesPainted++;
             }
+        }
+        for (int i = notesPainted; i <= 4; i++) {
+            staffNoteViewId = ctx.getResources().getIdentifier("staff_chord_chart_note_layout_" + i, "id", ctx.getPackageName());
+            staffNoteView = ((Activity)ctx).findViewById(staffNoteViewId);
+            staffNoteView.setVisibility(View.GONE);
+
+            staffSharpViewId = ctx.getResources().getIdentifier("staff_chord_chart_sharp_" + i, "id", ctx.getPackageName());
+            staffSharpView = ((Activity)ctx).findViewById(staffSharpViewId);
+            staffSharpView.setVisibility(View.GONE);
         }
     }
 
@@ -82,13 +92,28 @@ public class StaffChordChart extends ChordChart {
         NotesEnum firstStaffChordChartNote = getFirstChordChartNote(clef);
 
         int noteLoop = firstStaffChordChartNote.getValue();
+        boolean isTriadChord = chordNotes[3] == NotesEnum.NO_NOTE;
+        int notesToSet = isTriadChord ? 3 : 4;
+        boolean tonicSet = false;
+
         for (int i = 0; i < numberOfNotes; i ++) {
-            for (int ii = 0; ii < 4; ii++) {
-                if (NotesEnum.getString(chordNotes[ii]).contains(NotesEnum.getString(NotesEnum.fromInteger(noteLoop)))) {
-                    if (NotesEnum.getString(chordNotes[ii]).contains("#")) {
+            if (!tonicSet) {
+                if (NotesEnum.getString(tonic).contains(NotesEnum.getString(NotesEnum.fromInteger(noteLoop)))) {
+                    if (NotesEnum.getString(tonic).contains("#")) {
                         chordTab[i] = 2;
                     } else {
                         chordTab[i] = 1;
+                    }
+                    tonicSet = true;
+                }
+            } else {
+                for (int ii = 1; ii < notesToSet; ii++) {
+                    if (NotesEnum.getString(chordNotes[ii]).contains(NotesEnum.getString(NotesEnum.fromInteger(noteLoop)))) {
+                        if (NotesEnum.getString(chordNotes[ii]).contains("#")) {
+                            chordTab[i] = 2;
+                        } else {
+                            chordTab[i] = 1;
+                        }
                     }
                 }
             }
