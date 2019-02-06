@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
         spectralFlatnessValue = AudioStack.getSpectralFlatness(Arrays.copyOfRange(audioSpectrumBuffer, 0, Parameters.BUFFER_SIZE / 2));
 
         //TODO How do we detect if there's music being played??
-        if (pitchProbability >= 0.70 && spectralFlatnessValue < 0.99996 && !musicBeingPlayed) {
+        if (pitchProbability >= 0.70 && spectralFlatnessValue < 0.999995 && !musicBeingPlayed) {
             polytonalMusicBeingPlayed = (pitchProbability < 0.90) ? true : false;
             musicBeingPlayed = true;
             ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
@@ -380,9 +380,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.dropdown_menu, menu);
-        if (!BuildConfig.FLAVOR.equals("dev")) {
-            menu.findItem(R.id.debug_mode).setVisible(false);
-        }
         return true;
     }
 
@@ -419,15 +416,6 @@ public class MainActivity extends AppCompatActivity {
                 this.onPause();
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
-                return true;
-            case R.id.debug_mode:
-                GuitarChordChart.hideChordChart(this);
-                UkuleleChordChart.hideChordChart(this);
-                Parameters.getInstance().setDebugMode(!Parameters.getInstance().isDebugMode());
-                setDebugModeViews();
-                String toastString = (Parameters.getInstance().isDebugMode()) ? "Debug mode enabled" : "Debug mode disabled";
-                Toast toast = Toast.makeText(getApplicationContext(), toastString, Toast.LENGTH_SHORT);
-                toast.show();
                 return true;
             case R.id.exit_app_option:
                 keepProcessingFrame = false;

@@ -3,9 +3,12 @@ package com.upf.minichain.eversongapp;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.upf.minichain.eversongapp.enums.MusicalNotationEnum;
 import com.upf.minichain.eversongapp.enums.WindowFunctionEnum;
@@ -22,6 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
         setWindowingFunctionSetting();
         setChordBufferSizeSetting();
         setAudioBufferSizeSetting();
+        setDebugModeSetting();
     }
 
     private void setMusicalNotationSetting() {
@@ -163,6 +167,25 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+    }
+
+    private void setDebugModeSetting() {
+        Switch switchView = this.findViewById(R.id.debug_mode_switch);
+        if (!BuildConfig.FLAVOR.equals("dev")) {
+            switchView.setVisibility(View.GONE);
+            return;
+        }
+        switchView.setChecked(Parameters.getInstance().isDebugMode());
+
+        switchView.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                String toastString = b ? "Debug mode enabled" : "Debug mode disabled";
+                Toast toast = Toast.makeText(getApplicationContext(), toastString, Toast.LENGTH_SHORT);
+                toast.show();
+                Parameters.getInstance().setDebugMode(b);
+            }
         });
     }
 }

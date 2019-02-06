@@ -79,6 +79,9 @@ public class Parameters {
 
             tempValue = loadParameter("chordBufferSize");
             chordBufferSize = (tempValue != -1) ? tempValue : chordBufferSize;
+
+            tempValue = loadParameter("debugMode");
+            debugMode = tempValue == 1;
         }
     }
 
@@ -192,8 +195,9 @@ public class Parameters {
         return tabSelected;
     }
 
-    public void setDebugMode(boolean debugMode) {
-        this.debugMode = debugMode;
+    public void setDebugMode(boolean value) {
+        setParameterInDataBase("debugMode", value ? 1 : 0);
+        debugMode = value;
     }
 
     public boolean isDebugMode() {
