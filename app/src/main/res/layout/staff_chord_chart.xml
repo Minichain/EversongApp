@@ -42,7 +42,7 @@
                 android:id="@+id/staff_chord_chart_note_1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/staff_chord_chart_note"
+                android:src="@drawable/staff_chord_chart_note_1"
                 />
 
             <ImageView
@@ -65,7 +65,7 @@
                 android:id="@+id/staff_chord_chart_note_2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/staff_chord_chart_note"
+                android:src="@drawable/staff_chord_chart_note_1"
                 />
 
             <ImageView
@@ -88,7 +88,7 @@
                 android:id="@+id/staff_chord_chart_note_3"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/staff_chord_chart_note"
+                android:src="@drawable/staff_chord_chart_note_1"
                 />
 
             <ImageView
@@ -111,7 +111,7 @@
                 android:id="@+id/staff_chord_chart_note_4"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/staff_chord_chart_note"
+                android:src="@drawable/staff_chord_chart_note_1"
                 />
 
             <ImageView

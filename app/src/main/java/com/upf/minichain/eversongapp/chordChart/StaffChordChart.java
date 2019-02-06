@@ -13,8 +13,7 @@ import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
 public class StaffChordChart extends ChordChart {
-    private static int numberOfLines = 5;   //All staffs have 5 lines
-    private static int numberOfNotes = 11;
+    private static int numberOfNotes = 15;
     private static Clef clef = Clef.G_CLEF;
 
     enum Clef {
@@ -23,12 +22,11 @@ public class StaffChordChart extends ChordChart {
 
     public static void setChordChart(Context ctx, NotesEnum tonic, ChordTypeEnum chordType, float alpha) {
         int[] chordChart = getStaffChordTab(tonic, chordType);
-        int staffNoteViewId;
-        ConstraintLayout staffNoteView;
-        int staffSharpViewId;
+        ConstraintLayout staffNoteLayoutView;
+        ImageView staffNoteView;
         ImageView staffSharpView;
         int notesPainted = 1;
-        final int initialPadding = 21;
+        final int initialPadding = 0;
         final int paddingBetweenNotes = 11;
 //        for (int i = 0; i < numberOfNotes; i++) {
 //            Log.l("StaffChordChartLog:: chordChart[" + i + "]: " + chordChart[i]);
@@ -39,19 +37,24 @@ public class StaffChordChart extends ChordChart {
 
         for (int i = 0; (i < numberOfNotes) && (notesPainted <= 4); i++) {
             if (chordChart[i] != 0) {
-                staffNoteViewId = ctx.getResources().getIdentifier("staff_chord_chart_note_layout_" + notesPainted, "id", ctx.getPackageName());
-                staffNoteView = ((Activity)ctx).findViewById(staffNoteViewId);
-                staffNoteView.setVisibility(View.VISIBLE);
+                staffNoteLayoutView = ((Activity)ctx).findViewById(ctx.getResources().getIdentifier("staff_chord_chart_note_layout_" + notesPainted, "id", ctx.getPackageName()));
+                staffNoteLayoutView.setVisibility(View.VISIBLE);
 
-                staffSharpViewId = ctx.getResources().getIdentifier("staff_chord_chart_sharp_" + notesPainted, "id", ctx.getPackageName());
-                staffSharpView = ((Activity)ctx).findViewById(staffSharpViewId);
+                staffNoteView = ((Activity)ctx).findViewById(ctx.getResources().getIdentifier("staff_chord_chart_note_" + notesPainted, "id", ctx.getPackageName()));
+                if (i == 1 || i == 13) {
+                    staffNoteView.setImageResource(R.drawable.staff_chord_chart_note_2);
+                } else {
+                    staffNoteView.setImageResource(R.drawable.staff_chord_chart_note_1);
+                }
+
+                staffSharpView = ((Activity)ctx).findViewById(ctx.getResources().getIdentifier("staff_chord_chart_sharp_" + notesPainted, "id", ctx.getPackageName()));
                 if (chordChart[i] == 1) {           //Not sharp note
                     staffSharpView.setVisibility(View.GONE);
                 } else if (chordChart[i] == 2) {    //Sharp note
                     staffSharpView.setVisibility(View.VISIBLE);
                 }
 
-                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) staffNoteView.getLayoutParams();
+                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) staffNoteLayoutView.getLayoutParams();
 
                 if (i > 0 && chordChart[i - 1] != 0) {  //To avoid notes overlap we set a margin on the left
                     params.setMargins((int)Utils.convertDpToPixel((float)(40), ctx),
@@ -64,17 +67,15 @@ public class StaffChordChart extends ChordChart {
                             0,
                             (int)Utils.convertDpToPixel((float)(initialPadding + i * paddingBetweenNotes), ctx));
                 }
-                staffNoteView.setLayoutParams(params);
+                staffNoteLayoutView.setLayoutParams(params);
                 notesPainted++;
             }
         }
         for (int i = notesPainted; i <= 4; i++) {
-            staffNoteViewId = ctx.getResources().getIdentifier("staff_chord_chart_note_layout_" + i, "id", ctx.getPackageName());
-            staffNoteView = ((Activity)ctx).findViewById(staffNoteViewId);
-            staffNoteView.setVisibility(View.GONE);
+            staffNoteLayoutView = ((Activity)ctx).findViewById(ctx.getResources().getIdentifier("staff_chord_chart_note_layout_" + i, "id", ctx.getPackageName()));
+            staffNoteLayoutView.setVisibility(View.GONE);
 
-            staffSharpViewId = ctx.getResources().getIdentifier("staff_chord_chart_sharp_" + i, "id", ctx.getPackageName());
-            staffSharpView = ((Activity)ctx).findViewById(staffSharpViewId);
+            staffSharpView = ((Activity)ctx).findViewById(ctx.getResources().getIdentifier("staff_chord_chart_sharp_" + i, "id", ctx.getPackageName()));
             staffSharpView.setVisibility(View.GONE);
         }
     }
@@ -128,18 +129,16 @@ public class StaffChordChart extends ChordChart {
 
     /**
      * Depending on the "clef" the first note of the staff changes.
-     * We consider the first note of the staff as the note right before
-     * the first line starting from the bottom (Example: D in G clef).
      * */
     private static NotesEnum getFirstChordChartNote(Clef clef) {
         switch(clef) {
             case C_CLEF:
-                return NotesEnum.E;
+                return NotesEnum.C;
             case F_CLEF:
-                return NotesEnum.F;
+                return NotesEnum.D;
             case G_CLEF:
             default:
-                return NotesEnum.D;
+                return NotesEnum.B;
         }
     }
 
