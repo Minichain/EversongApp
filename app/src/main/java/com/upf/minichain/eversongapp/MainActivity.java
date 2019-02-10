@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     boolean polytonalMusicBeingPlayed;
     float pitchDetected;
     float pitchProbability;
+    float[] pitchDetectedBuffer;
+    int pitchBufferIterator = 0;
     NotesEnum pitchNote;
     double spectralFlatnessValue;
     int[] chordDetected = new int[2];
@@ -98,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         polytonalMusicBeingPlayed = false;
         pitchDetected = -1;
         pitchNote = NotesEnum.NO_NOTE;
+        pitchDetectedBuffer = new float[Parameters.getInstance().getPitchBufferSize()];
         chordDetected[0] = -1;
         chordDetected[1] = -1;
         mostProbableChord[0] = NotesEnum.A.getValue();
@@ -231,6 +234,14 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         pitchDetected = pitchDetectedThread;
                         pitchProbability = pitchProbabilityThread;
+                        pitchDetectedBuffer[pitchBufferIterator % Parameters.getInstance().getPitchBufferSize()] = pitchDetected;
+                        pitchDetected = Utils.getAverage(pitchDetectedBuffer, Parameters.getInstance().getPitchBufferSize());
+                        pitchBufferIterator++;
+                        float stdDeviation = Utils.getStandardDeviation(pitchDetectedBuffer, Parameters.getInstance().getPitchBufferSize());
+                        if (stdDeviation > 100) {
+                            pitchDetected = -1;
+                        }
+//                        Log.l("PitchLog:: std deviation: " + stdDeviation);
 //                        Log.l("PitchLog:: Pitch detected with probability " + pitchProbability);
                     }
                 });

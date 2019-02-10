@@ -28,6 +28,7 @@ public class Parameters {
     private static MusicalNotationEnum musicalNotation;
     private static WindowFunctionEnum windowingFunction;
     private static int chordBufferSize;
+    private static int pitchBufferSize;
     private static TabSelected tabSelected;
     private static boolean debugMode;
 
@@ -47,6 +48,7 @@ public class Parameters {
         musicalNotation = MusicalNotationEnum.ENGLISH_NOTATION;
         windowingFunction = WindowFunctionEnum.HAMMING_WINDOW;
         chordBufferSize = 7;
+        pitchBufferSize = 4;
         tabSelected = TabSelected.GUITAR_TAB;
         debugMode = false;
     }
@@ -185,6 +187,10 @@ public class Parameters {
 
     public int getChordBufferSize() {
         return chordBufferSize;
+    }
+
+    public int getPitchBufferSize() {
+        return pitchBufferSize;
     }
 
     public void setTabSelected(TabSelected tab) {

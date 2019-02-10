@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.upf.minichain.eversongapp.Log;
 import com.upf.minichain.eversongapp.R;
+import com.upf.minichain.eversongapp.Utils;
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
@@ -57,7 +57,7 @@ public class StaffChordChart extends ChordChart {
                 ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) staffNoteLayoutView.getLayoutParams();
 
                 if (i > 0 && chordChart[i - 1] != 0) {  //To avoid notes overlap we set a margin on the left
-                    params.setMargins((int)Utils.convertDpToPixel((float)(40), ctx),
+                    params.setMargins((int) Utils.convertDpToPixel((float)(40), ctx),
                             0,
                             0,
                             (int)Utils.convertDpToPixel((float)(initialPadding + i * paddingBetweenNotes), ctx));
@@ -95,9 +95,10 @@ public class StaffChordChart extends ChordChart {
         int noteLoop = firstStaffChordChartNote.getValue();
         boolean isTriadChord = chordNotes[3] == NotesEnum.NO_NOTE;
         int notesToSet = isTriadChord ? 3 : 4;
+        int notesSet = 0;
         boolean tonicSet = false;
 
-        for (int i = 0; i < numberOfNotes; i ++) {
+        for (int i = 0; (i < numberOfNotes) && (notesSet != notesToSet); i ++) {
             if (!tonicSet) {
                 if (NotesEnum.getString(tonic).contains(NotesEnum.getString(NotesEnum.fromInteger(noteLoop)))) {
                     if (NotesEnum.getString(tonic).contains("#")) {
@@ -105,6 +106,7 @@ public class StaffChordChart extends ChordChart {
                     } else {
                         chordTab[i] = 1;
                     }
+                    notesSet++;
                     tonicSet = true;
                 }
             } else {
@@ -115,6 +117,7 @@ public class StaffChordChart extends ChordChart {
                         } else {
                             chordTab[i] = 1;
                         }
+                        notesSet++;
                     }
                 }
             }

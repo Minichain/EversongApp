@@ -1,6 +1,6 @@
 package com.upf.minichain.eversongapp;
 
-public final class Log {
+public class Log {
     public static final String LOG_TAG = "EversongAppLog::";
 
     public static void l(String string) {

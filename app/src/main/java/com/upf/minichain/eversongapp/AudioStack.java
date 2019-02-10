@@ -4,8 +4,7 @@ import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 import com.upf.minichain.eversongapp.enums.WindowFunctionEnum;
 
-public final class AudioStack {
-
+public class AudioStack {
     static {
         System.loadLibrary("native-lib");
     }
@@ -61,7 +60,7 @@ public final class AudioStack {
     }
 
     public static double getDifference(double[] buffer1, double[] buffer2) {
-        return Math.abs(getAverageLevel(buffer1) - getAverageLevelJni(buffer2));
+        return Math.abs(getAverageLevelJni(buffer1) - getAverageLevelJni(buffer2));
     }
 
     public static NotesEnum getNoteByFrequency(double frequencyValue) {

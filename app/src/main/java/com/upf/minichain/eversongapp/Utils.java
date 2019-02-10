@@ -1,4 +1,4 @@
-package com.upf.minichain.eversongapp.chordChart;
+package com.upf.minichain.eversongapp;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
@@ -7,6 +7,31 @@ import android.util.DisplayMetrics;
  * Utils class. Only "static" methods.
  */
 public class Utils {
+    public static float getAverage(float[] array, int length) {
+        float sum = 0;
+        for (int i = 0; i < length; i++) {
+            sum += array[i];
+        }
+        return (sum / length);
+    }
+
+    public static double getAverage(double[] array, int length) {
+        double sum = 0;
+        for (int i = 0; i < length; i++) {
+            sum += array[i];
+        }
+        return (sum / length);
+    }
+
+    public static float getStandardDeviation(float[] array, int length) {
+        float sum = 0;
+        float mean = getAverage(array, length);
+        for (int i = 0; i < length; i++) {
+            sum += Math.pow(array[i] - mean, 2);
+        }
+        return (sum / (length - 1));
+    }
+
     /**
      * This method converts dp unit to equivalent pixels, depending on device density.
      *
