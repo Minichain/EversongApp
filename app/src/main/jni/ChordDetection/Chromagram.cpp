@@ -23,11 +23,12 @@
 
 //==================================================================================
 Chromagram::Chromagram (int frameSize, int fs, int bs)
- :  referenceFrequency (55.0),              // A2
+ :  referenceFrequency (55.0),              // A1
+// :  referenceFrequency (110.0),              // A2
 // :  referenceFrequency (130.81278265),       // C2
     numHarmonics (2),
     numOctaves (2),
-    numBinsToSearch (2)
+    numBinsToSearch (1)
 {
     bufferSize = bs;    // It must be a power of 2 (2048, 4096, 8192, 16384...)
 
@@ -216,26 +217,21 @@ void Chromagram::calculateChromagram()
 
     double divisorRatio = (((double) samplingFrequency) / 4.0) / ((double)bufferSize);
     
-    for (int n = 0; n < 12; n++)
-    {
+    for (int n = 0; n < 12; n++) {
         double chromaSum = 0.0;
         
-        for (int octave = 1; octave <= numOctaves; octave++)
-        {
+        for (int octave = 1; octave <= numOctaves; octave++) {
             double noteSum = 0.0;
             
-            for (int harmonic = 1; harmonic <= numHarmonics; harmonic++)
-            {
+            for (int harmonic = 1; harmonic <= numHarmonics; harmonic++) {
                 int centerBin = (int)round((noteFrequencies[n] * octave * harmonic) / divisorRatio);
                 int minBin = centerBin - (numBinsToSearch * harmonic);
                 int maxBin = centerBin + (numBinsToSearch * harmonic);
                 
                 double maxVal = 0.0;
                 
-                for (int k = minBin; k < maxBin; k++)
-                {
-                    if (magnitudeSpectrum[k] > maxVal)
-                    {
+                for (int k = minBin; k < maxBin; k++) {
+                    if (magnitudeSpectrum[k] > maxVal) {
                         maxVal = magnitudeSpectrum[k];
                     }
                 }

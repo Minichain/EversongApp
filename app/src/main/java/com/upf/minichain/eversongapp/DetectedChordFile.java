@@ -13,10 +13,13 @@ public class DetectedChordFile {
     FileOutputStream chordsDetectedOutputStream;
     OutputStreamWriter chordsDetectedOutputStreamWriter;
     BufferedWriter chordsDetectedBufferedWriter;
+    long startTime;
 
     DetectedChordFile(Context context) {
         String filename = "chords_detected.txt";
-        File file = new File(context.getFilesDir(), filename);
+//        File file = new File(context.getFilesDir(), filename);
+        File file = new File(context.getExternalFilesDir(null), filename);
+        Log.l("DetectedChordFileLog:: Creating file. Name: " + filename + ", Directory: " + context.getFilesDir());
         try {
             chordsDetectedOutputStream = new FileOutputStream(file);
             chordsDetectedOutputStreamWriter = new OutputStreamWriter(chordsDetectedOutputStream);
@@ -29,7 +32,7 @@ public class DetectedChordFile {
     public void writeInFile(String newElement) {
         try {
             chordsDetectedBufferedWriter.write(newElement + "\n");
-            Log.l("DetectedChordFileLog:: writing to file. Content: " + newElement);
+            Log.l("DetectedChordFileLog:: writing to file. Content: \"" + newElement + "\"");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -37,6 +40,7 @@ public class DetectedChordFile {
 
     public void closeFile() {
         try {
+            Log.l("DetectedChordFileLog:: Closing file");
             chordsDetectedBufferedWriter.close();
         } catch (IOException e) {
             e.printStackTrace();

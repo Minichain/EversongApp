@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.l("MainActivityLog:: recordingButton pressed!");
                 if (recordingButton.getText().equals(getString(R.string.start_record_button))) {
                     recordingButton.setText(R.string.stop_record_button);
+                    detectedChordsFile.startTime = System.currentTimeMillis();
                     recordAudio();
                 } else if (recordingButton.getText().equals(getString(R.string.stop_record_button))) {
                     recordingButton.setText(R.string.start_record_button);
@@ -252,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO How do we detect if there's music being played??
         if (pitchProbability >= 0.70 && spectralFlatnessValue < 0.999995 && !musicBeingPlayed) {
-            polytonalMusicBeingPlayed = (pitchProbability < 0.90) ? true : false;
+            polytonalMusicBeingPlayed = (pitchProbability < 0.95) ? true : false;
             musicBeingPlayed = true;
             ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
             executor.schedule(new Runnable() {
@@ -332,8 +333,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateDetectedChordsList() {
         String chord = NotesEnum.getString(NotesEnum.fromInteger(mostProbableChord[0])) + ChordTypeEnum.getString(ChordTypeEnum.fromInteger(mostProbableChord[1]));
+        if (!keepRecordingAudio) {
+            return;
+        }
         if (arrayOfChordsDetected.isEmpty() || !arrayOfChordsDetected.get(arrayOfChordsDetected.size() - 1).contains(chord)) {
-            String newElement = chord + ", " + System.currentTimeMillis();
+            long timeInMillis = (System.currentTimeMillis() - detectedChordsFile.startTime);
+            String newElement = timeInMillis + " ms"  + ": " + chord;
             arrayOfChordsDetected.add(newElement);
             detectedChordsFile.writeInFile(newElement);
         }
@@ -370,14 +375,14 @@ public class MainActivity extends AppCompatActivity {
                     prevAudioSpectrumBuffer = audioSpectrumBuffer;
                     audioSamplesBuffer = AudioStack.getSamplesToDouble(tempAudioSamples);
                     audioSamplesBufferWindowed = AudioStack.window(audioSamplesBuffer, Parameters.getInstance().getWindowingFunction());
-                    audioSpectrumBuffer = AudioStack.bandPassFilter(AudioStack.fft(audioSamplesBufferWindowed, true), 20, 8000);
+                    audioSpectrumBuffer = AudioStack.bandPassFilter(AudioStack.fft(audioSamplesBufferWindowed, true), 20, 4000);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             processAudio();
                         }
                     });
-                    System.gc();
+//                    System.gc();
 //                    Log.l("MainActivityLog:: reading buffer of size " + Parameters.BUFFER_SIZE + ", Time elapsed: " + (System.currentTimeMillis() - startTime) + " ms");
                 }
                 record.stop();

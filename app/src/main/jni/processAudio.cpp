@@ -8,7 +8,7 @@ ProcessAudio::ProcessAudio(int sample_rate, int frame_size) {
     c = Chromagram(frameSize, sampleRate, frameSize);
     c.setInputAudioFrameSize(frameSize);
     c.setSamplingFrequency(sampleRate);
-    c.setChromaCalculationInterval(frameSize * 2);
+    c.setChromaCalculationInterval(frameSize);
 
     Yin_init(&yin, (int16_t)frameSize, 0.30);
 }
