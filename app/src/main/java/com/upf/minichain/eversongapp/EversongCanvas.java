@@ -12,6 +12,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
 public class EversongCanvas {
@@ -58,7 +59,7 @@ public class EversongCanvas {
         });
     }
 
-    public void updateCanvas(final double[] bufferSamples, final double[] bufferFrequency, final double spectrumAverage, final float pitch, final double[] chromagram) {
+    public void updateCanvas(final double[] bufferSamples, final double[] bufferFrequency, final double spectrumAverage, final float pitch, final double[] chromagram, final int[] chordDetected) {
         mImageView.setImageBitmap(mBitmap);
         mCanvas.drawColor(mColorBackground);    //Reset background color
 
@@ -74,7 +75,7 @@ public class EversongCanvas {
                     }
                     break;
                 case CHROMAGRAM:
-                    drawChromagram(chromagram, spectrumAverage, mPaint01);
+                    drawChromagram(chromagram, spectrumAverage, chordDetected, mPaint01, mPaint02);
                     break;
             }
         }
@@ -117,18 +118,29 @@ public class EversongCanvas {
         mCanvas.drawLine(0, (float)spectrumAverage, mCanvas.getWidth(), (float)spectrumAverage, mPaint01);
     }
 
-    public void drawChromagram(double[] chromagram, double spectrumAverage, Paint paint) {
+    public void drawChromagram(double[] chromagram, double spectrumAverage, int[] chordDetected, Paint paint01, Paint paint02) {
         int notesBins = (int)((float)mCanvas.getWidth() / 12f);
         int paddingBetweenBins = 10;
         int bottomPadding = 300;
-        paint.setTextSize(45);
+        paint01.setTextSize(45);
 
         float amplifyDrawFactor = 0.50f * 0.00025f / (float)spectrumAverage;
         for (int i = 0; i < NotesEnum.numberOfNotes; i++) {
             mRect.set(i * notesBins, (mCanvas.getHeight() - bottomPadding) - (int)(chromagram[i] * amplifyDrawFactor * (double)mCanvas.getHeight()),
                     i * notesBins + (notesBins - paddingBetweenBins), mCanvas.getHeight() - bottomPadding);
-            mCanvas.drawRect(mRect, paint);
-            mCanvas.drawText(NotesEnum.fromInteger(i).toString(), i * notesBins, mCanvas.getHeight() - bottomPadding + 40, paint);
+            boolean noteIsInTheChord = false;
+            NotesEnum[] chordNotes = Utils.getChordNotes(NotesEnum.fromInteger(chordDetected[0]), ChordTypeEnum.fromInteger(chordDetected[1]));
+            for (int z = 0; z < 4; z++) {
+                if (chordNotes[z].toString().equals(NotesEnum.fromInteger(i).toString())) {
+                    noteIsInTheChord = true;
+                }
+            }
+            if (noteIsInTheChord) {
+                mCanvas.drawRect(mRect, paint02);
+            } else {
+                mCanvas.drawRect(mRect, paint01);
+            }
+            mCanvas.drawText(NotesEnum.fromInteger(i).toString(), i * notesBins, mCanvas.getHeight() - bottomPadding + 40, paint01);
         }
     }
 

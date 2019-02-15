@@ -279,7 +279,7 @@ public class EversongActivity extends AppCompatActivity {
 
     public void processFrame() {
         if (canvas.getCanvas() != null) {
-            canvas.updateCanvas(audioSamplesBuffer, audioSpectrumBuffer, AudioStack.getAverageLevel(audioSpectrumBuffer), pitchDetected, chromagram);
+            canvas.updateCanvas(audioSamplesBuffer, audioSpectrumBuffer, AudioStack.getAverageLevel(audioSpectrumBuffer), pitchDetected, chromagram, chordDetected);
         }
 
         if (Parameters.getInstance().isDebugMode()) {

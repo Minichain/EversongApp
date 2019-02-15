@@ -85,7 +85,7 @@ public class StaffChordChart extends ChordChart {
         for (int i = 0; i < numberOfNotes; i++) {
             chordTab[i] = 0;
         }
-        NotesEnum[] chordNotes = getChordNotes(tonic, chordType);
+        NotesEnum[] chordNotes = Utils.getChordNotes(tonic, chordType);
 //        Log.l("StaffChordChartLog:: chordNotes: " + chordNotes[0]
 //                + ", " + chordNotes[1]
 //                + ", " + chordNotes[2]

@@ -3,6 +3,9 @@ package com.upf.minichain.eversongapp;
 import android.content.Context;
 import android.util.DisplayMetrics;
 
+import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
+import com.upf.minichain.eversongapp.enums.NotesEnum;
+
 /**
  * Utils class. Only "static" methods.
  */
@@ -68,5 +71,63 @@ public class Utils {
      */
     public static float convertPixelsToDp(float px, Context context){
         return px / ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    }
+
+    /**
+     * This method takes a chord as an input [G, major]
+     * and returns the notes that compose the chord [G, B, D].
+     * */
+    public static NotesEnum[] getChordNotes(NotesEnum tonic, ChordTypeEnum chordType) {
+        NotesEnum[] chordNotes = new NotesEnum[4];
+        chordNotes[0] = tonic;
+        chordNotes[1] = NotesEnum.NO_NOTE;
+        chordNotes[2] = NotesEnum.NO_NOTE;
+        chordNotes[3] = NotesEnum.NO_NOTE;
+
+        switch(chordType) {
+            case Major:
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 4) % NotesEnum.numberOfNotes);    //The major third
+                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 7) % NotesEnum.numberOfNotes);    //The fifth
+                break;
+            case Minor:
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 3) % NotesEnum.numberOfNotes);    //The minor third
+                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 7) % NotesEnum.numberOfNotes);    //The fifth
+                break;
+            case Dominant7th:
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 4) % NotesEnum.numberOfNotes);    //The major third
+                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 7) % NotesEnum.numberOfNotes);    //The fifth
+                chordNotes[3] = NotesEnum.fromInteger((tonic.getValue() + 10) % NotesEnum.numberOfNotes);   //The seventh
+                break;
+            case Sus2:
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 2) % NotesEnum.numberOfNotes);    //The second
+                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 7) % NotesEnum.numberOfNotes);    //The fifth
+                break;
+            case Sus4:
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 5) % NotesEnum.numberOfNotes);    //The fourth
+                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 7) % NotesEnum.numberOfNotes);    //The fifth
+                break;
+            case Major7th:
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 4) % NotesEnum.numberOfNotes);    //The major third
+                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 7) % NotesEnum.numberOfNotes);    //The fifth
+                chordNotes[3] = NotesEnum.fromInteger((tonic.getValue() + 11) % NotesEnum.numberOfNotes);   //The seventh
+                break;
+            case Minor7th:
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 3) % NotesEnum.numberOfNotes);    //The minor third
+                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 7) % NotesEnum.numberOfNotes);    //The fifth
+                chordNotes[3] = NotesEnum.fromInteger((tonic.getValue() + 10) % NotesEnum.numberOfNotes);   //The dominant seventh
+                break;
+            case Diminished5th:
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 3) % NotesEnum.numberOfNotes);    //The minor third
+                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 6) % NotesEnum.numberOfNotes);    //The diminished fifth
+                break;
+            case Augmented5th:
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 4) % NotesEnum.numberOfNotes);    //The major third
+                chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 8) % NotesEnum.numberOfNotes);    //The augmented fifth
+                break;
+            case NoChord:
+            default:
+                break;
+        }
+        return chordNotes;
     }
 }
