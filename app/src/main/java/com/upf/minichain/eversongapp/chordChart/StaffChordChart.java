@@ -100,8 +100,8 @@ public class StaffChordChart extends ChordChart {
 
         for (int i = 0; (i < numberOfNotes) && (notesSet != notesToSet); i ++) {
             if (!tonicSet) {
-                if (NotesEnum.getString(tonic).contains(NotesEnum.getString(NotesEnum.fromInteger(noteLoop)))) {
-                    if (NotesEnum.getString(tonic).contains("#")) {
+                if (tonic.toString().contains(NotesEnum.fromInteger(noteLoop).toString())) {
+                    if (tonic.toString().contains("#")) {
                         chordTab[i] = 2;
                     } else {
                         chordTab[i] = 1;
@@ -111,8 +111,8 @@ public class StaffChordChart extends ChordChart {
                 }
             } else {
                 for (int ii = 1; ii < notesToSet; ii++) {
-                    if (NotesEnum.getString(chordNotes[ii]).contains(NotesEnum.getString(NotesEnum.fromInteger(noteLoop)))) {
-                        if (NotesEnum.getString(chordNotes[ii]).contains("#")) {
+                    if (chordNotes[ii].toString().contains(NotesEnum.fromInteger(noteLoop).toString())) {
+                        if (chordNotes[ii].toString().contains("#")) {
                             chordTab[i] = 2;
                         } else {
                             chordTab[i] = 1;

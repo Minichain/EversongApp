@@ -80,10 +80,10 @@ public enum NotesEnum {
         return 0f;
     }
 
-    public static String getString(NotesEnum note) {
+    public String toString() {
         MusicalNotationEnum musicalNotation = Parameters.getInstance().getMusicalNotation();
         if (musicalNotation == MusicalNotationEnum.SOLFEGE_NOTATION) {
-            switch(note) {
+            switch(this) {
                 case A:
                     return "La";
                 case A_SHARP:
@@ -110,7 +110,7 @@ public enum NotesEnum {
                     return "Sol#";
             }
         } else if (musicalNotation == MusicalNotationEnum.ENGLISH_NOTATION) {
-            switch(note) {
+            switch(this) {
                 case A:
                     return "A";
                 case A_SHARP:

@@ -1,7 +1,10 @@
 package com.upf.minichain.eversongapp;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
@@ -17,11 +20,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.upf.minichain.eversongapp.chordChart.GuitarChordChart;
 import com.upf.minichain.eversongapp.chordChart.StaffChordChart;
 import com.upf.minichain.eversongapp.chordChart.UkuleleChordChart;
+import com.upf.minichain.eversongapp.enums.BroadcastMessage;
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
@@ -31,7 +34,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity {
+public class EversongActivity extends AppCompatActivity {
+    EversongBroadCastReceiver eversongBroadCastReceiver;
+
     boolean keepRecordingAudio;        // Indicates if recording / playback should stop
     boolean keepProcessingFrame;
     Button recordingButton;
@@ -92,9 +97,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initMainActivity() {
-        Log.l("MainActivityLog:: initMainActivity");
+        Log.l("EversongActivityLog:: initMainActivity");
         Parameters.getInstance().loadParameters(getApplicationContext());
         AudioStack.initAudioStack();
+
+        Intent serviceIntent = new Intent(getApplicationContext(), EversongService.class);
+        getApplicationContext().startService(serviceIntent);
+
+        eversongBroadCastReceiver = new EversongBroadCastReceiver();
+        registerEversongBroadcastReceiver();
 
         musicBeingPlayed = false;
         polytonalMusicBeingPlayed = false;
@@ -124,9 +135,9 @@ public class MainActivity extends AppCompatActivity {
         mostProbableChordTypeText = this.findViewById(R.id.most_probable_chord_type);
 
         mostProbableChordNoteText.setTextColor(mColor01);
-        mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.A));
+        mostProbableChordNoteText.setText(NotesEnum.A.toString());
         mostProbableChordTypeText.setTextColor(mColor01);
-        mostProbableChordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.Major));
+        mostProbableChordTypeText.setText(ChordTypeEnum.Major.toString());
 
         canvas =  new EversongCanvas(getResources(), this.findViewById(R.id.canvas_view));
 
@@ -154,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         recordingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.l("MainActivityLog:: recordingButton pressed!");
+                Log.l("EversongActivityLog:: recordingButton pressed!");
                 if (recordingButton.getText().equals(getString(R.string.start_record_button))) {
                     recordingButton.setText(R.string.stop_record_button);
                     detectedChordsFile.startTime = System.currentTimeMillis();
@@ -209,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
                     final int[] chordDetectedThread = AudioStack.chordDetection(audioSamplesBufferWindowed, audioSpectrumBuffer);
                     final double[] chromagramThread = AudioStack.getChromagram(audioSamplesBufferWindowed, audioSpectrumBuffer);
 
-//                    Log.l("MainActivityLog:: Spectrum diff: " + AudioStack.getDifference(audioSpectrumBuffer, prevAudioSpectrumBuffer));
+//                    Log.l("EversongActivityLog:: Spectrum diff: " + AudioStack.getDifference(audioSpectrumBuffer, prevAudioSpectrumBuffer));
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -276,20 +287,20 @@ public class MainActivity extends AppCompatActivity {
                 pitchNote = AudioStack.getNoteByFrequency((double)pitchDetected);
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append("Pitch: ").append((int)pitchDetected).append(" Hz").append(" (")
-                        .append(NotesEnum.getString(pitchNote)).append("), ")
+                        .append(pitchNote.toString()).append("), ")
                         .append((int)(pitchProbability * 100)).append("%");
                 pitchText.setText(stringBuilder.toString());
             } else {
                 pitchNote = NotesEnum.NO_NOTE;
-                pitchText.setText(String.valueOf("Pitch: " + NotesEnum.getString(pitchNote) + " Hz"));
+                pitchText.setText(String.valueOf("Pitch: " + pitchNote.toString() + " Hz"));
             }
 
             if (chordDetected[0] != -1) {
-                chordNoteText.setText(NotesEnum.getString(NotesEnum.fromInteger(chordDetected[0])));
+                chordNoteText.setText(NotesEnum.fromInteger(chordDetected[0]).toString());
             }
 
             if (chordDetected[1] != -1) {
-                chordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(chordDetected[1])));
+                chordTypeText.setText(ChordTypeEnum.fromInteger(chordDetected[1]).toString());
             }
             spectralFlatnessText.setText("Flatness: 0." + ((int)(spectralFlatnessValue * 1000000)));
             if (musicBeingPlayed) {
@@ -305,9 +316,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (mostProbableChord[0] != -1 && mostProbableChord[1] != -1) {
-            mostProbableChordNoteText.setText(NotesEnum.getString(NotesEnum.fromInteger(mostProbableChord[0])));
+            mostProbableChordNoteText.setText(NotesEnum.fromInteger(mostProbableChord[0]).toString());
             mostProbableChordNoteText.setAlpha((float)mostProbableChord[2] / 100f);
-            mostProbableChordTypeText.setText(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(mostProbableChord[1])));
+            mostProbableChordTypeText.setText(ChordTypeEnum.fromInteger(mostProbableChord[1]).toString());
             mostProbableChordTypeText.setAlpha((float)mostProbableChord[2] / 100f);
         }
 
@@ -332,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateDetectedChordsList() {
-        String chord = NotesEnum.getString(NotesEnum.fromInteger(mostProbableChord[0])) + ChordTypeEnum.getString(ChordTypeEnum.fromInteger(mostProbableChord[1]));
+        String chord = NotesEnum.fromInteger(mostProbableChord[0]).toString() + " " + ChordTypeEnum.fromInteger(mostProbableChord[1]).toString();
         if (!keepRecordingAudio) {
             return;
         }
@@ -359,12 +370,12 @@ public class MainActivity extends AppCompatActivity {
                         Parameters.BUFFER_SIZE);
 
                 if (record.getState() != AudioRecord.STATE_INITIALIZED) {
-                    Log.l("MainActivityLog:: Audio Record cannot be initialized!");
+                    Log.l("EversongActivityLog:: Audio Record cannot be initialized!");
                     return;
                 }
                 record.startRecording();
 
-                Log.l("MainActivityLog:: Start recording");
+                Log.l("EversongActivityLog:: Start recording");
 
                 keepRecordingAudio = true;
                 final long startTime = System.currentTimeMillis();
@@ -383,12 +394,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 //                    System.gc();
-//                    Log.l("MainActivityLog:: reading buffer of size " + Parameters.BUFFER_SIZE + ", Time elapsed: " + (System.currentTimeMillis() - startTime) + " ms");
+//                    Log.l("EversongActivityLog:: reading buffer of size " + Parameters.BUFFER_SIZE + ", Time elapsed: " + (System.currentTimeMillis() - startTime) + " ms");
                 }
                 record.stop();
                 record.release();
 
-                Log.l("MainActivityLog:: Recording stopped. Num of samples read: " + totalShortsRead);
+                Log.l("EversongActivityLog:: Recording stopped. Num of samples read: " + totalShortsRead);
             }
         }).start();
     }
@@ -443,6 +454,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    class EversongBroadCastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.l("EversongActivityLog:: Broadcast received " + intent.getAction());
+            try {
+                if (intent.getAction() != null) {
+                    if (intent.getAction().equals(BroadcastMessage.REFRESH_FRAME.toString())) {
+                        Log.l("EversongActivityLog:: refreshing frame!");
+                    } else {
+
+                    }
+                }
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private void registerEversongBroadcastReceiver() {
+        try {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(BroadcastMessage.REFRESH_FRAME.toString());
+            registerReceiver(eversongBroadCastReceiver, intentFilter);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
     private void setChordChart() {
         LinearLayout placeHolder;
         switch(Parameters.getInstance().getTabSelected()) {
@@ -464,8 +506,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void closeApp() {
+        Intent serviceIntent = new Intent(getApplicationContext(), EversongService.class);
+        getApplicationContext().stopService(serviceIntent);
         this.finish();
         android.os.Process.killProcess(android.os.Process.myPid());
-        System.exit(1);
+        System.exit(-1);
     }
 }

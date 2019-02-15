@@ -41,12 +41,8 @@ public enum ChordTypeEnum {
         }
     }
 
-    public static String getString(ChordTypeEnum chordType) {
-        if (chordType == null) {
-            return null;
-        }
-
-        switch(chordType) {
+    public String toString() {
+        switch(this) {
             case Minor:
                 return "Minor";
             case Major:
@@ -56,15 +52,15 @@ public enum ChordTypeEnum {
             case Sus4:
                 return "Sus4";
             case Dominant7th:
-                return "Dominant 7th";
+                return "Dominant7th";
             case Major7th:
                 return "Major7th";
             case Minor7th:
                 return "Minor7th";
             case Diminished5th:
-                return "Diminished 5th";
+                return "Diminished5th";
             case Augmented5th:
-                return "Augmented 5th";
+                return "Augmented5th";
             case NoChord:
             default:
                 return "";

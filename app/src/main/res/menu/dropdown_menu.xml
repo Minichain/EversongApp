@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="10dp"
     android:layout_width="10dp"
-    tools:context=".MainActivity">
+    tools:context=".EversongActivity">
 
     <item android:id="@+id/open_guitar_tab"
         android:title="@string/guitar_tab"

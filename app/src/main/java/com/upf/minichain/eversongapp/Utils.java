@@ -33,6 +33,22 @@ public class Utils {
     }
 
     /**
+     * This method takes an hexadecimal color as an input ("FCFCFCFC" or "FCFCFC") and
+     * returns an array of 3 integers which are the colour in RGB (252, 252, 252).
+     * */
+    public static int[] hexadecimalToRgb(String hex) {
+        hex = hex.replace("#", "");
+        if (hex.length() == 8) {
+            hex = hex.substring(2, 8);  //Transforms "FCFCFCFC" into "FCFCFC"
+        }
+        final int[] ret = new int[3];
+        for (int i = 0; i < 3; i++) {
+            ret[i] = Integer.parseInt(hex.substring(i * 2, i * 2 + 2), 16);
+        }
+        return ret;
+    }
+
+    /**
      * This method converts dp unit to equivalent pixels, depending on device density.
      *
      * @param dp A value in dp (density independent pixels) unit. Which we need to convert into pixels

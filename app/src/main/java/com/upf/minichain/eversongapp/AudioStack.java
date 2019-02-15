@@ -133,8 +133,8 @@ public class AudioStack {
         int numOfDifferentChords = 0;
 
         for (int i = 0; i < Parameters.getInstance().getChordBufferSize(); i++) {
-            String chordName = NotesEnum.getString(NotesEnum.fromInteger(chordsDetectedBuffer[i][0]))
-                    + ChordTypeEnum.getString(ChordTypeEnum.fromInteger(chordsDetectedBuffer[i][1]));
+            String chordName = NotesEnum.fromInteger(chordsDetectedBuffer[i][0]).toString()
+                    + ChordTypeEnum.fromInteger(chordsDetectedBuffer[i][1]).toString();
 
             for (int j = 0; j < Parameters.getInstance().getChordBufferSize(); j++) {
                 if (listOfChords[j] == null || listOfChords[j].equals("")) {
@@ -167,16 +167,16 @@ public class AudioStack {
         int[] chord = new int[2];
         chord[1] = 0;   //NoChord as default ChordType
         for (int i = 0; i < NotesEnum.numberOfNotes; i++) {
-            if (chordString.startsWith(NotesEnum.getString(NotesEnum.fromInteger(i))) && chordString.contains("#")) {
+            if (chordString.startsWith(NotesEnum.fromInteger(i).toString()) && chordString.contains("#")) {
                 chord[0] = i + 1;
                 break;
-            } else if (chordString.startsWith(NotesEnum.getString(NotesEnum.fromInteger(i)))) {
+            } else if (chordString.startsWith(NotesEnum.fromInteger(i).toString())) {
                 chord[0] = i;
                 break;
             }
         }
         for (int i = 0; i < ChordTypeEnum.numberOfChordTypes; i++) {
-            if (chordString.endsWith(ChordTypeEnum.getString(ChordTypeEnum.fromInteger(i)))) {
+            if (chordString.endsWith(ChordTypeEnum.fromInteger(i).toString())) {
                 chord[1] = i;
             }
         }

@@ -32,8 +32,8 @@ public class EversongCanvas {
         mColor01 = ResourcesCompat.getColor(resources, R.color.mColor01, null);
         mColor02 = ResourcesCompat.getColor(resources, R.color.mColor02, null);
 
-        int[] color01RGB = hexadecimalToRgb(resources.getString(R.color.colorBackground));
-        int[] color02RGB = hexadecimalToRgb(resources.getString(R.color.mColor02));
+        int[] color01RGB = Utils.hexadecimalToRgb(resources.getString(R.color.colorBackground));
+        int[] color02RGB = Utils.hexadecimalToRgb(resources.getString(R.color.mColor02));
         shader1 = new LinearGradient(0, 400, 0, 500, Color.rgb(color01RGB[0], color01RGB[1], color01RGB[2]),
                 Color.rgb(color02RGB[0], color02RGB[1], color02RGB[2]), Shader.TileMode.CLAMP);
 
@@ -128,23 +128,11 @@ public class EversongCanvas {
             mRect.set(i * notesBins, (mCanvas.getHeight() - bottomPadding) - (int)(chromagram[i] * amplifyDrawFactor * (double)mCanvas.getHeight()),
                     i * notesBins + (notesBins - paddingBetweenBins), mCanvas.getHeight() - bottomPadding);
             mCanvas.drawRect(mRect, paint);
-            mCanvas.drawText(NotesEnum.getString(NotesEnum.fromInteger(i)), i * notesBins, mCanvas.getHeight() - bottomPadding + 40, paint);
+            mCanvas.drawText(NotesEnum.fromInteger(i).toString(), i * notesBins, mCanvas.getHeight() - bottomPadding + 40, paint);
         }
     }
 
     public Canvas getCanvas() {
         return mCanvas;
-    }
-
-    public static int[] hexadecimalToRgb(String hex) {
-        hex = hex.replace("#", "");
-        if (hex.length() == 8) {
-            hex = hex.substring(2, 8);  //Transforms "FCFCFCFC" into "FCFCFC"
-        }
-        final int[] ret = new int[3];
-        for (int i = 0; i < 3; i++) {
-            ret[i] = Integer.parseInt(hex.substring(i * 2, i * 2 + 2), 16);
-        }
-        return ret;
     }
 }
