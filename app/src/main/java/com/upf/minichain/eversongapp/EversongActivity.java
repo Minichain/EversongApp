@@ -72,6 +72,8 @@ public class EversongActivity extends AppCompatActivity {
     double[] audioSpectrumBuffer;
     double[] prevAudioSpectrumBuffer;
 
+    TextView algorithmPerformanceText;
+
     int mColor01;
     int mColor03;
 
@@ -139,6 +141,9 @@ public class EversongActivity extends AppCompatActivity {
         mostProbableChordTypeText.setTextColor(mColor01);
         mostProbableChordTypeText.setText(ChordTypeEnum.Major.toString());
 
+        algorithmPerformanceText = this.findViewById(R.id.algorithm_performance);
+        algorithmPerformanceText.setTextColor(mColor01);
+
         canvas =  new EversongCanvas(getResources(), this.findViewById(R.id.canvas_view));
 
         keepProcessingFrame = true;
@@ -169,10 +174,16 @@ public class EversongActivity extends AppCompatActivity {
                 if (recordingButton.getText().equals(getString(R.string.start_record_button))) {
                     recordingButton.setText(R.string.stop_record_button);
                     detectedChordsFile.startTime = System.currentTimeMillis();
+                    arrayOfChordsDetected.clear();
                     recordAudio();
                 } else if (recordingButton.getText().equals(getString(R.string.stop_record_button))) {
                     recordingButton.setText(R.string.start_record_button);
                     keepRecordingAudio = false;
+                    if (Parameters.getInstance().isDebugMode()) {
+                        algorithmPerformanceText.setVisibility(View.VISIBLE);
+                        algorithmPerformanceText.setText("Performance: " + (int)(TestAlgorithm.computeAlgorithmPerformance(arrayOfChordsDetected) * 100) + "%");
+//                        Log.l("AlgorithmPerformanceLog:: Performance: " + (int)(TestAlgorithm.computeAlgorithmPerformance(arrayOfChordsDetected) * 100) + "%");
+                    }
                 }
             }
         });
