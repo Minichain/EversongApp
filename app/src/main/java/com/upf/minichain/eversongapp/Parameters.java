@@ -46,7 +46,7 @@ public class Parameters {
         BUFFER_SIZE = 8192;
         HOP_SIZE = 2048;
         FRAMES_PER_SECOND = 10;
-        BANDPASS_FILTER_LOW_FREQ = 80;
+        BANDPASS_FILTER_LOW_FREQ = 55;
         BANDPASS_FILTER_HIGH_FREQ = 4000;
 
         musicalNotation = MusicalNotationEnum.ENGLISH_NOTATION;

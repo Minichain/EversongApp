@@ -55,17 +55,17 @@ void ChordDetector::classifyChromagram()
 	int fifth;
 	int chordindex;
 	
-//	// remove some of the 5th note energy from chromagram
-//	for (i = 0; i < 12; i++)
-//	{
-//		fifth = (i+7) % 12;
-//		chromagram[fifth] = chromagram[fifth] - (0.1 * chromagram[i]);
-//
-//		if (chromagram[fifth] < 0)
-//		{
-//			chromagram[fifth] = 0;
-//		}
-//	}
+	// remove some of the 5th note energy from chromagram
+	for (i = 0; i < 12; i++)
+	{
+		fifth = (i+7) % 12;
+		chromagram[fifth] = chromagram[fifth] - (0.1 * chromagram[i]);
+
+		if (chromagram[fifth] < 0)
+		{
+			chromagram[fifth] = 0;
+		}
+	}
 	
 	// major chords
 	for (j = 0; j < 12; j++)

@@ -1,15 +1,22 @@
 package com.upf.minichain.eversongapp;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 
 import com.upf.minichain.eversongapp.enums.BroadcastMessage;
 
 public class EversongService extends Service {
+    EversongServiceBroadcastReceiver eversongBroadCastReceiver;
+
     @Override
     public void onCreate() {
         Log.l("EversongServiceLog:: onCreate service");
+        eversongBroadCastReceiver = new EversongServiceBroadcastReceiver();
+        registerEversongServiceBroadcastReceiver();
     }
 
     @Override
@@ -29,7 +36,7 @@ public class EversongService extends Service {
         Log.l("EversongServiceLog:: onDestroy service");
     }
 
-    private void sendBroadCast(BroadcastMessage broadcastMessage) {
+    private void sendBroadcastToActivity(BroadcastMessage broadcastMessage) {
         Log.l("EversongServiceLog:: sending broadcast " + broadcastMessage.toString());
         try {
             Intent broadCastIntent = new Intent();
@@ -40,5 +47,36 @@ public class EversongService extends Service {
         catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    class EversongServiceBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.l("EversongServiceLog:: Broadcast received " + intent.getAction());
+            try {
+                if (intent.getAction() != null) {
+                    if(intent.getAction().equals(BroadcastMessage.START_RECORDING_AUDIO.toString())) {
+                        sendBroadcastToActivity(BroadcastMessage.STOP_RECORDING_AUDIO);
+                    }
+                }
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private void registerEversongServiceBroadcastReceiver() {
+        try {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(BroadcastMessage.REFRESH_FRAME.toString());
+            intentFilter.addAction(BroadcastMessage.START_RECORDING_AUDIO.toString());
+            intentFilter.addAction(BroadcastMessage.STOP_RECORDING_AUDIO.toString());
+            registerReceiver(eversongBroadCastReceiver, intentFilter);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
     }
 }

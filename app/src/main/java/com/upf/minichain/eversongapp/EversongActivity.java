@@ -35,7 +35,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class EversongActivity extends AppCompatActivity {
-    EversongBroadCastReceiver eversongBroadCastReceiver;
+    EversongActivityBroadcastReceiver eversongBroadCastReceiver;
 
     boolean keepRecordingAudio;        // Indicates if recording / playback should stop
     boolean keepProcessingFrame;
@@ -106,8 +106,8 @@ public class EversongActivity extends AppCompatActivity {
         Intent serviceIntent = new Intent(getApplicationContext(), EversongService.class);
         getApplicationContext().startService(serviceIntent);
 
-        eversongBroadCastReceiver = new EversongBroadCastReceiver();
-        registerEversongBroadcastReceiver();
+        eversongBroadCastReceiver = new EversongActivityBroadcastReceiver();
+        registerEversongActivityBroadcastReceiver();
 
         musicBeingPlayed = false;
         polytonalMusicBeingPlayed = false;
@@ -172,12 +172,14 @@ public class EversongActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.l("EversongActivityLog:: recordingButton pressed!");
                 if (recordingButton.getText().equals(getString(R.string.start_record_button))) {
+                    sendBroadcastToService(BroadcastMessage.START_RECORDING_AUDIO);
                     recordingButton.setText(R.string.stop_record_button);
                     detectedChordsFile.startTime = System.currentTimeMillis();
                     arrayOfChordsDetected.clear();
                     recordAudio();
                 } else if (recordingButton.getText().equals(getString(R.string.stop_record_button))) {
                     recordingButton.setText(R.string.start_record_button);
+                    sendBroadcastToService(BroadcastMessage.STOP_RECORDING_AUDIO);
                     keepRecordingAudio = false;
                     if (Parameters.getInstance().isDebugMode()) {
                         algorithmPerformanceText.setVisibility(View.VISIBLE);
@@ -465,7 +467,20 @@ public class EversongActivity extends AppCompatActivity {
         }
     }
 
-    class EversongBroadCastReceiver extends BroadcastReceiver {
+    private void sendBroadcastToService(BroadcastMessage broadcastMessage) {
+        Log.l("EversongServiceLog:: sending broadcast " + broadcastMessage.toString());
+        try {
+            Intent broadCastIntent = new Intent();
+            broadCastIntent.setAction(broadcastMessage.toString());
+
+            sendBroadcast(broadCastIntent);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    class EversongActivityBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.l("EversongActivityLog:: Broadcast received " + intent.getAction());
@@ -484,10 +499,12 @@ public class EversongActivity extends AppCompatActivity {
         }
     }
 
-    private void registerEversongBroadcastReceiver() {
+    private void registerEversongActivityBroadcastReceiver() {
         try {
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(BroadcastMessage.REFRESH_FRAME.toString());
+            intentFilter.addAction(BroadcastMessage.START_RECORDING_AUDIO.toString());
+            intentFilter.addAction(BroadcastMessage.STOP_RECORDING_AUDIO.toString());
             registerReceiver(eversongBroadCastReceiver, intentFilter);
         }
         catch (Exception ex) {

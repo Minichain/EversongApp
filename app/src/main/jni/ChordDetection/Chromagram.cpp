@@ -27,7 +27,7 @@ Chromagram::Chromagram (int frameSize, int fs, int bs)
 // :  referenceFrequency (110.0),              // A2
 // :  referenceFrequency (130.81278265),       // C2
     numHarmonics (2),
-    numOctaves (3),
+    numOctaves (2),
     numBinsToSearch (1)
 {
     bufferSize = bs;    // It must be a power of 2 (2048, 4096, 8192, 16384...)
@@ -241,7 +241,7 @@ void Chromagram::calculateChromagram()
             
             chromaSum += noteSum;
         }
-        
+
         chromagram[n] = chromaSum;
     }
 
