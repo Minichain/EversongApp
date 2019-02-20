@@ -23,4 +23,6 @@
     <string name="setting_blackman_window">Blackman window</string>
     <string name="setting_chord_buffer_size">Chord buffer size</string>
     <string name="setting_audio_buffer_size">Audio buffer size</string>
+    <string name="setting_bandpass_filter_low_freq">Bandpass filter low freq</string>
+    <string name="setting_bandpass_filter_high_freq">Bandpass filter high freq</string>
 </resources>

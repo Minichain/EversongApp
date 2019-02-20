@@ -25,6 +25,8 @@ public class SettingsActivity extends AppCompatActivity {
         setWindowingFunctionSetting();
         setChordBufferSizeSetting();
         setAudioBufferSizeSetting();
+        setBandpassFilterLowFreqSetting();
+        setBandpassFilterHighFreqSetting();
         setDebugModeSetting();
     }
 
@@ -112,7 +114,7 @@ public class SettingsActivity extends AppCompatActivity {
         SeekBar seekBar = this.findViewById(R.id.chord_buffer_size_seekbar);
         seekBar.setProgress(bufferSize);
         final TextView textView = this.findViewById(R.id.chord_buffer_size_seekbar_text);
-        textView.setText(String.valueOf(bufferSize));
+        textView.setText(String.valueOf(bufferSize) + " chords");
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
@@ -121,8 +123,57 @@ public class SettingsActivity extends AppCompatActivity {
                     progress = min;
                     seekBar.setProgress(progress);
                 }
-                textView.setText(String.valueOf(progress));
+                textView.setText(String.valueOf(progress) + " chords");
                 Parameters.getInstance().setChordBufferSize(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+    }
+
+    private void setBandpassFilterLowFreqSetting() {
+        int bufferSize = Parameters.BANDPASS_FILTER_LOW_FREQ;
+        SeekBar seekBar = this.findViewById(R.id.bandpass_filter_low_freq_seekbar);
+        seekBar.setProgress(bufferSize);
+        final TextView textView = this.findViewById(R.id.bandpass_filter_low_freq_seekbar_text);
+        textView.setText(String.valueOf(bufferSize) + " Hz");
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                int min = 1;
+                if (progress < min) {
+                    progress = min;
+                    seekBar.setProgress(progress);
+                }
+                textView.setText(String.valueOf(progress) + " Hz");
+                Parameters.getInstance().setBandpassFilterLowFreq(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+    }
+
+    private void setBandpassFilterHighFreqSetting() {
+        final int minFreq = 1000;
+        int bufferSize = Parameters.BANDPASS_FILTER_HIGH_FREQ;
+        SeekBar seekBar = this.findViewById(R.id.bandpass_filter_high_freq_seekbar);
+        seekBar.setProgress(bufferSize - minFreq);
+        final TextView textView = this.findViewById(R.id.bandpass_filter_high_freq_seekbar_text);
+        textView.setText(String.valueOf(bufferSize) + " Hz");
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                seekBar.setProgress(progress);
+                textView.setText(String.valueOf(progress + minFreq) + " Hz");
+                Parameters.getInstance().setBandpassFilterHighFreq(progress + minFreq);
             }
 
             @Override
@@ -153,12 +204,12 @@ public class SettingsActivity extends AppCompatActivity {
         SeekBar seekBar = this.findViewById(R.id.audio_buffer_size_seekbar);
         seekBar.setProgress(seekBarProgress);
         final TextView textView = this.findViewById(R.id.audio_buffer_size_seekbar_text);
-        textView.setText(String.valueOf((int)Math.pow(2, 11 + seekBarProgress)));
+        textView.setText(String.valueOf((int)Math.pow(2, 11 + seekBarProgress)) + " s.");
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
                 int newAudioBufferSize = (int)Math.pow(2, 11 + progress);
-                textView.setText(String.valueOf(newAudioBufferSize));
+                textView.setText(String.valueOf(newAudioBufferSize) + " s.");
                 Parameters.getInstance().setAudioBufferSize(newAudioBufferSize);
             }
 

@@ -24,6 +24,8 @@ public class Parameters {
     public static int BUFFER_SIZE;          // It must be a power of 2 (2048, 4096, 8192, 16384...)
     public static int HOP_SIZE;             // It must be a power of 2
     public static int FRAMES_PER_SECOND;
+    public static int BANDPASS_FILTER_LOW_FREQ;
+    public static int BANDPASS_FILTER_HIGH_FREQ;
 
     private static MusicalNotationEnum musicalNotation;
     private static WindowFunctionEnum windowingFunction;
@@ -44,6 +46,8 @@ public class Parameters {
         BUFFER_SIZE = 8192;
         HOP_SIZE = 2048;
         FRAMES_PER_SECOND = 10;
+        BANDPASS_FILTER_LOW_FREQ = 80;
+        BANDPASS_FILTER_HIGH_FREQ = 4000;
 
         musicalNotation = MusicalNotationEnum.ENGLISH_NOTATION;
         windowingFunction = WindowFunctionEnum.HAMMING_WINDOW;
@@ -72,6 +76,12 @@ public class Parameters {
 
             tempValue = loadParameter("FRAMES_PER_SECOND");
             FRAMES_PER_SECOND = (tempValue != -1) ? tempValue : FRAMES_PER_SECOND;
+
+            tempValue = loadParameter("BANDPASS_FILTER_LOW_FREQ");
+            BANDPASS_FILTER_LOW_FREQ = (tempValue != -1) ? tempValue : BANDPASS_FILTER_LOW_FREQ;
+
+            tempValue = loadParameter("BANDPASS_FILTER_HIGH_FREQ");
+            BANDPASS_FILTER_HIGH_FREQ = (tempValue != -1) ? tempValue : BANDPASS_FILTER_HIGH_FREQ;
 
             tempValue = loadParameter("musicalNotation");
             musicalNotation = (tempValue != -1) ? MusicalNotationEnum.values()[tempValue] : musicalNotation;
@@ -146,10 +156,6 @@ public class Parameters {
         BUFFER_SIZE = newSize;
     }
 
-    public int getAudioBufferSize() {
-        return BUFFER_SIZE;
-    }
-
     private int checkAudioBufferValue(int tempValue) {
         switch(tempValue) {
             case 2048:
@@ -160,6 +166,16 @@ public class Parameters {
             default:
                 return BUFFER_SIZE;
         }
+    }
+
+    public void setBandpassFilterLowFreq(int bandpassFilterLowFreq) {
+        setParameterInDataBase("BANDPASS_FILTER_LOW_FREQ", bandpassFilterLowFreq);
+        BANDPASS_FILTER_LOW_FREQ = bandpassFilterLowFreq;
+    }
+
+    public void setBandpassFilterHighFreq(int bandpassFilterHighFreq) {
+        setParameterInDataBase("BANDPASS_FILTER_HIGH_FREQ", bandpassFilterHighFreq);
+        BANDPASS_FILTER_HIGH_FREQ = bandpassFilterHighFreq;
     }
 
     public void setMusicalNotation(MusicalNotationEnum notation) {

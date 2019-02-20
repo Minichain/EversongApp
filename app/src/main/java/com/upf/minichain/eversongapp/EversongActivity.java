@@ -397,7 +397,7 @@ public class EversongActivity extends AppCompatActivity {
                     prevAudioSpectrumBuffer = audioSpectrumBuffer;
                     audioSamplesBuffer = AudioStack.getSamplesToDouble(tempAudioSamples);
                     audioSamplesBufferWindowed = AudioStack.window(audioSamplesBuffer, Parameters.getInstance().getWindowingFunction());
-                    audioSpectrumBuffer = AudioStack.bandPassFilter(AudioStack.fft(audioSamplesBufferWindowed, true), 20, 4000);
+                    audioSpectrumBuffer = AudioStack.bandPassFilter(AudioStack.fft(audioSamplesBufferWindowed, true), Parameters.BANDPASS_FILTER_LOW_FREQ, Parameters.BANDPASS_FILTER_HIGH_FREQ);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

@@ -29,6 +29,7 @@ public class TestAlgorithm {
         int chordsChecked = 0;
         int chordsRight = 0;
 
+//        Log.l("TestingAlgorithmLog:: Check from 0 ms to " + lastTimeToCheck + " ms");
         for (long i = 0; i < lastTimeToCheck; i = i + 100) {
             while (parseTimeFromChordElement(testingChords.get(testingChordChecking + 1)) < i) {
                 testingChordChecking++;
