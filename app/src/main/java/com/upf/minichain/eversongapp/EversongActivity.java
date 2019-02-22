@@ -6,9 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
-import android.media.MediaRecorder;
 import android.os.Process;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.res.ResourcesCompat;
@@ -24,18 +21,15 @@ import android.widget.TextView;
 import com.upf.minichain.eversongapp.chordChart.GuitarChordChart;
 import com.upf.minichain.eversongapp.chordChart.StaffChordChart;
 import com.upf.minichain.eversongapp.chordChart.UkuleleChordChart;
+import com.upf.minichain.eversongapp.enums.BroadcastExtra;
 import com.upf.minichain.eversongapp.enums.BroadcastMessage;
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class EversongActivity extends AppCompatActivity {
-    EversongActivityBroadcastReceiver eversongBroadCastReceiver;
+    EversongActivityBroadcastReceiver eversongBroadcastReceiver;
 
     boolean keepRecordingAudio;        // Indicates if recording / playback should stop
     boolean keepProcessingFrame;
@@ -54,12 +48,10 @@ public class EversongActivity extends AppCompatActivity {
     float pitchDetected;
     float pitchProbability;
     float[] pitchDetectedBuffer;
-    int pitchBufferIterator = 0;
     NotesEnum pitchNote;
     double spectralFlatnessValue;
     int[] chordDetected = new int[2];
     int[][] mostProbableChordBuffer;
-    int chordBufferIterator = 0;
 
     ArrayList<String> arrayOfChordsDetected;
     DetectedChordFile detectedChordsFile;
@@ -68,9 +60,7 @@ public class EversongActivity extends AppCompatActivity {
     double[] chromagram = new double[NotesEnum.numberOfNotes];
 
     double[] audioSamplesBuffer;
-    double[] audioSamplesBufferWindowed;
     double[] audioSpectrumBuffer;
-    double[] prevAudioSpectrumBuffer;
 
     TextView algorithmPerformanceText;
 
@@ -95,6 +85,7 @@ public class EversongActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         keepRecordingAudio = false;
+        unregisterReceiver(eversongBroadcastReceiver);
         super.onPause();
     }
 
@@ -106,7 +97,7 @@ public class EversongActivity extends AppCompatActivity {
         Intent serviceIntent = new Intent(getApplicationContext(), EversongService.class);
         getApplicationContext().startService(serviceIntent);
 
-        eversongBroadCastReceiver = new EversongActivityBroadcastReceiver();
+        eversongBroadcastReceiver = new EversongActivityBroadcastReceiver();
         registerEversongActivityBroadcastReceiver();
 
         musicBeingPlayed = false;
@@ -176,11 +167,9 @@ public class EversongActivity extends AppCompatActivity {
                     recordingButton.setText(R.string.stop_record_button);
                     detectedChordsFile.startTime = System.currentTimeMillis();
                     arrayOfChordsDetected.clear();
-                    recordAudio();
                 } else if (recordingButton.getText().equals(getString(R.string.stop_record_button))) {
                     recordingButton.setText(R.string.start_record_button);
                     sendBroadcastToService(BroadcastMessage.STOP_RECORDING_AUDIO);
-                    keepRecordingAudio = false;
                     if (Parameters.getInstance().isDebugMode()) {
                         algorithmPerformanceText.setVisibility(View.VISIBLE);
                         algorithmPerformanceText.setText("Performance: " + (int)(TestAlgorithm.computeAlgorithmPerformance(arrayOfChordsDetected) * 100) + "%");
@@ -225,71 +214,6 @@ public class EversongActivity extends AppCompatActivity {
         }
     }
 
-    public void processAudio() {
-        if (musicBeingPlayed) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    final int[] chordDetectedThread = AudioStack.chordDetection(audioSamplesBufferWindowed, audioSpectrumBuffer);
-                    final double[] chromagramThread = AudioStack.getChromagram(audioSamplesBufferWindowed, audioSpectrumBuffer);
-
-//                    Log.l("EversongActivityLog:: Spectrum diff: " + AudioStack.getDifference(audioSpectrumBuffer, prevAudioSpectrumBuffer));
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            chromagram = chromagramThread;
-                            chordDetected = chordDetectedThread;
-                            mostProbableChordBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][0] = chordDetected[0];
-                            mostProbableChordBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][1] = chordDetected[1];
-                            chordBufferIterator++;
-                        }
-                    });
-                }
-            }).start();
-        }
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final float pitchDetectedThread = AudioStack.getPitch(audioSamplesBufferWindowed);
-                final float pitchProbabilityThread = AudioStack.getPitchProbability();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        pitchDetected = pitchDetectedThread;
-                        pitchProbability = pitchProbabilityThread;
-                        pitchDetectedBuffer[pitchBufferIterator % Parameters.getInstance().getPitchBufferSize()] = pitchDetected;
-                        pitchDetected = Utils.getAverage(pitchDetectedBuffer, Parameters.getInstance().getPitchBufferSize());
-                        pitchBufferIterator++;
-                        float stdDeviation = Utils.getStandardDeviation(pitchDetectedBuffer, Parameters.getInstance().getPitchBufferSize());
-                        if (stdDeviation > 100) {
-                            pitchDetected = -1;
-                        }
-//                        Log.l("PitchLog:: std deviation: " + stdDeviation);
-//                        Log.l("PitchLog:: Pitch detected with probability " + pitchProbability);
-                    }
-                });
-            }
-        }).start();
-
-        spectralFlatnessValue = AudioStack.getSpectralFlatness(Arrays.copyOfRange(audioSpectrumBuffer, 0, Parameters.BUFFER_SIZE / 2));
-
-        //TODO How do we detect if there's music being played??
-        if (pitchProbability >= 0.70 && spectralFlatnessValue < 0.999995 && !musicBeingPlayed) {
-            polytonalMusicBeingPlayed = (pitchProbability < 0.95) ? true : false;
-            musicBeingPlayed = true;
-            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-            executor.schedule(new Runnable() {
-                @Override
-                public void run(){
-                    musicBeingPlayed = false;
-                }
-            }, 2000, TimeUnit.MILLISECONDS);
-        }
-        mostProbableChord = AudioStack.getMostProbableChord(mostProbableChordBuffer);
-    }
-
     public void processFrame() {
         if (canvas.getCanvas() != null) {
             canvas.updateCanvas(audioSamplesBuffer, audioSpectrumBuffer, AudioStack.getAverageLevel(audioSpectrumBuffer), pitchDetected, chromagram, chordDetected);
@@ -315,6 +239,7 @@ public class EversongActivity extends AppCompatActivity {
             if (chordDetected[1] != -1) {
                 chordTypeText.setText(ChordTypeEnum.fromInteger(chordDetected[1]).toString());
             }
+
             spectralFlatnessText.setText("Flatness: 0." + ((int)(spectralFlatnessValue * 1000000)));
             if (musicBeingPlayed) {
                 musicPlayingDetectorText.setVisibility(View.VISIBLE);
@@ -366,55 +291,6 @@ public class EversongActivity extends AppCompatActivity {
             arrayOfChordsDetected.add(newElement);
             detectedChordsFile.writeInFile(newElement);
         }
-    }
-
-    void recordAudio() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Process.setThreadPriority(Process.THREAD_PRIORITY_AUDIO);
-                short[] tempAudioSamples = new short[Parameters.BUFFER_SIZE];
-                int numberOfShortRead;
-                long totalShortsRead = 0;
-                AudioRecord record = new AudioRecord(MediaRecorder.AudioSource.DEFAULT,
-                        Parameters.SAMPLE_RATE,
-                        AudioFormat.CHANNEL_IN_MONO,
-                        AudioFormat.ENCODING_DEFAULT,
-                        Parameters.BUFFER_SIZE);
-
-                if (record.getState() != AudioRecord.STATE_INITIALIZED) {
-                    Log.l("EversongActivityLog:: Audio Record cannot be initialized!");
-                    return;
-                }
-                record.startRecording();
-
-                Log.l("EversongActivityLog:: Start recording");
-
-                keepRecordingAudio = true;
-                final long startTime = System.currentTimeMillis();
-
-                while (keepRecordingAudio) {
-                    numberOfShortRead = record.read(tempAudioSamples, 0, tempAudioSamples.length);
-                    totalShortsRead += numberOfShortRead;
-                    prevAudioSpectrumBuffer = audioSpectrumBuffer;
-                    audioSamplesBuffer = AudioStack.getSamplesToDouble(tempAudioSamples);
-                    audioSamplesBufferWindowed = AudioStack.window(audioSamplesBuffer, Parameters.getInstance().getWindowingFunction());
-                    audioSpectrumBuffer = AudioStack.bandPassFilter(AudioStack.fft(audioSamplesBufferWindowed, true), Parameters.BANDPASS_FILTER_LOW_FREQ, Parameters.BANDPASS_FILTER_HIGH_FREQ);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            processAudio();
-                        }
-                    });
-//                    System.gc();
-//                    Log.l("EversongActivityLog:: reading buffer of size " + Parameters.BUFFER_SIZE + ", Time elapsed: " + (System.currentTimeMillis() - startTime) + " ms");
-                }
-                record.stop();
-                record.release();
-
-                Log.l("EversongActivityLog:: Recording stopped. Num of samples read: " + totalShortsRead);
-            }
-        }).start();
     }
 
     @Override
@@ -485,9 +361,30 @@ public class EversongActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             Log.l("EversongActivityLog:: Broadcast received " + intent.getAction());
             try {
-                if (intent.getAction() != null) {
-                    if (intent.getAction().equals(BroadcastMessage.REFRESH_FRAME.toString())) {
+                String broadcast = intent.getAction();
+                Bundle extras = intent.getExtras();
+                if (broadcast != null) {
+                    if (broadcast.equals(BroadcastMessage.REFRESH_FRAME.toString())) {
                         Log.l("EversongActivityLog:: refreshing frame!");
+                    } else if (broadcast.equals(BroadcastMessage.START_RECORDING_AUDIO.toString())) {
+
+                    } else if (broadcast.equals(BroadcastMessage.STOP_RECORDING_AUDIO.toString())) {
+
+                    } else if (broadcast.equals(BroadcastMessage.PITCH_DETECTION.toString())) {
+                        pitchDetected = extras.getFloat(BroadcastExtra.PITCH_DETECTED.toString());
+                        pitchProbability = extras.getFloat(BroadcastExtra.PITCH_PROBABILITY.toString());
+                    } else if (broadcast.equals(BroadcastMessage.AUDIO_CAPTURED.toString())) {
+                        audioSamplesBuffer = extras.getDoubleArray(BroadcastExtra.AUDIO_SAMPLES_BUFFER.toString());
+                        audioSpectrumBuffer = extras.getDoubleArray(BroadcastExtra.AUDIO_SPECTRUM_BUFFER.toString());
+                    } else if (broadcast.equals(BroadcastMessage.MUSIC_DETECTION.toString())) {
+                        musicBeingPlayed = extras.getBoolean(BroadcastExtra.MUSIC_BEING_PLAYED.toString());
+                        polytonalMusicBeingPlayed = extras.getBoolean(BroadcastExtra.POLYTONAL_MUSIC_BEING_PLAYED.toString());
+                        spectralFlatnessValue = extras.getDouble(BroadcastExtra.SPECTRAL_FLATNESS.toString());
+                    } else if (broadcast.equals(BroadcastMessage.CHORD_DETECTION_PROCESSED.toString())) {
+                        chromagram = extras.getDoubleArray(BroadcastExtra.CHROMAGRAM.toString());
+                        chordDetected = extras.getIntArray(BroadcastExtra.CHORD_DETECTED.toString());
+                        mostProbableChord = extras.getIntArray(BroadcastExtra.MOST_PROBABLE_CHORD.toString());
+                        mostProbableChordBuffer = (int[][])extras.getSerializable(BroadcastExtra.MOST_PROBABLE_CHORD_BUFFER.toString());
                     } else {
 
                     }
@@ -502,10 +399,10 @@ public class EversongActivity extends AppCompatActivity {
     private void registerEversongActivityBroadcastReceiver() {
         try {
             IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(BroadcastMessage.REFRESH_FRAME.toString());
-            intentFilter.addAction(BroadcastMessage.START_RECORDING_AUDIO.toString());
-            intentFilter.addAction(BroadcastMessage.STOP_RECORDING_AUDIO.toString());
-            registerReceiver(eversongBroadCastReceiver, intentFilter);
+            for (int i = 0; i < BroadcastMessage.values().length; i++) {
+                intentFilter.addAction(BroadcastMessage.values()[i].toString());
+            }
+            registerReceiver(eversongBroadcastReceiver, intentFilter);
         }
         catch (Exception ex) {
             ex.printStackTrace();
