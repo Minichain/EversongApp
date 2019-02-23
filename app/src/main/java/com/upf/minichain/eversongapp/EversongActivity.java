@@ -29,9 +29,8 @@ import com.upf.minichain.eversongapp.enums.NotesEnum;
 import java.util.ArrayList;
 
 public class EversongActivity extends AppCompatActivity {
-    EversongActivityBroadcastReceiver eversongBroadcastReceiver;
+    EversongActivityBroadcastReceiver eversongBroadcastReceiver = new EversongActivityBroadcastReceiver();
 
-    boolean keepRecordingAudio;        // Indicates if recording / playback should stop
     boolean keepProcessingFrame;
     Button recordingButton;
     TextView pitchText;
@@ -77,6 +76,12 @@ public class EversongActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onRestart() {
+        initMainActivity();
+        super.onRestart();
+    }
+
+    @Override
     protected void onResume() {
         initMainActivity();
         super.onResume();
@@ -84,9 +89,22 @@ public class EversongActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        keepRecordingAudio = false;
-        unregisterReceiver(eversongBroadcastReceiver);
         super.onPause();
+        try {
+            unregisterReceiver(eversongBroadcastReceiver);
+        } catch(IllegalArgumentException e) {
+
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        try {
+            unregisterReceiver(eversongBroadcastReceiver);
+        } catch(IllegalArgumentException e) {
+
+        }
     }
 
     public void initMainActivity() {
@@ -97,7 +115,6 @@ public class EversongActivity extends AppCompatActivity {
         Intent serviceIntent = new Intent(getApplicationContext(), EversongService.class);
         getApplicationContext().startService(serviceIntent);
 
-        eversongBroadcastReceiver = new EversongActivityBroadcastReceiver();
         registerEversongActivityBroadcastReceiver();
 
         musicBeingPlayed = false;
@@ -170,11 +187,6 @@ public class EversongActivity extends AppCompatActivity {
                 } else if (recordingButton.getText().equals(getString(R.string.stop_record_button))) {
                     recordingButton.setText(R.string.start_record_button);
                     sendBroadcastToService(BroadcastMessage.STOP_RECORDING_AUDIO);
-                    if (Parameters.getInstance().isDebugMode()) {
-                        algorithmPerformanceText.setVisibility(View.VISIBLE);
-                        algorithmPerformanceText.setText("Performance: " + (int)(TestAlgorithm.computeAlgorithmPerformance(arrayOfChordsDetected) * 100) + "%");
-//                        Log.l("AlgorithmPerformanceLog:: Performance: " + (int)(TestAlgorithm.computeAlgorithmPerformance(arrayOfChordsDetected) * 100) + "%");
-                    }
                 }
             }
         });
@@ -260,8 +272,6 @@ public class EversongActivity extends AppCompatActivity {
             mostProbableChordTypeText.setAlpha((float)mostProbableChord[2] / 100f);
         }
 
-        updateDetectedChordsList();
-
         switch(Parameters.getInstance().getTabSelected()) {
             case GUITAR_TAB:
                 GuitarChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);
@@ -277,19 +287,6 @@ public class EversongActivity extends AppCompatActivity {
                 break;
             case CHROMAGRAM:
                 break;
-        }
-    }
-
-    private void updateDetectedChordsList() {
-        String chord = NotesEnum.fromInteger(mostProbableChord[0]).toString() + " " + ChordTypeEnum.fromInteger(mostProbableChord[1]).toString();
-        if (!keepRecordingAudio) {
-            return;
-        }
-        if (arrayOfChordsDetected.isEmpty() || !arrayOfChordsDetected.get(arrayOfChordsDetected.size() - 1).contains(chord)) {
-            long timeInMillis = (System.currentTimeMillis() - detectedChordsFile.startTime);
-            String newElement = timeInMillis + " ms"  + ": " + chord;
-            arrayOfChordsDetected.add(newElement);
-            detectedChordsFile.writeInFile(newElement);
         }
     }
 
@@ -328,6 +325,7 @@ public class EversongActivity extends AppCompatActivity {
                 Parameters.getInstance().setTabSelected(Parameters.TabSelected.CHROMAGRAM);
                 return true;
             case R.id.open_settings_menu_option:
+                sendBroadcastToService(BroadcastMessage.PAUSE_ACTIVITY);
                 keepProcessingFrame = false;
                 this.onPause();
                 Intent intent = new Intent(this, SettingsActivity.class);
@@ -370,6 +368,9 @@ public class EversongActivity extends AppCompatActivity {
 
                     } else if (broadcast.equals(BroadcastMessage.STOP_RECORDING_AUDIO.toString())) {
 
+                    } else if (broadcast.equals(BroadcastMessage.ALGORITHM_PERFORMANCE.toString())) {
+                        algorithmPerformanceText.setVisibility(View.VISIBLE);
+                        algorithmPerformanceText.setText("Performance: " + (int)(extras.getDouble(BroadcastExtra.ALGORITHM_PERFORMANCE.toString()) * 100) + "%");
                     } else if (broadcast.equals(BroadcastMessage.PITCH_DETECTION.toString())) {
                         pitchDetected = extras.getFloat(BroadcastExtra.PITCH_DETECTED.toString());
                         pitchProbability = extras.getFloat(BroadcastExtra.PITCH_PROBABILITY.toString());
@@ -407,7 +408,6 @@ public class EversongActivity extends AppCompatActivity {
         catch (Exception ex) {
             ex.printStackTrace();
         }
-
     }
 
     private void setChordChart() {

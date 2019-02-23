@@ -58,17 +58,13 @@ public class EversongService extends Service {
         polytonalMusicBeingPlayed = false;
         pitchDetected = -1;
         pitchNote = NotesEnum.NO_NOTE;
-        pitchDetectedBuffer = new float[Parameters.getInstance().getPitchBufferSize()];
         chordDetected[0] = -1;
         chordDetected[1] = -1;
         mostProbableChord[0] = NotesEnum.A.getValue();
         mostProbableChord[1] = ChordTypeEnum.Major.getValue();
         mostProbableChord[2] = 100;
-        mostProbableChordBuffer = new int[Parameters.getInstance().getChordBufferSize()][2];
         arrayOfChordsDetected =  new ArrayList<>();
         detectedChordsFile = new DetectedChordFile(getApplicationContext());
-        audioSamplesBuffer = new double[Parameters.BUFFER_SIZE];
-        audioSpectrumBuffer = new double[Parameters.BUFFER_SIZE];
 
         Log.l("EversongServiceLog:: onCreate service");
     }
@@ -76,6 +72,11 @@ public class EversongService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.l("EversongServiceLog:: onStartCommand service");
+        setActivityChordsDetected();
+        pitchDetectedBuffer = new float[Parameters.getInstance().getPitchBufferSize()];
+        mostProbableChordBuffer = new int[Parameters.getInstance().getChordBufferSize()][2];
+        audioSamplesBuffer = new double[Parameters.BUFFER_SIZE];
+        audioSpectrumBuffer = new double[Parameters.BUFFER_SIZE];
         return Service.START_NOT_STICKY;
     }
 
@@ -125,6 +126,14 @@ public class EversongService extends Service {
                         recordAudio();
                     } else if (broadcast.equals(BroadcastMessage.STOP_RECORDING_AUDIO.toString())) {
                         keepRecordingAudio = false;
+                        if (Parameters.getInstance().isDebugMode()) {
+                            Bundle extras = new Bundle();
+                            extras.putDouble(BroadcastExtra.ALGORITHM_PERFORMANCE.toString(), TestAlgorithm.computeAlgorithmPerformance(arrayOfChordsDetected));
+                            sendBroadcastToActivity(BroadcastMessage.ALGORITHM_PERFORMANCE, extras);
+//                            Log.l("AlgorithmPerformanceLog:: Performance: " + (int)(TestAlgorithm.computeAlgorithmPerformance(arrayOfChordsDetected) * 100) + "%");
+                        }
+                    } else if (broadcast.equals(BroadcastMessage.PAUSE_ACTIVITY.toString())) {
+                        keepRecordingAudio = false;
                     } else {
 
                     }
@@ -166,13 +175,8 @@ public class EversongService extends Service {
                     mostProbableChordBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][1] = chordDetected[1];
                     mostProbableChord = AudioStack.getMostProbableChord(mostProbableChordBuffer);
                     chordBufferIterator++;
-
-                    Bundle extras = new Bundle();
-                    extras.putDoubleArray(BroadcastExtra.CHROMAGRAM.toString(), chromagram);
-                    extras.putIntArray(BroadcastExtra.CHORD_DETECTED.toString(), chordDetected);
-                    extras.putIntArray(BroadcastExtra.MOST_PROBABLE_CHORD.toString(), mostProbableChord);
-                    extras.putSerializable(BroadcastExtra.MOST_PROBABLE_CHORD_BUFFER.toString(), mostProbableChordBuffer);
-                    sendBroadcastToActivity(BroadcastMessage.CHORD_DETECTION_PROCESSED, extras);
+                    updateDetectedChordsList();
+                    setActivityChordsDetected();
                 }
             }).start();
         }
@@ -228,6 +232,15 @@ public class EversongService extends Service {
         }
     }
 
+    private void setActivityChordsDetected() {
+        Bundle extras = new Bundle();
+        extras.putDoubleArray(BroadcastExtra.CHROMAGRAM.toString(), chromagram);
+        extras.putIntArray(BroadcastExtra.CHORD_DETECTED.toString(), chordDetected);
+        extras.putIntArray(BroadcastExtra.MOST_PROBABLE_CHORD.toString(), mostProbableChord);
+        extras.putSerializable(BroadcastExtra.MOST_PROBABLE_CHORD_BUFFER.toString(), mostProbableChordBuffer);
+        sendBroadcastToActivity(BroadcastMessage.CHORD_DETECTION_PROCESSED, extras);
+    }
+
     void recordAudio() {
         new Thread(new Runnable() {
             @Override
@@ -275,5 +288,18 @@ public class EversongService extends Service {
                 Log.l("EversongActivityLog:: Recording stopped. Num of samples read: " + totalShortsRead);
             }
         }).start();
+    }
+
+    private void updateDetectedChordsList() {
+        String chord = NotesEnum.fromInteger(mostProbableChord[0]).toString() + " " + ChordTypeEnum.fromInteger(mostProbableChord[1]).toString();
+        if (!keepRecordingAudio) {
+            return;
+        }
+        if (arrayOfChordsDetected.isEmpty() || !arrayOfChordsDetected.get(arrayOfChordsDetected.size() - 1).contains(chord)) {
+            long timeInMillis = (System.currentTimeMillis() - detectedChordsFile.startTime);
+            String newElement = timeInMillis + " ms"  + ": " + chord;
+            arrayOfChordsDetected.add(newElement);
+            detectedChordsFile.writeInFile(newElement);
+        }
     }
 }
