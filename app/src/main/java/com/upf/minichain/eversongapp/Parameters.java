@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.upf.minichain.eversongapp.enums.MusicalNotationEnum;
 import com.upf.minichain.eversongapp.enums.WindowFunctionEnum;
+import com.upf.minichain.eversongapp.enums.TabSelected;
 
 public class Parameters {
     private static final Parameters instance = new Parameters();
@@ -29,14 +30,10 @@ public class Parameters {
 
     private static MusicalNotationEnum musicalNotation;
     private static WindowFunctionEnum windowingFunction;
+    private static TabSelected tabSelected;
     private static int chordBufferSize;
     private static int pitchBufferSize;
-    private static TabSelected tabSelected;
     private static boolean debugMode;
-
-    enum TabSelected {
-        GUITAR_TAB, UKULELE_TAB, PIANO_TAB, STAFF_TAB, CHROMAGRAM
-    }
 
     /******************
      * INIT PARAMETERS
@@ -94,6 +91,9 @@ public class Parameters {
 
             tempValue = loadParameter("debugMode");
             debugMode = tempValue == 1;
+
+            tempValue = loadParameter("tabSelected");
+            tabSelected = (tempValue != -1) ? TabSelected.values()[tempValue] : tabSelected;
         }
     }
 
@@ -210,6 +210,7 @@ public class Parameters {
     }
 
     public void setTabSelected(TabSelected tab) {
+        setParameterInDataBase("tabSelected", tab.getValue());
         tabSelected = tab;
     }
 

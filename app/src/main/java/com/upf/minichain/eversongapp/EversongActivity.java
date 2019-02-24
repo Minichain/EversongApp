@@ -25,6 +25,7 @@ import com.upf.minichain.eversongapp.enums.BroadcastExtra;
 import com.upf.minichain.eversongapp.enums.BroadcastMessage;
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
+import com.upf.minichain.eversongapp.enums.TabSelected;
 
 import java.util.ArrayList;
 
@@ -70,7 +71,6 @@ public class EversongActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setChordChart();
         checkCaptureAudioPermission();
         initMainActivity();
     }
@@ -90,6 +90,7 @@ public class EversongActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        stopRecording();
         try {
             unregisterReceiver(eversongBroadcastReceiver);
         } catch(IllegalArgumentException e) {
@@ -100,6 +101,7 @@ public class EversongActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        stopRecording();
         try {
             unregisterReceiver(eversongBroadcastReceiver);
         } catch(IllegalArgumentException e) {
@@ -110,7 +112,6 @@ public class EversongActivity extends AppCompatActivity {
     public void initMainActivity() {
         Log.l("EversongActivityLog:: initMainActivity");
         Parameters.getInstance().loadParameters(getApplicationContext());
-        AudioStack.initAudioStack();
 
         Intent serviceIntent = new Intent(getApplicationContext(), EversongService.class);
         getApplicationContext().startService(serviceIntent);
@@ -140,6 +141,7 @@ public class EversongActivity extends AppCompatActivity {
         mColor03  = ResourcesCompat.getColor(getResources(), R.color.mColor03, null);
 
         setDebugModeViews();
+        setChordChart();
 
         mostProbableChordNoteText = this.findViewById(R.id.most_probable_chord_note);
         mostProbableChordTypeText = this.findViewById(R.id.most_probable_chord_type);
@@ -180,16 +182,24 @@ public class EversongActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.l("EversongActivityLog:: recordingButton pressed!");
                 if (recordingButton.getText().equals(getString(R.string.start_record_button))) {
-                    sendBroadcastToService(BroadcastMessage.START_RECORDING_AUDIO);
-                    recordingButton.setText(R.string.stop_record_button);
-                    detectedChordsFile.startTime = System.currentTimeMillis();
-                    arrayOfChordsDetected.clear();
+                    startRecording();
                 } else if (recordingButton.getText().equals(getString(R.string.stop_record_button))) {
-                    recordingButton.setText(R.string.start_record_button);
-                    sendBroadcastToService(BroadcastMessage.STOP_RECORDING_AUDIO);
+                    stopRecording();
                 }
             }
         });
+    }
+
+    private void startRecording() {
+        sendBroadcastToService(BroadcastMessage.START_RECORDING_AUDIO);
+        recordingButton.setText(R.string.stop_record_button);
+        detectedChordsFile.startTime = System.currentTimeMillis();
+        arrayOfChordsDetected.clear();
+    }
+
+    private void stopRecording() {
+        recordingButton.setText(R.string.start_record_button);
+        sendBroadcastToService(BroadcastMessage.STOP_RECORDING_AUDIO);
     }
 
     private void setDebugModeViews() {
@@ -301,28 +311,20 @@ public class EversongActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id){
             case R.id.open_guitar_tab:
-                Parameters.getInstance().setTabSelected(Parameters.TabSelected.GUITAR_TAB);
-                UkuleleChordChart.hideChordChart(this);
-                StaffChordChart.hideChordChart(this);
+                Parameters.getInstance().setTabSelected(TabSelected.GUITAR_TAB);
                 setChordChart();
                 return true;
             case R.id.open_ukulele_tab:
-                Parameters.getInstance().setTabSelected(Parameters.TabSelected.UKULELE_TAB);
-                GuitarChordChart.hideChordChart(this);
-                StaffChordChart.hideChordChart(this);
+                Parameters.getInstance().setTabSelected(TabSelected.UKULELE_TAB);
                 setChordChart();
                 return true;
             case R.id.open_staff_tab:
-                Parameters.getInstance().setTabSelected(Parameters.TabSelected.STAFF_TAB);
-                GuitarChordChart.hideChordChart(this);
-                UkuleleChordChart.hideChordChart(this);
+                Parameters.getInstance().setTabSelected(TabSelected.STAFF_TAB);
                 setChordChart();
                 return true;
             case R.id.open_chromagram:
-                GuitarChordChart.hideChordChart(this);
-                UkuleleChordChart.hideChordChart(this);
-                StaffChordChart.hideChordChart(this);
-                Parameters.getInstance().setTabSelected(Parameters.TabSelected.CHROMAGRAM);
+                Parameters.getInstance().setTabSelected(TabSelected.CHROMAGRAM);
+                setChordChart();
                 return true;
             case R.id.open_settings_menu_option:
                 sendBroadcastToService(BroadcastMessage.PAUSE_ACTIVITY);
@@ -414,18 +416,27 @@ public class EversongActivity extends AppCompatActivity {
         LinearLayout placeHolder;
         switch(Parameters.getInstance().getTabSelected()) {
             case GUITAR_TAB:
+                UkuleleChordChart.hideChordChart(this);
+                StaffChordChart.hideChordChart(this);
                 placeHolder = this.findViewById(R.id.guitar_chord_chart_layout);
                 getLayoutInflater().inflate(R.layout.guitar_chord_chart, placeHolder);
                 break;
             case UKULELE_TAB:
+                GuitarChordChart.hideChordChart(this);
+                StaffChordChart.hideChordChart(this);
                 placeHolder = this.findViewById(R.id.ukulele_chord_chart_layout);
                 getLayoutInflater().inflate(R.layout.ukulele_chord_chart, placeHolder);
                 break;
             case STAFF_TAB:
+                GuitarChordChart.hideChordChart(this);
+                UkuleleChordChart.hideChordChart(this);
                 placeHolder = this.findViewById(R.id.staff_chord_chart_layout);
                 getLayoutInflater().inflate(R.layout.staff_chord_chart, placeHolder);
                 break;
             case CHROMAGRAM:
+                GuitarChordChart.hideChordChart(this);
+                UkuleleChordChart.hideChordChart(this);
+                StaffChordChart.hideChordChart(this);
                 break;
         }
     }

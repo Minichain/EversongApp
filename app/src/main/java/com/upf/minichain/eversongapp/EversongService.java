@@ -72,11 +72,19 @@ public class EversongService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.l("EversongServiceLog:: onStartCommand service");
-        setActivityChordsDetected();
+        AudioStack.initAudioStack();
         pitchDetectedBuffer = new float[Parameters.getInstance().getPitchBufferSize()];
         mostProbableChordBuffer = new int[Parameters.getInstance().getChordBufferSize()][2];
-        audioSamplesBuffer = new double[Parameters.BUFFER_SIZE];
-        audioSpectrumBuffer = new double[Parameters.BUFFER_SIZE];
+
+        if (audioSamplesBuffer == null || Parameters.BUFFER_SIZE != audioSamplesBuffer.length) {
+            audioSamplesBuffer = new double[Parameters.BUFFER_SIZE];
+        }
+        if (audioSpectrumBuffer == null || Parameters.BUFFER_SIZE != audioSpectrumBuffer.length) {
+            audioSpectrumBuffer = new double[Parameters.BUFFER_SIZE];
+        }
+
+        setActivityChordsDetected();
+        setActivitySampleBuffer();
         return Service.START_NOT_STICKY;
     }
 
@@ -213,32 +221,16 @@ public class EversongService extends Service {
         if (pitchProbability >= 0.70 && spectralFlatnessValue < 0.999995 && !musicBeingPlayed) {
             polytonalMusicBeingPlayed = (pitchProbability < 0.95) ? true : false;
             musicBeingPlayed = true;
-            Bundle extras = new Bundle();
-            extras.putBoolean(BroadcastExtra.MUSIC_BEING_PLAYED.toString(), musicBeingPlayed);
-            extras.putBoolean(BroadcastExtra.POLYTONAL_MUSIC_BEING_PLAYED.toString(), polytonalMusicBeingPlayed);
-            sendBroadcastToActivity(BroadcastMessage.MUSIC_DETECTION, extras);
+            setActivityMusicDetection();
             ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
             executor.schedule(new Runnable() {
                 @Override
                 public void run(){
                     musicBeingPlayed = false;
-                    Bundle extras = new Bundle();
-                    extras.putBoolean(BroadcastExtra.MUSIC_BEING_PLAYED.toString(), musicBeingPlayed);
-                    extras.putBoolean(BroadcastExtra.POLYTONAL_MUSIC_BEING_PLAYED.toString(), polytonalMusicBeingPlayed);
-                    extras.putDouble(BroadcastExtra.SPECTRAL_FLATNESS.toString(), spectralFlatnessValue);
-                    sendBroadcastToActivity(BroadcastMessage.MUSIC_DETECTION, extras);
+                    setActivityMusicDetection();
                 }
             }, 2000, TimeUnit.MILLISECONDS);
         }
-    }
-
-    private void setActivityChordsDetected() {
-        Bundle extras = new Bundle();
-        extras.putDoubleArray(BroadcastExtra.CHROMAGRAM.toString(), chromagram);
-        extras.putIntArray(BroadcastExtra.CHORD_DETECTED.toString(), chordDetected);
-        extras.putIntArray(BroadcastExtra.MOST_PROBABLE_CHORD.toString(), mostProbableChord);
-        extras.putSerializable(BroadcastExtra.MOST_PROBABLE_CHORD_BUFFER.toString(), mostProbableChordBuffer);
-        sendBroadcastToActivity(BroadcastMessage.CHORD_DETECTION_PROCESSED, extras);
     }
 
     void recordAudio() {
@@ -273,11 +265,7 @@ public class EversongService extends Service {
                     audioSamplesBuffer = AudioStack.getSamplesToDouble(tempAudioSamples);
                     audioSamplesBufferWindowed = AudioStack.window(audioSamplesBuffer, Parameters.getInstance().getWindowingFunction());
                     audioSpectrumBuffer = AudioStack.bandPassFilter(AudioStack.fft(audioSamplesBufferWindowed, true), Parameters.BANDPASS_FILTER_LOW_FREQ, Parameters.BANDPASS_FILTER_HIGH_FREQ);
-
-                    Bundle extras = new Bundle();
-                    extras.putDoubleArray(BroadcastExtra.AUDIO_SAMPLES_BUFFER.toString(), audioSamplesBuffer);
-                    extras.putDoubleArray(BroadcastExtra.AUDIO_SPECTRUM_BUFFER.toString(), audioSpectrumBuffer);
-                    sendBroadcastToActivity(BroadcastMessage.AUDIO_CAPTURED, extras);
+                    setActivitySampleBuffer();
                     processAudio();
 //                    System.gc();
 //                    Log.l("EversongActivityLog:: reading buffer of size " + Parameters.BUFFER_SIZE + ", Time elapsed: " + (System.currentTimeMillis() - startTime) + " ms");
@@ -301,5 +289,29 @@ public class EversongService extends Service {
             arrayOfChordsDetected.add(newElement);
             detectedChordsFile.writeInFile(newElement);
         }
+    }
+
+    private void setActivityChordsDetected() {
+        Bundle extras = new Bundle();
+        extras.putDoubleArray(BroadcastExtra.CHROMAGRAM.toString(), chromagram);
+        extras.putIntArray(BroadcastExtra.CHORD_DETECTED.toString(), chordDetected);
+        extras.putIntArray(BroadcastExtra.MOST_PROBABLE_CHORD.toString(), mostProbableChord);
+        extras.putSerializable(BroadcastExtra.MOST_PROBABLE_CHORD_BUFFER.toString(), mostProbableChordBuffer);
+        sendBroadcastToActivity(BroadcastMessage.CHORD_DETECTION_PROCESSED, extras);
+    }
+
+    private void setActivitySampleBuffer() {
+        Bundle extras = new Bundle();
+        extras.putDoubleArray(BroadcastExtra.AUDIO_SAMPLES_BUFFER.toString(), audioSamplesBuffer);
+        extras.putDoubleArray(BroadcastExtra.AUDIO_SPECTRUM_BUFFER.toString(), audioSpectrumBuffer);
+        sendBroadcastToActivity(BroadcastMessage.AUDIO_CAPTURED, extras);
+    }
+
+    private void setActivityMusicDetection() {
+        Bundle extras = new Bundle();
+        extras.putBoolean(BroadcastExtra.MUSIC_BEING_PLAYED.toString(), musicBeingPlayed);
+        extras.putBoolean(BroadcastExtra.POLYTONAL_MUSIC_BEING_PLAYED.toString(), polytonalMusicBeingPlayed);
+        extras.putDouble(BroadcastExtra.SPECTRAL_FLATNESS.toString(), spectralFlatnessValue);
+        sendBroadcastToActivity(BroadcastMessage.MUSIC_DETECTION, extras);
     }
 }

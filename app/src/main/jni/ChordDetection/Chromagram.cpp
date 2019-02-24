@@ -242,7 +242,12 @@ void Chromagram::calculateChromagram()
             chromaSum += noteSum;
         }
 
-        chromagram[n] = chromaSum;
+        //Chromagram amplitude threshold
+        if (chromaSum > 0.1) {
+            chromagram[n] = chromaSum;
+        } else {
+            chromagram[n] = 0;
+        }
     }
 
     chromaReady = true;
