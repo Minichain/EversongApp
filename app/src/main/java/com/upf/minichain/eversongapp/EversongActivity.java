@@ -65,6 +65,7 @@ public class EversongActivity extends AppCompatActivity {
     TextView algorithmPerformanceText;
 
     int mColor01;
+    int mColor02;
     int mColor03;
 
     @Override
@@ -72,6 +73,11 @@ public class EversongActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkCaptureAudioPermission();
+
+        LinearLayout placeHolder;
+        placeHolder = this.findViewById(R.id.chart_menu_layout);
+        getLayoutInflater().inflate(R.layout.chart_menu, placeHolder);
+
         initMainActivity();
     }
 
@@ -115,7 +121,6 @@ public class EversongActivity extends AppCompatActivity {
 
         Intent serviceIntent = new Intent(getApplicationContext(), EversongService.class);
         getApplicationContext().startService(serviceIntent);
-
         registerEversongActivityBroadcastReceiver();
 
         musicBeingPlayed = false;
@@ -137,11 +142,13 @@ public class EversongActivity extends AppCompatActivity {
         recordingButton = this.findViewById(R.id.recording_button);
         recordingButton.setText(R.string.start_record_button);
 
-        mColor01  = ResourcesCompat.getColor(getResources(), R.color.mColor01, null);
-        mColor03  = ResourcesCompat.getColor(getResources(), R.color.mColor03, null);
+        mColor01 = ResourcesCompat.getColor(getResources(), R.color.mColor01, null);
+        mColor02 = ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null);
+        mColor03 = ResourcesCompat.getColor(getResources(), R.color.mColor03, null);
 
         setDebugModeViews();
         setChordChart();
+        setChartMenu();
 
         mostProbableChordNoteText = this.findViewById(R.id.most_probable_chord_note);
         mostProbableChordTypeText = this.findViewById(R.id.most_probable_chord_type);
@@ -310,22 +317,6 @@ public class EversongActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id){
-            case R.id.open_guitar_tab:
-                Parameters.getInstance().setTabSelected(TabSelected.GUITAR_TAB);
-                setChordChart();
-                return true;
-            case R.id.open_ukulele_tab:
-                Parameters.getInstance().setTabSelected(TabSelected.UKULELE_TAB);
-                setChordChart();
-                return true;
-            case R.id.open_staff_tab:
-                Parameters.getInstance().setTabSelected(TabSelected.STAFF_TAB);
-                setChordChart();
-                return true;
-            case R.id.open_chromagram:
-                Parameters.getInstance().setTabSelected(TabSelected.CHROMAGRAM);
-                setChordChart();
-                return true;
             case R.id.open_settings_menu_option:
                 sendBroadcastToService(BroadcastMessage.PAUSE_ACTIVITY);
                 keepProcessingFrame = false;
@@ -427,6 +418,11 @@ public class EversongActivity extends AppCompatActivity {
                 placeHolder = this.findViewById(R.id.ukulele_chord_chart_layout);
                 getLayoutInflater().inflate(R.layout.ukulele_chord_chart, placeHolder);
                 break;
+            case PIANO_TAB:
+                GuitarChordChart.hideChordChart(this);
+                UkuleleChordChart.hideChordChart(this);
+                StaffChordChart.hideChordChart(this);
+                break;
             case STAFF_TAB:
                 GuitarChordChart.hideChordChart(this);
                 UkuleleChordChart.hideChordChart(this);
@@ -438,6 +434,119 @@ public class EversongActivity extends AppCompatActivity {
                 UkuleleChordChart.hideChordChart(this);
                 StaffChordChart.hideChordChart(this);
                 break;
+        }
+    }
+
+    private void setChartMenu() {
+        Button button = this.findViewById(R.id.guitar_chart_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Parameters.getInstance().getTabSelected() != TabSelected.GUITAR_TAB) {
+                    Parameters.getInstance().setTabSelected(TabSelected.GUITAR_TAB);
+                    setChordChart();
+                    updateChartMenu();
+                }
+            }
+        });
+
+        button = this.findViewById(R.id.ukulele_chart_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Parameters.getInstance().getTabSelected() != TabSelected.UKULELE_TAB) {
+                    Parameters.getInstance().setTabSelected(TabSelected.UKULELE_TAB);
+                    setChordChart();
+                    updateChartMenu();
+                }
+            }
+        });
+
+        button = this.findViewById(R.id.piano_chart_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Parameters.getInstance().getTabSelected() != TabSelected.PIANO_TAB) {
+                    Parameters.getInstance().setTabSelected(TabSelected.PIANO_TAB);
+                    setChordChart();
+                    updateChartMenu();
+                }
+            }
+        });
+
+        button = this.findViewById(R.id.staff_chart_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Parameters.getInstance().getTabSelected() != TabSelected.STAFF_TAB) {
+                    Parameters.getInstance().setTabSelected(TabSelected.STAFF_TAB);
+                    setChordChart();
+                    updateChartMenu();
+                }
+            }
+        });
+
+        button = this.findViewById(R.id.chromagram_chart_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Parameters.getInstance().getTabSelected() != TabSelected.CHROMAGRAM) {
+                    Parameters.getInstance().setTabSelected(TabSelected.CHROMAGRAM);
+                    setChordChart();
+                    updateChartMenu();
+                }
+            }
+        });
+
+        updateChartMenu();
+    }
+
+    private void updateChartMenu() {
+        Button button;
+
+        button = this.findViewById(R.id.guitar_chart_button);
+        if (Parameters.getInstance().getTabSelected() == TabSelected.GUITAR_TAB) {
+            button.setBackgroundResource(R.drawable.chart_menu_button_selected);
+            button.setTextColor(mColor01);
+        } else {
+            button.setBackgroundResource(R.drawable.chart_menu_button_not_selected);
+            button.setTextColor(mColor02);
+        }
+
+        button = this.findViewById(R.id.ukulele_chart_button);
+        if (Parameters.getInstance().getTabSelected() == TabSelected.UKULELE_TAB) {
+            button.setBackgroundResource(R.drawable.chart_menu_button_selected);
+            button.setTextColor(mColor01);
+        } else {
+            button.setBackgroundResource(R.drawable.chart_menu_button_not_selected);
+            button.setTextColor(mColor02);
+        }
+
+        button = this.findViewById(R.id.piano_chart_button);
+        if (Parameters.getInstance().getTabSelected() == TabSelected.PIANO_TAB) {
+            button.setBackgroundResource(R.drawable.chart_menu_button_selected);
+            button.setTextColor(mColor01);
+        } else {
+            button.setBackgroundResource(R.drawable.chart_menu_button_not_selected);
+            button.setTextColor(mColor02);
+        }
+
+        button = this.findViewById(R.id.staff_chart_button);
+        if (Parameters.getInstance().getTabSelected() == TabSelected.STAFF_TAB) {
+            button.setBackgroundResource(R.drawable.chart_menu_button_selected);
+            button.setTextColor(mColor01);
+        } else {
+            button.setBackgroundResource(R.drawable.chart_menu_button_not_selected);
+            button.setTextColor(mColor02);
+        }
+
+        button = this.findViewById(R.id.chromagram_chart_button);
+        if (Parameters.getInstance().getTabSelected() == TabSelected.CHROMAGRAM) {
+            button.setBackgroundResource(R.drawable.chart_menu_button_selected);
+            button.setTextColor(mColor01);
+        } else {
+            button.setBackgroundResource(R.drawable.chart_menu_button_not_selected);
+            button.setTextColor(mColor02);
         }
     }
 

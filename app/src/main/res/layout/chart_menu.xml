@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/chart_menu_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <Button
+            android:id="@+id/guitar_chart_button"
+            android:layout_width="75dp"
+            android:layout_height="30sp"
+            android:background="@drawable/chart_menu_button_not_selected"
+            android:textSize="10sp"
+            android:textColor="@color/colorPrimary"
+            android:visibility="visible"
+            android:text="@string/guitar_tab" />
+        <Button
+            android:id="@+id/ukulele_chart_button"
+            android:layout_width="75dp"
+            android:layout_height="30sp"
+            android:text="@string/ukulele_tab"
+            android:background="@drawable/chart_menu_button_not_selected"
+            android:textSize="10sp"
+            android:textColor="@color/colorPrimary"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/guitar_chart_button"/>
+        <Button
+            android:id="@+id/piano_chart_button"
+            android:layout_width="75dp"
+            android:layout_height="30sp"
+            android:text="@string/piano_tab"
+            android:background="@drawable/chart_menu_button_not_selected"
+            android:textSize="10sp"
+            android:textColor="@color/colorPrimary"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/ukulele_chart_button"/>
+        <Button
+            android:id="@+id/staff_chart_button"
+            android:layout_width="75dp"
+            android:layout_height="30sp"
+            android:text="@string/staff_tab"
+            android:background="@drawable/chart_menu_button_not_selected"
+            android:textSize="10sp"
+            android:textColor="@color/colorPrimary"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/piano_chart_button"/>
+        <Button
+            android:id="@+id/chromagram_chart_button"
+            android:layout_width="75dp"
+            android:layout_height="30sp"
+            android:text="@string/chromagram_tab"
+            android:background="@drawable/chart_menu_button_not_selected"
+            android:textSize="10sp"
+            android:textColor="@color/colorPrimary"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/staff_chart_button"/>
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>
