@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/functionalities_menu_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <Button
+            android:id="@+id/chord_detection_functionality_button"
+            android:layout_width="10dp"
+            android:layout_height="30sp"
+            android:background="@drawable/chart_menu_button_not_selected"
+            android:text="@string/chord_detection_functionality"
+            android:textSize="10sp"
+            android:textColor="@color/colorPrimary"
+            android:visibility="visible"/>
+        <Button
+            android:id="@+id/chord_score_functionality_button"
+            android:layout_width="10dp"
+            android:layout_height="30sp"
+            android:text="@string/chord_score_functionality"
+            android:background="@drawable/chart_menu_button_not_selected"
+            android:textSize="10sp"
+            android:textColor="@color/colorPrimary"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/chord_detection_functionality_button"/>
+        <Button
+            android:id="@+id/tuning_functionality_button"
+            android:layout_width="10dp"
+            android:layout_height="30sp"
+            android:text="@string/tuning_functionality"
+            android:background="@drawable/chart_menu_button_not_selected"
+            android:textSize="10sp"
+            android:textColor="@color/colorPrimary"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/chord_score_functionality_button"/>
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

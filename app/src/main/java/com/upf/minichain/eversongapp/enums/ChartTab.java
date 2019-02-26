@@ -1,6 +1,6 @@
 package com.upf.minichain.eversongapp.enums;
 
-public enum TabSelected {
+public enum ChartTab {
     GUITAR_TAB(0),
     UKULELE_TAB(1),
     PIANO_TAB(2),
@@ -9,7 +9,7 @@ public enum TabSelected {
 
     private final int value;
 
-    TabSelected(int value) {
+    ChartTab(int value) {
         this.value = value;
     }
 

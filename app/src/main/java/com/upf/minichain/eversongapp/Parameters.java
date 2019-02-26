@@ -6,9 +6,10 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.upf.minichain.eversongapp.enums.ChartTab;
+import com.upf.minichain.eversongapp.enums.EversongFunctionalities;
 import com.upf.minichain.eversongapp.enums.MusicalNotationEnum;
 import com.upf.minichain.eversongapp.enums.WindowFunctionEnum;
-import com.upf.minichain.eversongapp.enums.TabSelected;
 
 public class Parameters {
     private static final Parameters instance = new Parameters();
@@ -30,7 +31,8 @@ public class Parameters {
 
     private static MusicalNotationEnum musicalNotation;
     private static WindowFunctionEnum windowingFunction;
-    private static TabSelected tabSelected;
+    private static ChartTab chartTab;
+    private static EversongFunctionalities functionalityTab;
     private static int chordBufferSize;
     private static int pitchBufferSize;
     private static boolean debugMode;
@@ -50,7 +52,8 @@ public class Parameters {
         windowingFunction = WindowFunctionEnum.HAMMING_WINDOW;
         chordBufferSize = 7;
         pitchBufferSize = 4;
-        tabSelected = TabSelected.GUITAR_TAB;
+        chartTab = ChartTab.GUITAR_TAB;
+        functionalityTab = EversongFunctionalities.CHORD_DETECTION;
         debugMode = false;
     }
 
@@ -92,8 +95,11 @@ public class Parameters {
             tempValue = loadParameter("debugMode");
             debugMode = tempValue == 1;
 
-            tempValue = loadParameter("tabSelected");
-            tabSelected = (tempValue != -1) ? TabSelected.values()[tempValue] : tabSelected;
+            tempValue = loadParameter("functionalityTab");
+            functionalityTab = (tempValue != -1) ? EversongFunctionalities.values()[tempValue] : functionalityTab;
+
+            tempValue = loadParameter("chartTab");
+            chartTab = (tempValue != -1) ? ChartTab.values()[tempValue] : chartTab;
         }
     }
 
@@ -209,13 +215,22 @@ public class Parameters {
         return pitchBufferSize;
     }
 
-    public void setTabSelected(TabSelected tab) {
-        setParameterInDataBase("tabSelected", tab.getValue());
-        tabSelected = tab;
+    public void setFunctionalitySelected(EversongFunctionalities tab) {
+        setParameterInDataBase("functionalityTab", tab.getValue());
+        functionalityTab = tab;
     }
 
-    public TabSelected getTabSelected() {
-        return tabSelected;
+    public EversongFunctionalities getFunctionalitySelected() {
+        return functionalityTab;
+    }
+
+    public void setChartTabSelected(ChartTab tab) {
+        setParameterInDataBase("chartTab", tab.getValue());
+        chartTab = tab;
+    }
+
+    public ChartTab getChartTabSelected() {
+        return chartTab;
     }
 
     public void setDebugMode(boolean value) {

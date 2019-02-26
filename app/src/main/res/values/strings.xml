@@ -3,13 +3,21 @@
 
     <string name="start_record_button">Start Recording</string>
     <string name="stop_record_button">Stop Recording</string>
+
+    <!--Chart menu tabs-->
     <string name="guitar_tab">Guitar</string>
     <string name="ukulele_tab">Ukulele</string>
     <string name="piano_tab">Piano</string>
     <string name="staff_tab">Staff</string>
     <string name="chromagram_tab">Chromagram</string>
+
+    <!--Functionalities-->
+    <string name="chord_detection_functionality">Chord detect.</string>
+    <string name="chord_score_functionality">Chord score</string>
+    <string name="tuning_functionality">Tuning</string>
+
+    <!--Top right menu-->
     <string name="open_settings_menu">Settings</string>
-    <string name="debug_mode">Debug Mode</string>
     <string name="close_app">Close App</string>
 
     <!--Settings-->
@@ -25,4 +33,5 @@
     <string name="setting_audio_buffer_size">Audio buffer size</string>
     <string name="setting_bandpass_filter_low_freq">Bandpass filter low freq</string>
     <string name="setting_bandpass_filter_high_freq">Bandpass filter high freq</string>
+    <string name="debug_mode">Debug Mode</string>
 </resources>

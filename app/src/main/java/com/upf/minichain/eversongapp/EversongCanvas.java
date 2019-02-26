@@ -65,18 +65,18 @@ public class EversongCanvas {
 
         if (bufferSamples != null && bufferFrequency != null) {
             drawBufferSamples(bufferSamples, spectrumAverage, mPaint01);
-            switch(Parameters.getInstance().getTabSelected()) {
+            switch(Parameters.getInstance().getChartTabSelected()) {
                 case GUITAR_TAB:
                 case UKULELE_TAB:
                 case PIANO_TAB:
                 case STAFF_TAB:
-                    if (Parameters.getInstance().isDebugMode()) {
-                        drawSpectrum(bufferFrequency, spectrumAverage, pitch, mPaint01);
-                    }
                     break;
                 case CHROMAGRAM:
                     drawChromagram(chromagram, spectrumAverage, chordDetected, mPaint01, mPaint02);
                     break;
+            }
+            if (Parameters.getInstance().isDebugMode()) {
+                drawSpectrum(bufferFrequency, spectrumAverage, pitch, mPaint01);
             }
         }
     }

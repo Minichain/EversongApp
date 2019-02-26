@@ -25,9 +25,10 @@ import com.upf.minichain.eversongapp.chordChart.StaffChordChart;
 import com.upf.minichain.eversongapp.chordChart.UkuleleChordChart;
 import com.upf.minichain.eversongapp.enums.BroadcastExtra;
 import com.upf.minichain.eversongapp.enums.BroadcastMessage;
+import com.upf.minichain.eversongapp.enums.ChartTab;
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
+import com.upf.minichain.eversongapp.enums.EversongFunctionalities;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
-import com.upf.minichain.eversongapp.enums.TabSelected;
 
 import java.util.ArrayList;
 
@@ -78,6 +79,10 @@ public class EversongActivity extends AppCompatActivity {
         checkCaptureAudioPermission();
 
         LinearLayout placeHolder;
+
+        placeHolder = this.findViewById(R.id.functionalities_menu_layout);
+        getLayoutInflater().inflate(R.layout.functionalities_menu, placeHolder);
+
         placeHolder = this.findViewById(R.id.chart_menu_layout);
         getLayoutInflater().inflate(R.layout.chart_menu, placeHolder);
     }
@@ -152,6 +157,7 @@ public class EversongActivity extends AppCompatActivity {
 
         setDebugModeViews();
         setChordChart();
+        setFunctionalitiesMenu();
         setChartMenu();
 
         mostProbableChordNoteText = this.findViewById(R.id.most_probable_chord_note);
@@ -293,7 +299,7 @@ public class EversongActivity extends AppCompatActivity {
             mostProbableChordTypeText.setAlpha((float)mostProbableChord[2] / 100f);
         }
 
-        switch(Parameters.getInstance().getTabSelected()) {
+        switch(Parameters.getInstance().getChartTabSelected()) {
             case GUITAR_TAB:
                 GuitarChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);
                 break;
@@ -409,7 +415,7 @@ public class EversongActivity extends AppCompatActivity {
 
     private void setChordChart() {
         LinearLayout placeHolder;
-        switch(Parameters.getInstance().getTabSelected()) {
+        switch(Parameters.getInstance().getChartTabSelected()) {
             case GUITAR_TAB:
                 UkuleleChordChart.hideChordChart(this);
                 StaffChordChart.hideChordChart(this);
@@ -441,6 +447,88 @@ public class EversongActivity extends AppCompatActivity {
         }
     }
 
+    private void setFunctionalitiesMenu() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels;
+        ConstraintLayout.LayoutParams params;
+
+        Button button = this.findViewById(R.id.chord_detection_functionality_button);
+        params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
+        params.width = screenWidth/ EversongFunctionalities.values().length;
+        button.setLayoutParams(params);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Parameters.getInstance().getFunctionalitySelected() != EversongFunctionalities.CHORD_DETECTION) {
+                    Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.CHORD_DETECTION);
+                    updateFunctionalitiesMenu();
+                }
+            }
+        });
+
+        button = this.findViewById(R.id.chord_score_functionality_button);
+        params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
+        params.width = screenWidth/ EversongFunctionalities.values().length;
+        button.setLayoutParams(params);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Parameters.getInstance().getFunctionalitySelected() != EversongFunctionalities.CHORD_SCORE) {
+                    Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.CHORD_SCORE);
+                    updateFunctionalitiesMenu();
+                }
+            }
+        });
+
+        button = this.findViewById(R.id.tuning_functionality_button);
+        params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
+        params.width = screenWidth/ EversongFunctionalities.values().length;
+        button.setLayoutParams(params);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Parameters.getInstance().getFunctionalitySelected() != EversongFunctionalities.TUNING) {
+                    Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.TUNING);
+                    updateFunctionalitiesMenu();
+                }
+            }
+        });
+
+        updateFunctionalitiesMenu();
+    }
+
+    private void updateFunctionalitiesMenu() {
+        Button button;
+
+        button = this.findViewById(R.id.chord_detection_functionality_button);
+        if (Parameters.getInstance().getFunctionalitySelected() == EversongFunctionalities.CHORD_DETECTION) {
+            button.setBackgroundResource(R.drawable.chart_menu_button_selected);
+            button.setTextColor(mColor01);
+        } else {
+            button.setBackgroundResource(R.drawable.chart_menu_button_not_selected);
+            button.setTextColor(mColor02);
+        }
+
+        button = this.findViewById(R.id.chord_score_functionality_button);
+        if (Parameters.getInstance().getFunctionalitySelected() == EversongFunctionalities.CHORD_SCORE) {
+            button.setBackgroundResource(R.drawable.chart_menu_button_selected);
+            button.setTextColor(mColor01);
+        } else {
+            button.setBackgroundResource(R.drawable.chart_menu_button_not_selected);
+            button.setTextColor(mColor02);
+        }
+
+        button = this.findViewById(R.id.tuning_functionality_button);
+        if (Parameters.getInstance().getFunctionalitySelected() == EversongFunctionalities.TUNING) {
+            button.setBackgroundResource(R.drawable.chart_menu_button_selected);
+            button.setTextColor(mColor01);
+        } else {
+            button.setBackgroundResource(R.drawable.chart_menu_button_not_selected);
+            button.setTextColor(mColor02);
+        }
+    }
+
     private void setChartMenu() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -449,13 +537,13 @@ public class EversongActivity extends AppCompatActivity {
 
         Button button = this.findViewById(R.id.guitar_chart_button);
         params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
-        params.width = screenWidth/TabSelected.values().length;
+        params.width = screenWidth/ ChartTab.values().length;
         button.setLayoutParams(params);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Parameters.getInstance().getTabSelected() != TabSelected.GUITAR_TAB) {
-                    Parameters.getInstance().setTabSelected(TabSelected.GUITAR_TAB);
+                if (Parameters.getInstance().getChartTabSelected() != ChartTab.GUITAR_TAB) {
+                    Parameters.getInstance().setChartTabSelected(ChartTab.GUITAR_TAB);
                     setChordChart();
                     updateChartMenu();
                 }
@@ -464,13 +552,13 @@ public class EversongActivity extends AppCompatActivity {
 
         button = this.findViewById(R.id.ukulele_chart_button);
         params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
-        params.width = screenWidth/TabSelected.values().length;
+        params.width = screenWidth/ ChartTab.values().length;
         button.setLayoutParams(params);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Parameters.getInstance().getTabSelected() != TabSelected.UKULELE_TAB) {
-                    Parameters.getInstance().setTabSelected(TabSelected.UKULELE_TAB);
+                if (Parameters.getInstance().getChartTabSelected() != ChartTab.UKULELE_TAB) {
+                    Parameters.getInstance().setChartTabSelected(ChartTab.UKULELE_TAB);
                     setChordChart();
                     updateChartMenu();
                 }
@@ -479,13 +567,13 @@ public class EversongActivity extends AppCompatActivity {
 
         button = this.findViewById(R.id.piano_chart_button);
         params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
-        params.width = screenWidth/TabSelected.values().length;
+        params.width = screenWidth/ ChartTab.values().length;
         button.setLayoutParams(params);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Parameters.getInstance().getTabSelected() != TabSelected.PIANO_TAB) {
-                    Parameters.getInstance().setTabSelected(TabSelected.PIANO_TAB);
+                if (Parameters.getInstance().getChartTabSelected() != ChartTab.PIANO_TAB) {
+                    Parameters.getInstance().setChartTabSelected(ChartTab.PIANO_TAB);
                     setChordChart();
                     updateChartMenu();
                 }
@@ -494,13 +582,13 @@ public class EversongActivity extends AppCompatActivity {
 
         button = this.findViewById(R.id.staff_chart_button);
         params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
-        params.width = screenWidth/TabSelected.values().length;
+        params.width = screenWidth/ ChartTab.values().length;
         button.setLayoutParams(params);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Parameters.getInstance().getTabSelected() != TabSelected.STAFF_TAB) {
-                    Parameters.getInstance().setTabSelected(TabSelected.STAFF_TAB);
+                if (Parameters.getInstance().getChartTabSelected() != ChartTab.STAFF_TAB) {
+                    Parameters.getInstance().setChartTabSelected(ChartTab.STAFF_TAB);
                     setChordChart();
                     updateChartMenu();
                 }
@@ -509,13 +597,13 @@ public class EversongActivity extends AppCompatActivity {
 
         button = this.findViewById(R.id.chromagram_chart_button);
         params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
-        params.width = screenWidth/TabSelected.values().length;
+        params.width = screenWidth/ ChartTab.values().length;
         button.setLayoutParams(params);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Parameters.getInstance().getTabSelected() != TabSelected.CHROMAGRAM) {
-                    Parameters.getInstance().setTabSelected(TabSelected.CHROMAGRAM);
+                if (Parameters.getInstance().getChartTabSelected() != ChartTab.CHROMAGRAM) {
+                    Parameters.getInstance().setChartTabSelected(ChartTab.CHROMAGRAM);
                     setChordChart();
                     updateChartMenu();
                 }
@@ -529,7 +617,7 @@ public class EversongActivity extends AppCompatActivity {
         Button button;
 
         button = this.findViewById(R.id.guitar_chart_button);
-        if (Parameters.getInstance().getTabSelected() == TabSelected.GUITAR_TAB) {
+        if (Parameters.getInstance().getChartTabSelected() == ChartTab.GUITAR_TAB) {
             button.setBackgroundResource(R.drawable.chart_menu_button_selected);
             button.setTextColor(mColor01);
         } else {
@@ -538,7 +626,7 @@ public class EversongActivity extends AppCompatActivity {
         }
 
         button = this.findViewById(R.id.ukulele_chart_button);
-        if (Parameters.getInstance().getTabSelected() == TabSelected.UKULELE_TAB) {
+        if (Parameters.getInstance().getChartTabSelected() == ChartTab.UKULELE_TAB) {
             button.setBackgroundResource(R.drawable.chart_menu_button_selected);
             button.setTextColor(mColor01);
         } else {
@@ -547,7 +635,7 @@ public class EversongActivity extends AppCompatActivity {
         }
 
         button = this.findViewById(R.id.piano_chart_button);
-        if (Parameters.getInstance().getTabSelected() == TabSelected.PIANO_TAB) {
+        if (Parameters.getInstance().getChartTabSelected() == ChartTab.PIANO_TAB) {
             button.setBackgroundResource(R.drawable.chart_menu_button_selected);
             button.setTextColor(mColor01);
         } else {
@@ -556,7 +644,7 @@ public class EversongActivity extends AppCompatActivity {
         }
 
         button = this.findViewById(R.id.staff_chart_button);
-        if (Parameters.getInstance().getTabSelected() == TabSelected.STAFF_TAB) {
+        if (Parameters.getInstance().getChartTabSelected() == ChartTab.STAFF_TAB) {
             button.setBackgroundResource(R.drawable.chart_menu_button_selected);
             button.setTextColor(mColor01);
         } else {
@@ -565,7 +653,7 @@ public class EversongActivity extends AppCompatActivity {
         }
 
         button = this.findViewById(R.id.chromagram_chart_button);
-        if (Parameters.getInstance().getTabSelected() == TabSelected.CHROMAGRAM) {
+        if (Parameters.getInstance().getChartTabSelected() == ChartTab.CHROMAGRAM) {
             button.setBackgroundResource(R.drawable.chart_menu_button_selected);
             button.setTextColor(mColor01);
         } else {
