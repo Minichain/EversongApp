@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Process;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -70,6 +72,7 @@ public class EversongActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.l("EversongActivityLog:: onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkCaptureAudioPermission();
@@ -77,24 +80,24 @@ public class EversongActivity extends AppCompatActivity {
         LinearLayout placeHolder;
         placeHolder = this.findViewById(R.id.chart_menu_layout);
         getLayoutInflater().inflate(R.layout.chart_menu, placeHolder);
-
-        initMainActivity();
     }
 
     @Override
     protected void onRestart() {
-        initMainActivity();
+        Log.l("EversongActivityLog:: onRestart");
         super.onRestart();
     }
 
     @Override
     protected void onResume() {
+        Log.l("EversongActivityLog:: onResume");
         initMainActivity();
         super.onResume();
     }
 
     @Override
     protected void onPause() {
+        Log.l("EversongActivityLog:: onPause");
         super.onPause();
         stopRecording();
         try {
@@ -106,6 +109,7 @@ public class EversongActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+        Log.l("EversongActivityLog:: onStop");
         super.onStop();
         stopRecording();
         try {
@@ -438,7 +442,15 @@ public class EversongActivity extends AppCompatActivity {
     }
 
     private void setChartMenu() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels;
+        ConstraintLayout.LayoutParams params;
+
         Button button = this.findViewById(R.id.guitar_chart_button);
+        params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
+        params.width = screenWidth/TabSelected.values().length;
+        button.setLayoutParams(params);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -451,6 +463,9 @@ public class EversongActivity extends AppCompatActivity {
         });
 
         button = this.findViewById(R.id.ukulele_chart_button);
+        params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
+        params.width = screenWidth/TabSelected.values().length;
+        button.setLayoutParams(params);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -463,6 +478,9 @@ public class EversongActivity extends AppCompatActivity {
         });
 
         button = this.findViewById(R.id.piano_chart_button);
+        params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
+        params.width = screenWidth/TabSelected.values().length;
+        button.setLayoutParams(params);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -475,6 +493,9 @@ public class EversongActivity extends AppCompatActivity {
         });
 
         button = this.findViewById(R.id.staff_chart_button);
+        params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
+        params.width = screenWidth/TabSelected.values().length;
+        button.setLayoutParams(params);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -487,6 +508,9 @@ public class EversongActivity extends AppCompatActivity {
         });
 
         button = this.findViewById(R.id.chromagram_chart_button);
+        params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
+        params.width = screenWidth/TabSelected.values().length;
+        button.setLayoutParams(params);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
