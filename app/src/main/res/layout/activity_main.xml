@@ -10,20 +10,17 @@
         android:id="@+id/canvas_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
     <LinearLayout
         android:id="@+id/functionalities_menu_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" />
-
     <LinearLayout
         android:id="@+id/chart_menu_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/functionalities_menu_layout" />
-
     <Button
         android:id="@+id/recording_button"
         android:layout_width="198dp"
@@ -38,94 +35,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/music_playing_detector"
-        android:layout_width="226dp"
-        android:layout_height="15dp"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="MUSIC PLAYING!"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/recording_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.038"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/pitch_text"
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Pitch: --- Hz"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/recording_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.038"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.059" />
-
-    <TextView
-        android:id="@+id/spectral_flatness_text"
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Flatness: ---"
-        android:textSize="12sp"
-        app:layout_constraintHorizontal_bias="0.038"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pitch_text" />
-
-    <TextView
-        android:id="@+id/chord_note"
-        android:layout_width="78dp"
-        android:layout_height="41dp"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="288dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text=""
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/chord_type"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.444" />
-
-    <TextView
-        android:id="@+id/chord_type"
-        android:layout_width="84dp"
-        android:layout_height="23dp"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="15dp"
-        android:gravity="end"
-        android:text=""
-        android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.971"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.055" />
-
     <TextView
         android:id="@+id/most_probable_chord_note"
         android:layout_width="232dp"
@@ -142,7 +51,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
-
     <TextView
         android:id="@+id/most_probable_chord_type"
         android:layout_width="176dp"
@@ -160,6 +68,57 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.473" />
 
+    <!--DEBUG INFO-->
+    <TextView
+        android:id="@+id/pitch_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Pitch: --- Hz"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/chart_menu_layout" />
+    <TextView
+        android:id="@+id/spectral_flatness_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Flatness: ---"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/pitch_text" />
+    <TextView
+        android:id="@+id/music_playing_detector"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="start"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="MUSIC PLAYING!"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/spectral_flatness_text" />
+    <TextView
+        android:id="@+id/chord_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="end"
+        android:text=""
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/chart_menu_layout" />
+    <TextView
+        android:id="@+id/chord_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="end"
+        android:text=""
+        android:textSize="10sp"
+        app:layout_constraintTop_toBottomOf="@+id/chord_note"/>
     <TextView
         android:id="@+id/algorithm_performance"
         android:layout_width="73dp"
