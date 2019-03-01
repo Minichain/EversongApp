@@ -13,12 +13,12 @@ public class AudioStack {
         initProcessAudioJni(Parameters.SAMPLE_RATE, Parameters.BUFFER_SIZE, Parameters.HOP_SIZE);
     }
 
-    public static int[] chordDetection(double[] samples, double[] spectrumSamples) {
-        return chordDetectionJni(samples, spectrumSamples);
+    public static int[] chordDetection(double[] samples, double[] spectrumSamples, int chordDetectionAlgorithm) {
+        return chordDetectionJni(samples, spectrumSamples, chordDetectionAlgorithm);
     }
 
-    public static double[] getChromagram(double[] samples, double[] spectrumSamples) {
-        return getChromagramJni(samples, spectrumSamples);
+    public static double[] getChromagram() {
+        return getChromagramJni();
     }
 
     public static float getPitch(double[] samples) {
@@ -206,9 +206,9 @@ public class AudioStack {
      **/
     private static native void initProcessAudioJni(int sample_rate, int frame_size, int hop_size);
 
-    private static native int[] chordDetectionJni(double[] samples, double[] spectrumSamples);
+    private static native int[] chordDetectionJni(double[] samples, double[] spectrumSamples, int chordDetectionAlgorithm);
 
-    private static native double[] getChromagramJni(double[] samples, double[] spectrumSamples);
+    private static native double[] getChromagramJni();
 
     private static native double[] windowJni(double[] samples, int windowType);
 

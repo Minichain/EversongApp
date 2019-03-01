@@ -100,51 +100,52 @@ void Chromagram::processAudioFrame (double* inputAudioFrame)
 {
     // create a vector
     std::vector<double> v;
-    
-    // use the array to initialise it
-    v.assign (inputAudioFrame, inputAudioFrame + inputAudioFrameSize);
-    
+
+    if (inputAudioFrame != NULL) {
+        // use the array to initialise it
+        v.assign (inputAudioFrame, inputAudioFrame + inputAudioFrameSize);
+    }
+
     // process the vector
-    processAudioFrame (v);
+    processAudioFrame(v);
 }
 
 //==================================================================================
-void Chromagram::processAudioFrame (std::vector<double> inputAudioFrame)
-{
+void Chromagram::processAudioFrame (std::vector<double> inputAudioFrame) {
     // our default state is that the chroma is not ready
     chromaReady = false;
-    
-    // downsample the input audio frame by 4
-    downSampleFrame(inputAudioFrame);
-    
-    // move samples back
-    for (int i = 0; i < bufferSize - downSampledAudioFrameSize; i++)
-    {
-        buffer[i] = buffer[i + downSampledAudioFrameSize];
-    }
-    
-    int n = 0;
-    
-    // add new samples to buffer
-    for (int i = (bufferSize - downSampledAudioFrameSize); i < bufferSize; i++)
-    {
-        buffer[i] = downsampledInputAudioFrame[n];
-        n++;
-    }
-    
-    // add number of samples from calculation
-    numSamplesSinceLastCalculation += inputAudioFrameSize;
-        
-    // if we have had enough samples
-    if (numSamplesSinceLastCalculation >= chromaCalculationInterval)
-    {
-        // calculate the chromagram
+
+    if (!inputAudioFrame.empty()) {
+        // downsample the input audio frame by 4
+        downSampleFrame(inputAudioFrame);
+
+        // move samples back
+        for (int i = 0; i < bufferSize - downSampledAudioFrameSize; i++) {
+            buffer[i] = buffer[i + downSampledAudioFrameSize];
+        }
+
+        int n = 0;
+
+        // add new samples to buffer
+        for (int i = (bufferSize - downSampledAudioFrameSize); i < bufferSize; i++) {
+            buffer[i] = downsampledInputAudioFrame[n];
+            n++;
+        }
+
+        // add number of samples from calculation
+        numSamplesSinceLastCalculation += inputAudioFrameSize;
+
+        // if we have had enough samples
+        if (numSamplesSinceLastCalculation >= chromaCalculationInterval) {
+            // calculate the chromagram
+            calculateChromagram();
+
+            // reset num samples counter
+            numSamplesSinceLastCalculation = 0;
+        }
+    } else {
         calculateChromagram();
-        
-        // reset num samples counter
-        numSamplesSinceLastCalculation = 0;
     }
-    
 }
 
 //==================================================================================
@@ -215,31 +216,67 @@ void Chromagram::calculateChromagram()
      */
 //    calculateMagnitudeSpectrum();
 
+    switch (chromagramAlgorithm) {
+        case ADAM_STARK:
+            chromagramAdamStarkAlgorithm();
+            break;
+        case EVERSONG:
+            chromagramEversongAlgorithm();
+            break;
+    }
+}
+
+void Chromagram::chromagramAdamStarkAlgorithm() {
     double divisorRatio = (((double) samplingFrequency) / 4.0) / ((double)bufferSize);
-    
+
     for (int n = 0; n < 12; n++) {
         double chromaSum = 0.0;
-        
+
         for (int octave = 1; octave <= numOctaves; octave++) {
             double noteSum = 0.0;
-            
+
             for (int harmonic = 1; harmonic <= numHarmonics; harmonic++) {
                 int centerBin = (int)round((noteFrequencies[n] * octave * harmonic) / divisorRatio);
                 int minBin = centerBin - (numBinsToSearch * harmonic);
                 int maxBin = centerBin + (numBinsToSearch * harmonic);
-                
+
                 double maxVal = 0.0;
-                
+
                 for (int k = minBin; k < maxBin; k++) {
                     if (magnitudeSpectrum[k] > maxVal) {
                         maxVal = magnitudeSpectrum[k];
                     }
                 }
-            
+
                 noteSum += (maxVal / (double) harmonic);
             }
-            
+
             chromaSum += noteSum;
+        }
+        chromagram[n] = chromaSum;
+    }
+
+    chromaReady = true;
+}
+
+void Chromagram::chromagramEversongAlgorithm() {
+    double maxChromagramValue = 0.0;
+    for (int n = 0; n < 12; n++) {
+        double chromaSum = 0.0;
+
+        for (int octave = 1; octave <= numOctaves; octave++) {
+            double noteSum = 0.0;
+            int noteChecking = (int)round(noteFrequencies[n] * octave);
+            int binWidth = 5;
+
+            for (int i = noteChecking - ((binWidth - 1) / 2); i <= noteChecking + ((binWidth - 1) / 2); i++) {
+                noteSum += magnitudeSpectrum[i];
+            }
+            chromaSum += noteSum;
+        }
+
+        if (maxChromagramValue < chromaSum) {
+            maxChromagramValue = chromaSum;
         }
 
         //Chromagram amplitude threshold
@@ -250,7 +287,25 @@ void Chromagram::calculateChromagram()
         }
     }
 
+    bool normalizeChromagram = false;
+    if (normalizeChromagram) {
+        for (int n = 0; n < 12; n++) {
+            chromagram[n] /= maxChromagramValue;
+        }
+    }
     chromaReady = true;
+}
+
+void Chromagram::setChordDetectionAlgorithm(int algorithm) {
+    switch(algorithm) {
+        case ADAM_STARK:
+            chromagramAlgorithm = ADAM_STARK;
+            break;
+        case EVERSONG:
+        default:
+            chromagramAlgorithm = EVERSONG;
+            break;
+    }
 }
 
 //==================================================================================

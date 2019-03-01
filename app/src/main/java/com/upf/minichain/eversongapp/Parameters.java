@@ -7,6 +7,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.upf.minichain.eversongapp.enums.ChartTab;
+import com.upf.minichain.eversongapp.enums.ChordDetectionAlgorithm;
 import com.upf.minichain.eversongapp.enums.EversongFunctionalities;
 import com.upf.minichain.eversongapp.enums.MusicalNotationEnum;
 import com.upf.minichain.eversongapp.enums.WindowFunctionEnum;
@@ -32,6 +33,7 @@ public class Parameters {
     private static MusicalNotationEnum musicalNotation;
     private static WindowFunctionEnum windowingFunction;
     private static ChartTab chartTab;
+    private static ChordDetectionAlgorithm chordDetectionAlgorithm;
     private static EversongFunctionalities functionalityTab;
     private static int chordBufferSize;
     private static int pitchBufferSize;
@@ -54,6 +56,7 @@ public class Parameters {
         pitchBufferSize = 4;
         chartTab = ChartTab.GUITAR_TAB;
         functionalityTab = EversongFunctionalities.CHORD_DETECTION;
+        chordDetectionAlgorithm = chordDetectionAlgorithm.ADAM_STARK_ALGORITHM;
         debugMode = false;
     }
 
@@ -92,14 +95,17 @@ public class Parameters {
             tempValue = loadParameter("chordBufferSize");
             chordBufferSize = (tempValue != -1) ? tempValue : chordBufferSize;
 
-            tempValue = loadParameter("debugMode");
-            debugMode = tempValue == 1;
-
             tempValue = loadParameter("functionalityTab");
             functionalityTab = (tempValue != -1) ? EversongFunctionalities.values()[tempValue] : functionalityTab;
 
             tempValue = loadParameter("chartTab");
             chartTab = (tempValue != -1) ? ChartTab.values()[tempValue] : chartTab;
+
+            tempValue = loadParameter("chordDetectionAlgorithm");
+            chordDetectionAlgorithm = (tempValue != -1) ? chordDetectionAlgorithm.values()[tempValue] : chordDetectionAlgorithm;
+
+            tempValue = loadParameter("debugMode");
+            debugMode = tempValue == 1;
         }
     }
 
@@ -233,8 +239,17 @@ public class Parameters {
         return chartTab;
     }
 
+    public void setChordDetectionAlgorithm(ChordDetectionAlgorithm algorithm) {
+        setParameterInDataBase("chordDetectionAlgorithm", algorithm.getValue());
+        chordDetectionAlgorithm = algorithm;
+    }
+
+    public ChordDetectionAlgorithm getChordDetectionAlgorithm() {
+        return chordDetectionAlgorithm;
+    }
+
     public void setDebugMode(boolean value) {
-        setParameterInDataBase("debugMode", value ? 1 : 0);
+        setParameterInDataBase("chordDetectionAlgorithm", value ? 1 : 0);
         debugMode = value;
     }
 

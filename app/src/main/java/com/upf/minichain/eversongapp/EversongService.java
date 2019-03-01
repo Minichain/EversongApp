@@ -172,8 +172,8 @@ public class EversongService extends Service {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    final int[] chordDetectedThread = AudioStack.chordDetection(audioSamplesBufferWindowed, audioSpectrumBuffer);
-                    final double[] chromagramThread = AudioStack.getChromagram(audioSamplesBufferWindowed, audioSpectrumBuffer);
+                    final int[] chordDetectedThread = AudioStack.chordDetection(audioSamplesBufferWindowed, audioSpectrumBuffer, Parameters.getInstance().getChordDetectionAlgorithm().getValue());
+                    final double[] chromagramThread = AudioStack.getChromagram();
 
 //                    Log.l("EversongActivityLog:: Spectrum diff: " + AudioStack.getDifference(audioSpectrumBuffer, prevAudioSpectrumBuffer));
 

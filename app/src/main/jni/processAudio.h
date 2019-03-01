@@ -29,8 +29,8 @@ public:
     Yin yin;
 
     ProcessAudio(int sample_rate, int frame_size);
-    int* chordDetection(double* samples, double* spectrumSamples);
-    double* getChromagram(double* samples, double* spectrumSamples);
+    int* chordDetection(double* samples, double* spectrumSamples, int chordDetectionAlgorithm);
+    double* getChromagram();
     float getPitch(double* samples, int length);
     float getPitchProbability();
 

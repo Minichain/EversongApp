@@ -13,10 +13,11 @@ ProcessAudio::ProcessAudio(int sample_rate, int frame_size) {
     Yin_init(&yin, (int16_t)frameSize, 0.30);
 }
 
-int* ProcessAudio::chordDetection(double* samples, double* spectrumSamples) {
+int* ProcessAudio::chordDetection(double* samples, double* spectrumSamples, int chordDetectionAlgorithm) {
 
     c.setMagnitudeSpectrum(spectrumSamples);
-    c.processAudioFrame(samples);
+    c.setChordDetectionAlgorithm(chordDetectionAlgorithm);
+    c.processAudioFrame(NULL);
 
     if (c.isReady()) {
         std::vector<double> chroma = c.getChromagram();
@@ -27,7 +28,7 @@ int* ProcessAudio::chordDetection(double* samples, double* spectrumSamples) {
     return chordDetectionOutput;
 }
 
-double* ProcessAudio::getChromagram(double* samples, double* spectrumSamples) {
+double* ProcessAudio::getChromagram() {
     std::vector<double> chroma(12, -1.0);
     chroma = c.getChromagram();
     for (int i = 0; i < 12; i++) {

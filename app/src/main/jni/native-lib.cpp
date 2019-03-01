@@ -11,15 +11,15 @@ extern "C" {
         processAudio = new ProcessAudio(sample_rate, frame_size);
     }
 
-    jintArray Java_com_upf_minichain_eversongapp_AudioStack_chordDetectionJni(JNIEnv *env, jobject, jdoubleArray samples, jdoubleArray spectrumSamples) {
+    jintArray Java_com_upf_minichain_eversongapp_AudioStack_chordDetectionJni(JNIEnv *env, jobject, jdoubleArray samples, jdoubleArray spectrumSamples, jint chordDetectionAlgorithm) {
         jintArray output = env->NewIntArray(2);
-        env->SetIntArrayRegion(output, 0, 2, processAudio->chordDetection(env->GetDoubleArrayElements(samples, 0), env->GetDoubleArrayElements(spectrumSamples, 0)));
+        env->SetIntArrayRegion(output, 0, 2, processAudio->chordDetection(env->GetDoubleArrayElements(samples, 0), env->GetDoubleArrayElements(spectrumSamples, 0), chordDetectionAlgorithm));
         return output;
     }
 
-    jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_getChromagramJni(JNIEnv *env, jobject, jdoubleArray samples, jdoubleArray spectrumSamples) {
+    jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_getChromagramJni(JNIEnv *env, jobject) {
         jdoubleArray output = env->NewDoubleArray(12);
-        env->SetDoubleArrayRegion(output, 0, 12, processAudio->getChromagram(env->GetDoubleArrayElements(samples, 0), env->GetDoubleArrayElements(spectrumSamples, 0)));
+        env->SetDoubleArrayRegion(output, 0, 12, processAudio->getChromagram());
         return output;
     }
 

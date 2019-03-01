@@ -97,10 +97,22 @@ public:
 
     void setMagnitudeSpectrum(double* spectrumSamples);
 
+    void setChordDetectionAlgorithm(int i);
+
 private:
     
     void setupFFT();
+
+    enum ChromagramAlgorithm {
+        ADAM_STARK = 0,
+        EVERSONG = 1
+    };
+    ChromagramAlgorithm chromagramAlgorithm;
+
     void calculateChromagram();
+    void chromagramAdamStarkAlgorithm();
+    void chromagramEversongAlgorithm();
+
     void calculateMagnitudeSpectrum();
 	void downSampleFrame (std::vector<double> inputAudioFrame);
     void makeHammingWindow();
@@ -137,7 +149,7 @@ private:
     kiss_fft_cpx* fftIn;
     kiss_fft_cpx* fftOut;
 #endif
-    
+
 };
 
 #endif /* defined(__CHROMAGRAM_H) */

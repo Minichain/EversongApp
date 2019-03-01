@@ -345,7 +345,7 @@ public class EversongActivity extends AppCompatActivity {
     }
 
     private void sendBroadcastToService(BroadcastMessage broadcastMessage) {
-        Log.l("EversongServiceLog:: sending broadcast " + broadcastMessage.toString());
+        Log.l("EversongActivityLog:: sending broadcast " + broadcastMessage.toString());
         try {
             Intent broadCastIntent = new Intent();
             broadCastIntent.setAction(broadcastMessage.toString());

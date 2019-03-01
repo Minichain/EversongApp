@@ -10,6 +10,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.upf.minichain.eversongapp.enums.ChordDetectionAlgorithm;
 import com.upf.minichain.eversongapp.enums.MusicalNotationEnum;
 import com.upf.minichain.eversongapp.enums.WindowFunctionEnum;
 
@@ -27,6 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
         setAudioBufferSizeSetting();
         setBandpassFilterLowFreqSetting();
         setBandpassFilterHighFreqSetting();
+        setChordDetectionAlgorithmSetting();
         setDebugModeSetting();
     }
 
@@ -82,7 +84,6 @@ public class SettingsActivity extends AppCompatActivity {
                 view.setChecked(true);
                 break;
         }
-
     }
 
     public void onWindowingSettingClicked(View view) {
@@ -220,6 +221,38 @@ public class SettingsActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
     }
+
+    private void setChordDetectionAlgorithmSetting() {
+        RadioButton view;
+        switch (Parameters.getInstance().getChordDetectionAlgorithm()) {
+            case ADAM_STARK_ALGORITHM:
+                view = this.findViewById(R.id.adam_stark_algorithm_option);
+                view.setChecked(true);
+                break;
+            case EVERSONG_ALGORITHM:
+            default:
+                view = this.findViewById(R.id.eversong_algorithm_option);
+                view.setChecked(true);
+                break;
+        }
+    }
+
+    public void onChordDetectionAlgorithmSettingClicked(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+
+        switch(view.getId()) {
+            case R.id.adam_stark_algorithm_option:
+                if (checked)
+                    Parameters.getInstance().setChordDetectionAlgorithm(ChordDetectionAlgorithm.ADAM_STARK_ALGORITHM);
+                break;
+            case R.id.eversong_algorithm_option:
+            default:
+                if (checked)
+                    Parameters.getInstance().setChordDetectionAlgorithm(ChordDetectionAlgorithm.EVERSONG_ALGORITHM);
+                break;
+        }
+    }
+
 
     private void setDebugModeSetting() {
         Switch switchView = this.findViewById(R.id.debug_mode_switch);

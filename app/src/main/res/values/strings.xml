@@ -33,5 +33,8 @@
     <string name="setting_audio_buffer_size">Audio buffer size</string>
     <string name="setting_bandpass_filter_low_freq">Bandpass filter low freq</string>
     <string name="setting_bandpass_filter_high_freq">Bandpass filter high freq</string>
+    <string name="setting_chord_detector_algorithm">Chord detection algorithm</string>
+    <string name="setting_adam_stark_algorithm">Adam Stark algorithm</string>
+    <string name="setting_eversong_algorithm">Eversong algorithm</string>
     <string name="debug_mode">Debug Mode</string>
 </resources>
