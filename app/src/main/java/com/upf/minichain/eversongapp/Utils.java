@@ -1,5 +1,6 @@
 package com.upf.minichain.eversongapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
 
@@ -73,6 +74,10 @@ public class Utils {
         return px / ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 
+    public static float convertSpToPixels(float sp, Context context) {
+        return sp * context.getResources().getDisplayMetrics().scaledDensity;
+    }
+
     /**
      * This method takes a chord as an input [G, major]
      * and returns the notes that compose the chord [G, B, D].
@@ -129,5 +134,17 @@ public class Utils {
                 break;
         }
         return chordNotes;
+    }
+
+    public static int getScreenWidthInPixels(Activity activity) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
+    }
+
+    public static int getScreenHeightInPixels(Activity activity) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.heightPixels;
     }
 }

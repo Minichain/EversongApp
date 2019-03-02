@@ -12,11 +12,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -41,8 +41,9 @@ public class EversongActivity extends AppCompatActivity {
     TextView spectralFlatnessText;
     TextView chordNoteText;
     TextView mostProbableChordNoteText;
-    TextView chordTypeText;
     TextView mostProbableChordTypeText;
+    TextView chordTypeText;
+    TextView tuningPitchNote;
     TextView musicPlayingDetectorText;
     EversongCanvas canvas;
 
@@ -85,6 +86,8 @@ public class EversongActivity extends AppCompatActivity {
 
         placeHolder = this.findViewById(R.id.chart_menu_layout);
         getLayoutInflater().inflate(R.layout.chart_menu, placeHolder);
+
+        inflateChordChartLayouts();
     }
 
     @Override
@@ -155,23 +158,28 @@ public class EversongActivity extends AppCompatActivity {
         mColor02 = ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null);
         mColor03 = ResourcesCompat.getColor(getResources(), R.color.mColor03, null);
 
-        setDebugModeViews();
-        setChordChart();
-        setFunctionalitiesMenu();
-        setChartMenu();
-
+        // CHORD DETECTION
         mostProbableChordNoteText = this.findViewById(R.id.most_probable_chord_note);
         mostProbableChordTypeText = this.findViewById(R.id.most_probable_chord_type);
-
         mostProbableChordNoteText.setTextColor(mColor01);
         mostProbableChordNoteText.setText(NotesEnum.A.toString());
         mostProbableChordTypeText.setTextColor(mColor01);
         mostProbableChordTypeText.setText(ChordTypeEnum.Major.toString());
 
+        // TUNING
+        tuningPitchNote = this.findViewById(R.id.tuning_pitch_note);
+        tuningPitchNote.setTextColor(mColor01);
+        tuningPitchNote.setText(ChordTypeEnum.Major.toString());
+
         algorithmPerformanceText = this.findViewById(R.id.algorithm_performance);
         algorithmPerformanceText.setTextColor(mColor01);
 
-        canvas =  new EversongCanvas(getResources(), this.findViewById(R.id.canvas_view));
+        setDebugModeViews();
+        setFunctionality();
+        setChordChart();
+        setFunctionalitiesMenu();
+        setChartMenu();
+        setCanvas();
 
         keepProcessingFrame = true;
         new Thread(new Runnable() {
@@ -205,6 +213,16 @@ public class EversongActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setCanvas() {
+        int screenHeight = Utils.getScreenHeightInPixels(this);
+        ConstraintLayout.LayoutParams params;
+        ImageView canvasView = this.findViewById(R.id.canvas_view);
+        params = (ConstraintLayout.LayoutParams) canvasView.getLayoutParams();
+        params.height = screenHeight - (int)Utils.convertSpToPixels(140, getApplicationContext());
+        canvasView.setLayoutParams(params);
+        canvas = new EversongCanvas(getResources(), canvasView);
     }
 
     private void startRecording() {
@@ -292,11 +310,31 @@ public class EversongActivity extends AppCompatActivity {
             }
         }
 
-        if (mostProbableChord[0] != -1 && mostProbableChord[1] != -1) {
-            mostProbableChordNoteText.setText(NotesEnum.fromInteger(mostProbableChord[0]).toString());
-            mostProbableChordNoteText.setAlpha((float)mostProbableChord[2] / 100f);
-            mostProbableChordTypeText.setText(ChordTypeEnum.fromInteger(mostProbableChord[1]).toString());
-            mostProbableChordTypeText.setAlpha((float)mostProbableChord[2] / 100f);
+        switch (Parameters.getInstance().getFunctionalitySelected()) {
+            case CHORD_DETECTION:
+                if (mostProbableChord[0] != -1 && mostProbableChord[1] != -1) {
+                    if (mostProbableChordNoteText.getVisibility() == View.VISIBLE) {
+                        mostProbableChordNoteText.setText(NotesEnum.fromInteger(mostProbableChord[0]).toString());
+                        mostProbableChordNoteText.setAlpha((float)mostProbableChord[2] / 100f);
+                    }
+                    if (mostProbableChordTypeText.getVisibility() == View.VISIBLE) {
+                        mostProbableChordTypeText.setText(ChordTypeEnum.fromInteger(mostProbableChord[1]).toString());
+                        mostProbableChordTypeText.setAlpha((float)mostProbableChord[2] / 100f);
+                    }
+                }
+                break;
+            case CHORD_SCORE:
+                break;
+            case TUNING:
+                if (pitchDetected != -1) {
+                    pitchNote = AudioStack.getNoteByFrequency((double)pitchDetected);
+                } else {
+                    pitchNote = NotesEnum.NO_NOTE;
+                }
+                if (tuningPitchNote.getVisibility() == View.VISIBLE) {
+                    tuningPitchNote.setText(pitchNote.toString());
+                }
+                break;
         }
 
         switch(Parameters.getInstance().getChartTabSelected()) {
@@ -413,20 +451,48 @@ public class EversongActivity extends AppCompatActivity {
         }
     }
 
-    private void setChordChart() {
+    private void setFunctionality() {
+        switch(Parameters.getInstance().getFunctionalitySelected()) {
+            case CHORD_DETECTION:
+                mostProbableChordNoteText.setVisibility(View.VISIBLE);
+                mostProbableChordTypeText.setVisibility(View.VISIBLE);
+                tuningPitchNote.setVisibility(View.GONE);
+                break;
+            case CHORD_SCORE:
+                mostProbableChordNoteText.setVisibility(View.GONE);
+                mostProbableChordTypeText.setVisibility(View.GONE);
+                tuningPitchNote.setVisibility(View.GONE);
+                break;
+            case TUNING:
+                mostProbableChordNoteText.setVisibility(View.GONE);
+                mostProbableChordTypeText.setVisibility(View.GONE);
+                tuningPitchNote.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
+    private void inflateChordChartLayouts() {
         LinearLayout placeHolder;
+
+        placeHolder = this.findViewById(R.id.guitar_chord_chart_layout);
+        getLayoutInflater().inflate(R.layout.guitar_chord_chart, placeHolder);
+
+        placeHolder = this.findViewById(R.id.ukulele_chord_chart_layout);
+        getLayoutInflater().inflate(R.layout.ukulele_chord_chart, placeHolder);
+
+        placeHolder = this.findViewById(R.id.staff_chord_chart_layout);
+        getLayoutInflater().inflate(R.layout.staff_chord_chart, placeHolder);
+    }
+
+    private void setChordChart() {
         switch(Parameters.getInstance().getChartTabSelected()) {
             case GUITAR_TAB:
                 UkuleleChordChart.hideChordChart(this);
                 StaffChordChart.hideChordChart(this);
-                placeHolder = this.findViewById(R.id.guitar_chord_chart_layout);
-                getLayoutInflater().inflate(R.layout.guitar_chord_chart, placeHolder);
                 break;
             case UKULELE_TAB:
                 GuitarChordChart.hideChordChart(this);
                 StaffChordChart.hideChordChart(this);
-                placeHolder = this.findViewById(R.id.ukulele_chord_chart_layout);
-                getLayoutInflater().inflate(R.layout.ukulele_chord_chart, placeHolder);
                 break;
             case PIANO_TAB:
                 GuitarChordChart.hideChordChart(this);
@@ -436,8 +502,6 @@ public class EversongActivity extends AppCompatActivity {
             case STAFF_TAB:
                 GuitarChordChart.hideChordChart(this);
                 UkuleleChordChart.hideChordChart(this);
-                placeHolder = this.findViewById(R.id.staff_chord_chart_layout);
-                getLayoutInflater().inflate(R.layout.staff_chord_chart, placeHolder);
                 break;
             case CHROMAGRAM:
                 GuitarChordChart.hideChordChart(this);
@@ -448,9 +512,7 @@ public class EversongActivity extends AppCompatActivity {
     }
 
     private void setFunctionalitiesMenu() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenWidth = displayMetrics.widthPixels;
+        int screenWidth = Utils.getScreenWidthInPixels(this);
         ConstraintLayout.LayoutParams params;
 
         Button button = this.findViewById(R.id.chord_detection_functionality_button);
@@ -462,6 +524,7 @@ public class EversongActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (Parameters.getInstance().getFunctionalitySelected() != EversongFunctionalities.CHORD_DETECTION) {
                     Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.CHORD_DETECTION);
+                    setFunctionality();
                     updateFunctionalitiesMenu();
                 }
             }
@@ -476,6 +539,7 @@ public class EversongActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (Parameters.getInstance().getFunctionalitySelected() != EversongFunctionalities.CHORD_SCORE) {
                     Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.CHORD_SCORE);
+                    setFunctionality();
                     updateFunctionalitiesMenu();
                 }
             }
@@ -490,6 +554,7 @@ public class EversongActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (Parameters.getInstance().getFunctionalitySelected() != EversongFunctionalities.TUNING) {
                     Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.TUNING);
+                    setFunctionality();
                     updateFunctionalitiesMenu();
                 }
             }
@@ -530,9 +595,7 @@ public class EversongActivity extends AppCompatActivity {
     }
 
     private void setChartMenu() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenWidth = displayMetrics.widthPixels;
+        int screenWidth = Utils.getScreenWidthInPixels(this);
         ConstraintLayout.LayoutParams params;
 
         Button button = this.findViewById(R.id.guitar_chart_button);

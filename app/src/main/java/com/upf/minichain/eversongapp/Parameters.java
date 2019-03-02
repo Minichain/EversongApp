@@ -249,7 +249,7 @@ public class Parameters {
     }
 
     public void setDebugMode(boolean value) {
-        setParameterInDataBase("chordDetectionAlgorithm", value ? 1 : 0);
+        setParameterInDataBase("debugMode", value ? 1 : 0);
         debugMode = value;
     }
 

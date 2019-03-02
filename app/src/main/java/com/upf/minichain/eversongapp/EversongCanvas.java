@@ -86,6 +86,7 @@ public class EversongCanvas {
         double smoothEffectValue;
         int numberOfSamplesToPaint;
         int firstSampleToPaint;
+        int verticalDisplacement = (mCanvas.getHeight() / 2);
 
         if (mCanvas.getWidth() < bufferSamples.length) {
             numberOfSamplesToPaint = mCanvas.getWidth();
@@ -96,8 +97,8 @@ public class EversongCanvas {
 
         for (int i = firstSampleToPaint; i < numberOfSamplesToPaint + firstSampleToPaint; i++) {
             smoothEffectValue = (0.5 * (1.0 - Math.cos(2.0*Math.PI*(double)(i - firstSampleToPaint)/(double)(mCanvas.getWidth() - 1))));
-            mCanvas.drawLine(i - firstSampleToPaint, (float) (bufferSamples[i] * 100 * smoothEffectValue * amplifyDrawFactor) + (mCanvas.getHeight() / 2),
-                    i + 1 - firstSampleToPaint, (float) (bufferSamples[i + 1] * 100 * smoothEffectValue * amplifyDrawFactor) + (mCanvas.getHeight() / 2), paint);
+            mCanvas.drawLine(i - firstSampleToPaint, (float) (bufferSamples[i] * 100 * smoothEffectValue * amplifyDrawFactor) + verticalDisplacement,
+                    i + 1 - firstSampleToPaint, (float) (bufferSamples[i + 1] * 100 * smoothEffectValue * amplifyDrawFactor) + verticalDisplacement, paint);
         }
     }
 
