@@ -33,8 +33,7 @@ Chromagram::Chromagram (int frameSize, int fs, int bs)
     bufferSize = bs;    // It must be a power of 2 (2048, 4096, 8192, 16384...)
 
     // calculate note frequencies
-    for (int i = 0; i < 12; i++)
-    {
+    for (int i = 0; i < 12; i++) {
         noteFrequencies[i] = referenceFrequency * pow (2,(((float) i) / 12));
     }
     
@@ -48,8 +47,7 @@ Chromagram::Chromagram (int frameSize, int fs, int bs)
     chromagram.resize (12);
     
     // initialise chromagram
-    for (int i = 0; i < 12; i++)
-    {
+    for (int i = 0; i < 12; i++) {
         chromagram[i] = 0.0;
     }
     
@@ -266,8 +264,9 @@ void Chromagram::chromagramEversongAlgorithm() {
 
         for (int octave = 1; octave <= numOctaves; octave++) {
             double noteSum = 0.0;
-            int noteChecking = (int)round(noteFrequencies[n] * octave);
-            int binWidth = 5;
+            //TODO check this 7 semitones shifting
+            int noteChecking = (int)round(noteFrequencies[(n + 7) % 12] * octave);
+            int binWidth = 5;   // It must be an odd number
 
             for (int i = noteChecking - ((binWidth - 1) / 2); i <= noteChecking + ((binWidth - 1) / 2); i++) {
                 noteSum += magnitudeSpectrum[i];

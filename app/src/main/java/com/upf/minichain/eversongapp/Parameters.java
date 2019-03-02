@@ -56,7 +56,7 @@ public class Parameters {
         pitchBufferSize = 4;
         chartTab = ChartTab.GUITAR_TAB;
         functionalityTab = EversongFunctionalities.CHORD_DETECTION;
-        chordDetectionAlgorithm = chordDetectionAlgorithm.ADAM_STARK_ALGORITHM;
+        chordDetectionAlgorithm = ChordDetectionAlgorithm.ADAM_STARK_ALGORITHM;
         debugMode = false;
     }
 
