@@ -39,12 +39,21 @@ public class EversongActivity extends AppCompatActivity {
     Button recordingButton;
     TextView pitchText;
     TextView spectralFlatnessText;
+    TextView musicPlayingDetectorText;
+
+    // CHORD DETECTION
     TextView chordNoteText;
+    TextView chordTypeText;
     TextView mostProbableChordNoteText;
     TextView mostProbableChordTypeText;
-    TextView chordTypeText;
+
+    // TUNING
     TextView tuningPitchNote;
-    TextView musicPlayingDetectorText;
+    LinearLayout tuningPitchNoteLayout;
+    ImageView tuningPitchNoteTopArrow;
+    ImageView tuningPitchNoteLeftArrow;
+    ImageView tuningPitchNoteRightArrow;
+
     EversongCanvas canvas;
 
     boolean musicBeingPlayed;
@@ -53,6 +62,7 @@ public class EversongActivity extends AppCompatActivity {
     float pitchProbability;
     float[] pitchDetectedBuffer;
     NotesEnum pitchNote;
+    float pitchNoteError;
     double spectralFlatnessValue;
     int[] chordDetected = new int[2];
     int[][] mostProbableChordBuffer;
@@ -88,6 +98,7 @@ public class EversongActivity extends AppCompatActivity {
         getLayoutInflater().inflate(R.layout.chart_menu, placeHolder);
 
         inflateChordChartLayouts();
+        inflateTuningPitchNoteLayout();
     }
 
     @Override
@@ -139,6 +150,7 @@ public class EversongActivity extends AppCompatActivity {
         polytonalMusicBeingPlayed = false;
         pitchDetected = -1;
         pitchNote = NotesEnum.NO_NOTE;
+        pitchNoteError = 0;
         pitchDetectedBuffer = new float[Parameters.getInstance().getPitchBufferSize()];
         chordDetected[0] = -1;
         chordDetected[1] = -1;
@@ -169,7 +181,11 @@ public class EversongActivity extends AppCompatActivity {
         // TUNING
         tuningPitchNote = this.findViewById(R.id.tuning_pitch_note);
         tuningPitchNote.setTextColor(mColor01);
-        tuningPitchNote.setText(ChordTypeEnum.Major.toString());
+        tuningPitchNote.setText(NotesEnum.NO_NOTE.toString());
+        tuningPitchNoteLayout = this.findViewById(R.id.tuning_pitch_note_layout);
+        tuningPitchNoteTopArrow = this.findViewById(R.id.tuning_pitch_note_top_arrow);
+        tuningPitchNoteLeftArrow = this.findViewById(R.id.tuning_pitch_note_left_arrow);
+        tuningPitchNoteRightArrow = this.findViewById(R.id.tuning_pitch_note_right_arrow);
 
         algorithmPerformanceText = this.findViewById(R.id.algorithm_performance);
         algorithmPerformanceText.setTextColor(mColor01);
@@ -327,9 +343,20 @@ public class EversongActivity extends AppCompatActivity {
                 break;
             case TUNING:
                 if (pitchDetected != -1) {
-                    pitchNote = AudioStack.getNoteByFrequency((double)pitchDetected);
+                    float[] tempPitch = AudioStack.getNoteByFrequencyAndError((double)pitchDetected, Parameters.BANDPASS_FILTER_LOW_FREQ, Parameters.BANDPASS_FILTER_HIGH_FREQ);
+                    pitchNote = NotesEnum.fromInteger((int)tempPitch[0]);
+                    pitchNoteError = tempPitch[1];
+                    tuningPitchNoteTopArrow.setAlpha(1f - Math.abs(pitchNoteError));
+                    if (pitchNoteError < 0) {
+                        tuningPitchNoteRightArrow.setAlpha(Math.abs(pitchNoteError));
+                        tuningPitchNoteLeftArrow.setAlpha(0f);
+                    } else {
+                        tuningPitchNoteLeftArrow.setAlpha(pitchNoteError);
+                        tuningPitchNoteRightArrow.setAlpha(0f);
+                    }
                 } else {
                     pitchNote = NotesEnum.NO_NOTE;
+                    pitchNoteError = 0;
                 }
                 if (tuningPitchNote.getVisibility() == View.VISIBLE) {
                     tuningPitchNote.setText(pitchNote.toString());
@@ -456,16 +483,19 @@ public class EversongActivity extends AppCompatActivity {
             case CHORD_DETECTION:
                 mostProbableChordNoteText.setVisibility(View.VISIBLE);
                 mostProbableChordTypeText.setVisibility(View.VISIBLE);
+                tuningPitchNoteLayout.setVisibility(View.GONE);
                 tuningPitchNote.setVisibility(View.GONE);
                 break;
             case CHORD_SCORE:
                 mostProbableChordNoteText.setVisibility(View.GONE);
                 mostProbableChordTypeText.setVisibility(View.GONE);
+                tuningPitchNoteLayout.setVisibility(View.GONE);
                 tuningPitchNote.setVisibility(View.GONE);
                 break;
             case TUNING:
                 mostProbableChordNoteText.setVisibility(View.GONE);
                 mostProbableChordTypeText.setVisibility(View.GONE);
+                tuningPitchNoteLayout.setVisibility(View.VISIBLE);
                 tuningPitchNote.setVisibility(View.VISIBLE);
                 break;
         }
@@ -482,6 +512,13 @@ public class EversongActivity extends AppCompatActivity {
 
         placeHolder = this.findViewById(R.id.staff_chord_chart_layout);
         getLayoutInflater().inflate(R.layout.staff_chord_chart, placeHolder);
+    }
+
+    private void inflateTuningPitchNoteLayout() {
+        LinearLayout placeHolder;
+
+        placeHolder = this.findViewById(R.id.tuning_pitch_note_layout);
+        getLayoutInflater().inflate(R.layout.tuning_pitch_note, placeHolder);
     }
 
     private void setChordChart() {

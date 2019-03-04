@@ -64,21 +64,37 @@ public class AudioStack {
     }
 
     public static NotesEnum getNoteByFrequency(double frequencyValue) {
-        double frequencyDistance = 1000.0;
-        NotesEnum noteDetected = NotesEnum.NO_NOTE;
-        double tempFrequency = 0.0;
+        return NotesEnum.fromInteger((int)getNoteByFrequencyAndError(frequencyValue, Parameters.BANDPASS_FILTER_LOW_FREQ, Parameters.BANDPASS_FILTER_HIGH_FREQ)[0]);
+    }
+
+    public static float[] getNoteByFrequencyAndError(double frequencyValue) {
+        return getNoteByFrequencyAndError(frequencyValue, 55, 10000);
+    }
+
+    public static float[] getNoteByFrequencyAndError(double frequencyValue, float minFreqToCheck, float maxFreqToCheck) {
+        float[] pitchAndError = new float[2];
+        pitchAndError[0] = -1;  //pitch
+        pitchAndError[1] = 0;   //error
+        double frequencyDistance = 1000.0;  //Initial error
+        double newFreqDistance;
+        double tempFrequency = minFreqToCheck;
+        double quarterOfTone;
         int i = 0;
-        float maxFreqToCheck = 10000f;
         while (tempFrequency < maxFreqToCheck) {
             tempFrequency = Math.pow(NotesEnum.refValue, ((double)i - 49.0)) * NotesEnum.refFreq;
-            double newFreqDistance = Math.abs(tempFrequency - frequencyValue);
+            newFreqDistance = Math.abs(tempFrequency - frequencyValue);
             if (newFreqDistance < frequencyDistance) {
                 frequencyDistance = newFreqDistance;
-                noteDetected = NotesEnum.fromInteger((i - 1) % NotesEnum.numberOfNotes);
+                pitchAndError[0] = (i - 1) % NotesEnum.numberOfNotes;
+                quarterOfTone = Math.abs((tempFrequency - Math.pow(NotesEnum.refValue, ((double)(i + 1) - 49.0)) * NotesEnum.refFreq) / 2);
+                pitchAndError[1] = (float)((tempFrequency - frequencyValue) / quarterOfTone);
+                if (newFreqDistance < quarterOfTone) {
+                    return pitchAndError;
+                }
             }
             i++;
         }
-        return noteDetected;
+        return pitchAndError;
     }
 
     public static float getFrequencyPeak(double[] spectrum, double threshold) {

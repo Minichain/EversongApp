@@ -15,6 +15,7 @@ import android.os.Process;
 import com.upf.minichain.eversongapp.enums.BroadcastExtra;
 import com.upf.minichain.eversongapp.enums.BroadcastMessage;
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
+import com.upf.minichain.eversongapp.enums.EversongFunctionalities;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
 import java.util.ArrayList;
@@ -168,7 +169,7 @@ public class EversongService extends Service {
     }
 
     public void processAudio() {
-        if (musicBeingPlayed) {
+        if (musicBeingPlayed && Parameters.getInstance().getFunctionalitySelected() == EversongFunctionalities.CHORD_DETECTION) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
