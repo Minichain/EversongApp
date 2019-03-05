@@ -30,7 +30,7 @@
             android:foregroundGravity="center_horizontal"
             android:gravity="center_horizontal"
             android:src="@drawable/top_green_arrow"
-            android:visibility="gone"
+            android:alpha="0"
             app:layout_constraintLeft_toRightOf="@+id/tuning_pitch_note_top_arrow_padding" />
 
         <ImageView
@@ -40,7 +40,7 @@
             android:foregroundGravity="center_horizontal"
             android:gravity="center_vertical"
             android:src="@drawable/left_red_arrow"
-            android:visibility="gone"
+            android:alpha="0"
             app:layout_constraintTop_toBottomOf="@+id/tuning_pitch_note_top_arrow" />
 
         <TextView
@@ -60,7 +60,7 @@
             android:foregroundGravity="center_horizontal"
             android:gravity="center_vertical"
             android:src="@drawable/right_red_arrow"
-            android:visibility="gone"
+            android:alpha="0"
             app:layout_constraintLeft_toRightOf="@+id/tuning_pitch_note"
             app:layout_constraintTop_toBottomOf="@+id/tuning_pitch_note_top_arrow" />
     </android.support.constraint.ConstraintLayout>

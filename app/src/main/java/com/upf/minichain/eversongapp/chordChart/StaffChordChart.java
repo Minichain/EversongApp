@@ -132,8 +132,14 @@ public class StaffChordChart extends ChordChart {
         return chordTab;
     }
 
-    public static void setTuningChordChart(Context ctx, NotesEnum pitchNote, float pitchFreq) {
-
+    public static void setTuningChordChart(Context ctx, NotesEnum pitchNote) {
+        float alpha;
+        if (pitchNote != NotesEnum.NO_NOTE) {
+            alpha = 1f;
+        } else {
+            alpha = 0.5f;
+        }
+        setChordChart(ctx, pitchNote, ChordTypeEnum.NoChord, alpha);
     }
 
     /**

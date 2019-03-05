@@ -376,7 +376,7 @@ public class EversongActivity extends AppCompatActivity {
                 //TODO
                 break;
             case STAFF_TAB:
-                StaffChordChart.setTuningChordChart(this, pitchNote, pitchDetected);
+                StaffChordChart.setTuningChordChart(this, pitchNote);
                 break;
             case CHROMAGRAM:
                 break;
