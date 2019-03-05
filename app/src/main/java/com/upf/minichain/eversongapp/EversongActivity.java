@@ -293,92 +293,127 @@ public class EversongActivity extends AppCompatActivity {
         }
 
         if (Parameters.getInstance().isDebugMode()) {
-            if (pitchDetected != -1) {
-                pitchNote = AudioStack.getNoteByFrequency((double)pitchDetected);
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append("Pitch: ").append((int)pitchDetected).append(" Hz").append(" (")
-                        .append(pitchNote.toString()).append("), ")
-                        .append((int)(pitchProbability * 100)).append("%");
-                pitchText.setText(stringBuilder.toString());
-            } else {
-                pitchNote = NotesEnum.NO_NOTE;
-                pitchText.setText(String.valueOf("Pitch: " + pitchNote.toString() + " Hz"));
-            }
-
-            if (chordDetected[0] != -1) {
-                chordNoteText.setText(NotesEnum.fromInteger(chordDetected[0]).toString());
-            }
-
-            if (chordDetected[1] != -1) {
-                chordTypeText.setText(ChordTypeEnum.fromInteger(chordDetected[1]).toString());
-            }
-
-            spectralFlatnessText.setText("Flatness: 0." + ((int)(spectralFlatnessValue * 1000000)));
-            if (musicBeingPlayed) {
-                musicPlayingDetectorText.setVisibility(View.VISIBLE);
-                if (polytonalMusicBeingPlayed) {
-                    musicPlayingDetectorText.setText("POLYTONAL MUSIC PLAYING!");
-                } else {
-                    musicPlayingDetectorText.setText("MONOTONAL MUSIC PLAYING!");
-                }
-            } else {
-                musicPlayingDetectorText.setVisibility(View.GONE);
-            }
+            updateDebugModeViews();
         }
 
         switch (Parameters.getInstance().getFunctionalitySelected()) {
             case CHORD_DETECTION:
-                if (mostProbableChord[0] != -1 && mostProbableChord[1] != -1) {
-                    if (mostProbableChordNoteText.getVisibility() == View.VISIBLE) {
-                        mostProbableChordNoteText.setText(NotesEnum.fromInteger(mostProbableChord[0]).toString());
-                        mostProbableChordNoteText.setAlpha((float)mostProbableChord[2] / 100f);
-                    }
-                    if (mostProbableChordTypeText.getVisibility() == View.VISIBLE) {
-                        mostProbableChordTypeText.setText(ChordTypeEnum.fromInteger(mostProbableChord[1]).toString());
-                        mostProbableChordTypeText.setAlpha((float)mostProbableChord[2] / 100f);
-                    }
-                }
+                updateChordDetectionViews();
                 break;
             case CHORD_SCORE:
                 break;
             case TUNING:
-                if (pitchDetected != -1) {
-                    float[] tempPitch = AudioStack.getNoteByFrequencyAndError((double)pitchDetected, Parameters.BANDPASS_FILTER_LOW_FREQ, Parameters.BANDPASS_FILTER_HIGH_FREQ);
-                    pitchNote = NotesEnum.fromInteger((int)tempPitch[0]);
-                    pitchNoteError = tempPitch[1];
-                    tuningPitchNoteTopArrow.setAlpha(1f - Math.abs(pitchNoteError));
-                    if (pitchNoteError < 0) {
-                        tuningPitchNoteRightArrow.setAlpha(Math.abs(pitchNoteError));
-                        tuningPitchNoteLeftArrow.setAlpha(0f);
-                    } else {
-                        tuningPitchNoteLeftArrow.setAlpha(pitchNoteError);
-                        tuningPitchNoteRightArrow.setAlpha(0f);
-                    }
-                } else {
-                    pitchNote = NotesEnum.NO_NOTE;
-                    pitchNoteError = 0;
-                }
-                if (tuningPitchNote.getVisibility() == View.VISIBLE) {
-                    tuningPitchNote.setText(pitchNote.toString());
-                }
+                updateTuningViews();
                 break;
         }
+    }
 
+    private void updateChordDetectionViews() {
+        float alpha = ((float)mostProbableChord[2] / 100f) > 0.5 ? ((float)mostProbableChord[2] / 100f) : 0.5f;
+        if (mostProbableChord[0] != -1 && mostProbableChord[1] != -1) {
+            if (mostProbableChordNoteText.getVisibility() == View.VISIBLE) {
+                mostProbableChordNoteText.setText(NotesEnum.fromInteger(mostProbableChord[0]).toString());
+                mostProbableChordNoteText.setAlpha(alpha);
+            }
+            if (mostProbableChordTypeText.getVisibility() == View.VISIBLE) {
+                mostProbableChordTypeText.setText(ChordTypeEnum.fromInteger(mostProbableChord[1]).toString());
+                mostProbableChordTypeText.setAlpha(alpha);
+            }
+        }
         switch(Parameters.getInstance().getChartTabSelected()) {
             case GUITAR_TAB:
-                GuitarChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);
+                GuitarChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), alpha);
                 break;
             case UKULELE_TAB:
-                UkuleleChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);
+                UkuleleChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), alpha);
                 break;
             case PIANO_TAB:
                 //TODO
                 break;
             case STAFF_TAB:
-                StaffChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), (float)mostProbableChord[2] / 100f /*Percentage*/);
+                StaffChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), alpha);
                 break;
             case CHROMAGRAM:
                 break;
+        }
+    }
+
+    private void updateChordScoreViews() {
+        //TODO
+    }
+
+    private void updateTuningViews() {
+        if (pitchDetected != -1) {
+            float[] tempPitch = AudioStack.getNoteByFrequencyAndError((double)pitchDetected, Parameters.BANDPASS_FILTER_LOW_FREQ, Parameters.BANDPASS_FILTER_HIGH_FREQ);
+            pitchNote = NotesEnum.fromInteger((int)tempPitch[0]);
+            pitchNoteError = tempPitch[1];
+            tuningPitchNoteTopArrow.setAlpha(1f - Math.abs(pitchNoteError));
+            if (pitchNoteError < 0) {
+                tuningPitchNoteRightArrow.setAlpha(Math.abs(pitchNoteError));
+                tuningPitchNoteLeftArrow.setAlpha(0f);
+            } else {
+                tuningPitchNoteLeftArrow.setAlpha(pitchNoteError);
+                tuningPitchNoteRightArrow.setAlpha(0f);
+            }
+        } else {
+            pitchNote = NotesEnum.NO_NOTE;
+            tuningPitchNoteTopArrow.setAlpha(0f);
+            tuningPitchNoteLeftArrow.setAlpha(0f);
+            tuningPitchNoteRightArrow.setAlpha(0f);
+            pitchNoteError = 0;
+        }
+        if (tuningPitchNote.getVisibility() == View.VISIBLE) {
+            tuningPitchNote.setText(pitchNote.toString());
+        }
+        switch(Parameters.getInstance().getChartTabSelected()) {
+            case GUITAR_TAB:
+                GuitarChordChart.setTuningChordChart(this, pitchNote, pitchDetected);
+                break;
+            case UKULELE_TAB:
+                UkuleleChordChart.setTuningChordChart(this, pitchNote, pitchDetected);
+                break;
+            case PIANO_TAB:
+                //TODO
+                break;
+            case STAFF_TAB:
+                StaffChordChart.setTuningChordChart(this, pitchNote, pitchDetected);
+                break;
+            case CHROMAGRAM:
+                break;
+        }
+    }
+
+    private void updateDebugModeViews() {
+        if (pitchDetected != -1) {
+            pitchNote = AudioStack.getNoteByFrequency((double)pitchDetected);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("Pitch: ").append((int)pitchDetected).append(" Hz").append(" (")
+                    .append(pitchNote.toString()).append("), ")
+                    .append((int)(pitchProbability * 100)).append("%");
+            pitchText.setText(stringBuilder.toString());
+        } else {
+            pitchNote = NotesEnum.NO_NOTE;
+            pitchText.setText(String.valueOf("Pitch: " + pitchNote.toString() + " Hz"));
+        }
+
+        if (chordDetected[0] != -1) {
+            chordNoteText.setText(NotesEnum.fromInteger(chordDetected[0]).toString());
+        }
+
+        if (chordDetected[1] != -1) {
+            chordTypeText.setText(ChordTypeEnum.fromInteger(chordDetected[1]).toString());
+        }
+
+        spectralFlatnessText.setText("Flatness: 0." + ((int)(spectralFlatnessValue * 1000000)));
+        if (musicBeingPlayed) {
+            musicPlayingDetectorText.setVisibility(View.VISIBLE);
+            if (polytonalMusicBeingPlayed) {
+                musicPlayingDetectorText.setText("POLYTONAL MUSIC PLAYING!");
+            } else {
+                musicPlayingDetectorText.setText("MONOTONAL MUSIC PLAYING!");
+            }
+        } else {
+            musicPlayingDetectorText.setVisibility(View.GONE);
         }
     }
 

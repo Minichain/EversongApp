@@ -54,6 +54,25 @@ public class GuitarChordChart extends ChordChart {
         fretView.setVisibility(View.VISIBLE);
     }
 
+    public static void setTuningChordChart(Context ctx, NotesEnum pitchNote, float pitchFreq) {
+        ImageView stringView;
+        int stringViewId;
+        int stringImageId;
+        LinearLayout chordChartLayout = ((Activity)ctx).findViewById(R.id.guitar_chord_chart_layout);
+        chordChartLayout.setVisibility(View.VISIBLE);
+        for (int i = 1; i <= numberOfStrings; i++) {
+            stringViewId = ctx.getResources().getIdentifier("guitar_chord_string_0" + i, "id", ctx.getPackageName());
+            stringView = ((Activity)ctx).findViewById(stringViewId);
+            stringImageId = ctx.getResources().getIdentifier("guitar_chord_string_00", "drawable", ctx.getPackageName());
+            stringView.setImageResource(stringImageId);
+            if (guitarTuning[numberOfStrings - i] == pitchNote) {
+                stringView.setAlpha(1f);
+            } else {
+                stringView.setAlpha(0.4f);
+            }
+        }
+    }
+
     public static void hideChordChart(Context ctx) {
         LinearLayout chordChartLayout = ((Activity)ctx).findViewById(R.id.guitar_chord_chart_layout);
         chordChartLayout.setVisibility(View.GONE);

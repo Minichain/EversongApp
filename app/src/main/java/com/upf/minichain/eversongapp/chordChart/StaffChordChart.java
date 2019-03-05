@@ -46,6 +46,7 @@ public class StaffChordChart extends ChordChart {
                 } else {
                     staffNoteView.setImageResource(R.drawable.staff_chord_chart_note_1);
                 }
+                staffNoteView.setAlpha(alpha);
 
                 staffSharpView = ((Activity)ctx).findViewById(ctx.getResources().getIdentifier("staff_chord_chart_sharp_" + notesPainted, "id", ctx.getPackageName()));
                 if (chordChart[i] == 1) {           //Not sharp note
@@ -53,6 +54,7 @@ public class StaffChordChart extends ChordChart {
                 } else if (chordChart[i] == 2) {    //Sharp note
                     staffSharpView.setVisibility(View.VISIBLE);
                 }
+                staffSharpView.setAlpha(alpha);
 
                 ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) staffNoteLayoutView.getLayoutParams();
 
@@ -128,6 +130,10 @@ public class StaffChordChart extends ChordChart {
             }
         }
         return chordTab;
+    }
+
+    public static void setTuningChordChart(Context ctx, NotesEnum pitchNote, float pitchFreq) {
+
     }
 
     /**

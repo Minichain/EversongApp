@@ -199,7 +199,9 @@ public class EversongService extends Service {
                 pitchDetected = pitchDetectedThread;
                 pitchProbability = pitchProbabilityThread;
                 pitchDetectedBuffer[pitchBufferIterator % Parameters.getInstance().getPitchBufferSize()] = pitchDetected;
-                pitchDetected = Utils.getAverage(pitchDetectedBuffer, Parameters.getInstance().getPitchBufferSize());
+                if (Parameters.getInstance().getFunctionalitySelected() == EversongFunctionalities.CHORD_DETECTION) {
+                    pitchDetected = Utils.getAverage(pitchDetectedBuffer, Parameters.getInstance().getPitchBufferSize());
+                }
                 float stdDeviation = Utils.getStandardDeviation(pitchDetectedBuffer, Parameters.getInstance().getPitchBufferSize());
                 if (stdDeviation > 100) {
                     pitchDetected = -1;

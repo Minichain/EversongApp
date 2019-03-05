@@ -32,15 +32,16 @@ public class UkuleleChordChart extends ChordChart {
     public static void setChordChart(Context ctx, NotesEnum tonic, ChordTypeEnum chordType, float alpha) {
         int[] chordChart = getChordTab(tonic, chordType, numberOfFrets, numberOfStrings, ukuleleTuning);
         ImageView chordStringView;
+        int chordStringViewId;
+        int chordStringImageId;
         LinearLayout chordChartLayout = ((Activity)ctx).findViewById(R.id.ukulele_chord_chart_layout);
         chordChartLayout.setVisibility(View.VISIBLE);
 
         for (int i = 1; i <= numberOfStrings; i++) {
-            int chordStringViewId = ctx.getResources().getIdentifier("ukulele_chord_string_0" + i, "id", ctx.getPackageName());
+            chordStringViewId = ctx.getResources().getIdentifier("ukulele_chord_string_0" + i, "id", ctx.getPackageName());
             chordStringView = ((Activity)ctx).findViewById(chordStringViewId);
             chordStringView.setAlpha(alpha);
             chordStringView.setVisibility(View.VISIBLE);
-            int chordStringImageId;
             if (chordChart[numberOfStrings - i] == -1) {
                 chordStringImageId = ctx.getResources().getIdentifier("guitar_chord_string_0", "drawable", ctx.getPackageName());
             } else {
@@ -50,6 +51,25 @@ public class UkuleleChordChart extends ChordChart {
         }
         ImageView fretView = ((Activity)ctx).findViewById(R.id.ukulele_chord_chart_frets);
         fretView.setVisibility(View.VISIBLE);
+    }
+
+    public static void setTuningChordChart(Context ctx, NotesEnum pitchNote, float pitchFreq) {
+        ImageView stringView;
+        int stringViewId;
+        int stringImageId;
+        LinearLayout chordChartLayout = ((Activity)ctx).findViewById(R.id.ukulele_chord_chart_layout);
+        chordChartLayout.setVisibility(View.VISIBLE);
+        for (int i = 1; i <= numberOfStrings; i++) {
+            stringViewId = ctx.getResources().getIdentifier("ukulele_chord_string_0" + i, "id", ctx.getPackageName());
+            stringView = ((Activity)ctx).findViewById(stringViewId);
+            stringImageId = ctx.getResources().getIdentifier("guitar_chord_string_00", "drawable", ctx.getPackageName());
+            stringView.setImageResource(stringImageId);
+            if (ukuleleTuning[numberOfStrings - i] == pitchNote) {
+                stringView.setAlpha(1f);
+            } else {
+                stringView.setAlpha(0.4f);
+            }
+        }
     }
 
     public static void hideChordChart(Context ctx) {
