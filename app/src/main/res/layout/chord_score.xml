@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EversongActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/chord_score_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+            <com.shawnlin.numberpicker.NumberPicker
+                android:id="@+id/tonic_note_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:np_width="64dp"
+                app:np_height="180dp"
+                app:np_dividerColor="@color/colorPrimary"
+                app:np_max="59"
+                app:np_min="0"
+                app:np_selectedTextColor="@color/colorPrimary"
+                app:np_textColor="@color/colorPrimary"
+                app:np_value="3" />
+            <com.shawnlin.numberpicker.NumberPicker
+                android:id="@+id/chord_type_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/tonic_note_picker"
+                app:np_width="64dp"
+                app:np_height="180dp"
+                app:np_dividerColor="@color/colorPrimary"
+                app:np_max="59"
+                app:np_min="0"
+                app:np_selectedTextColor="@color/colorPrimary"
+                app:np_textColor="@color/colorPrimary"
+                app:np_value="3" />
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

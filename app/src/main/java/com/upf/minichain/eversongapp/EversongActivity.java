@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Process;
 import android.support.constraint.ConstraintLayout;
@@ -20,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.shawnlin.numberpicker.NumberPicker;
 import com.upf.minichain.eversongapp.chordChart.GuitarChordChart;
 import com.upf.minichain.eversongapp.chordChart.StaffChordChart;
 import com.upf.minichain.eversongapp.chordChart.UkuleleChordChart;
@@ -46,6 +48,13 @@ public class EversongActivity extends AppCompatActivity {
     TextView chordTypeText;
     TextView mostProbableChordNoteText;
     TextView mostProbableChordTypeText;
+
+    // CHORD SCORE
+    LinearLayout chordScoreLayout;
+    NumberPicker chordScoreTonicNotePicker;
+    NumberPicker chordScoreChordTypePicker;
+    NotesEnum chordScoreTonicNotePicked;
+    ChordTypeEnum chordScoreChordTypePicked;
 
     // TUNING
     TextView tuningPitchNote;
@@ -78,6 +87,8 @@ public class EversongActivity extends AppCompatActivity {
 
     TextView algorithmPerformanceText;
 
+    TextView versionNumberTextView;
+
     int mColor01;
     int mColor02;
     int mColor03;
@@ -98,6 +109,7 @@ public class EversongActivity extends AppCompatActivity {
         getLayoutInflater().inflate(R.layout.chart_menu, placeHolder);
 
         inflateChordChartLayouts();
+        inflateChordScoreLayout();
         inflateTuningPitchNoteLayout();
     }
 
@@ -178,6 +190,9 @@ public class EversongActivity extends AppCompatActivity {
         mostProbableChordTypeText.setTextColor(mColor01);
         mostProbableChordTypeText.setText(ChordTypeEnum.Major.toString());
 
+        // CHORD SCORE
+        chordScoreLayout = this.findViewById(R.id.chord_score_layout);
+
         // TUNING
         tuningPitchNote = this.findViewById(R.id.tuning_pitch_note);
         tuningPitchNote.setTextColor(mColor01);
@@ -190,11 +205,21 @@ public class EversongActivity extends AppCompatActivity {
         algorithmPerformanceText = this.findViewById(R.id.algorithm_performance);
         algorithmPerformanceText.setTextColor(mColor01);
 
+        versionNumberTextView = this.findViewById(R.id.version_number_text);
+        try {
+            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            String version = "v" + pInfo.versionName;
+            versionNumberTextView.setText(version);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
         setDebugModeViews();
         setFunctionality();
         setChordChart();
         setFunctionalitiesMenu();
         setChartMenu();
+        setChordScoreViews();
         setCanvas();
 
         keepProcessingFrame = true;
@@ -227,6 +252,44 @@ public class EversongActivity extends AppCompatActivity {
                 } else if (recordingButton.getText().equals(getString(R.string.stop_record_button))) {
                     stopRecording();
                 }
+            }
+        });
+    }
+
+    private void setChordScoreViews() {
+        chordScoreTonicNotePicker = this.findViewById(R.id.tonic_note_picker);
+        chordScoreTonicNotePicker.setTextColor(mColor01);
+        chordScoreTonicNotePicker.setSelectedTextColor(mColor01);
+        String[] tonicNotePickerData = new String[NotesEnum.numberOfNotes];
+        for (int i = 0; i < NotesEnum.numberOfNotes; i++) {
+            tonicNotePickerData[i] = NotesEnum.values()[i].toString();
+        }
+        chordScoreTonicNotePicker.setMinValue(1);   //It must start at 1
+        chordScoreTonicNotePicker.setMaxValue(NotesEnum.numberOfNotes);
+        chordScoreTonicNotePicker.setDisplayedValues(tonicNotePickerData);
+        chordScoreTonicNotePicked = NotesEnum.values()[chordScoreTonicNotePicker.getValue() - 1];
+        chordScoreTonicNotePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                chordScoreTonicNotePicked = NotesEnum.values()[newVal - 1];
+            }
+        });
+
+        chordScoreChordTypePicker = this.findViewById(R.id.chord_type_picker);
+        chordScoreChordTypePicker.setTextColor(mColor01);
+        chordScoreChordTypePicker.setSelectedTextColor(mColor01);
+        String[] chordTypePickerData = new String[ChordTypeEnum.numberOfChordTypes];
+        for (int i = 0; i < ChordTypeEnum.numberOfChordTypes; i++) {
+            chordTypePickerData[i] = ChordTypeEnum.values()[i].toString();
+        }
+        chordScoreChordTypePicker.setMinValue(1);   //It must start at 1
+        chordScoreChordTypePicker.setMaxValue(ChordTypeEnum.numberOfChordTypes);
+        chordScoreChordTypePicker.setDisplayedValues(chordTypePickerData);
+        chordScoreChordTypePicked = ChordTypeEnum.values()[chordScoreChordTypePicker.getValue() - 1];
+        chordScoreChordTypePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                chordScoreChordTypePicked = ChordTypeEnum.values()[newVal - 1];
             }
         });
     }
@@ -301,6 +364,7 @@ public class EversongActivity extends AppCompatActivity {
                 updateChordDetectionViews();
                 break;
             case CHORD_SCORE:
+                updateChordScoreViews();
                 break;
             case TUNING:
                 updateTuningViews();
@@ -339,8 +403,22 @@ public class EversongActivity extends AppCompatActivity {
     }
 
     private void updateChordScoreViews() {
-        //TODO
-    }
+        switch(Parameters.getInstance().getChartTabSelected()) {
+            case GUITAR_TAB:
+                GuitarChordChart.setChordChart(this, chordScoreTonicNotePicked, chordScoreChordTypePicked, 1f);
+                break;
+            case UKULELE_TAB:
+                UkuleleChordChart.setChordChart(this, chordScoreTonicNotePicked, chordScoreChordTypePicked, 1f);
+                break;
+            case PIANO_TAB:
+                //TODO
+                break;
+            case STAFF_TAB:
+                StaffChordChart.setChordChart(this, chordScoreTonicNotePicked, chordScoreChordTypePicked, 1f);
+                break;
+            case CHROMAGRAM:
+                break;
+        }    }
 
     private void updateTuningViews() {
         if (pitchDetected != -1) {
@@ -520,18 +598,21 @@ public class EversongActivity extends AppCompatActivity {
                 mostProbableChordTypeText.setVisibility(View.VISIBLE);
                 tuningPitchNoteLayout.setVisibility(View.GONE);
                 tuningPitchNote.setVisibility(View.GONE);
+                chordScoreLayout.setVisibility(View.GONE);
                 break;
             case CHORD_SCORE:
                 mostProbableChordNoteText.setVisibility(View.GONE);
                 mostProbableChordTypeText.setVisibility(View.GONE);
                 tuningPitchNoteLayout.setVisibility(View.GONE);
                 tuningPitchNote.setVisibility(View.GONE);
+                chordScoreLayout.setVisibility(View.VISIBLE);
                 break;
             case TUNING:
                 mostProbableChordNoteText.setVisibility(View.GONE);
                 mostProbableChordTypeText.setVisibility(View.GONE);
                 tuningPitchNoteLayout.setVisibility(View.VISIBLE);
                 tuningPitchNote.setVisibility(View.VISIBLE);
+                chordScoreLayout.setVisibility(View.GONE);
                 break;
         }
     }
@@ -547,6 +628,13 @@ public class EversongActivity extends AppCompatActivity {
 
         placeHolder = this.findViewById(R.id.staff_chord_chart_layout);
         getLayoutInflater().inflate(R.layout.staff_chord_chart, placeHolder);
+    }
+
+    private void inflateChordScoreLayout() {
+        LinearLayout placeHolder;
+
+        placeHolder = this.findViewById(R.id.chord_score_layout);
+        getLayoutInflater().inflate(R.layout.chord_score, placeHolder);
     }
 
     private void inflateTuningPitchNoteLayout() {
