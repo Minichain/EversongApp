@@ -299,7 +299,8 @@ public class EversongActivity extends AppCompatActivity {
         ConstraintLayout.LayoutParams params;
         ImageView canvasView = this.findViewById(R.id.canvas_view);
         params = (ConstraintLayout.LayoutParams) canvasView.getLayoutParams();
-        params.height = screenHeight - (int)Utils.convertSpToPixels(140, getApplicationContext());
+        params.height = screenHeight - (int)Utils.convertSpToPixels(120, getApplicationContext());
+//        params.height = screenHeight - this.findViewById(R.id.functionalities_menu_layout).getLayoutParams().height - this.findViewById(R.id.chart_menu_layout).getLayoutParams().height;
         canvasView.setLayoutParams(params);
         canvas = new EversongCanvas(getResources(), canvasView);
     }

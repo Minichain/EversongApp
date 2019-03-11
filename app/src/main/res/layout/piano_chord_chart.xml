@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EversongActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/piano_chord_chart_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ImageView
+            android:id="@+id/piano_key_01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/left_piano_key_not_selected"
+            app:layout_constraintStart_toStartOf="parent"
+            android:foregroundGravity="center_vertical" />
+        <ImageView
+            android:id="@+id/piano_key_03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/center_piano_key_not_selected"
+            app:layout_constraintLeft_toRightOf="@+id/piano_key_01"
+            android:foregroundGravity="center_vertical" />
+        <ImageView
+            android:id="@+id/piano_key_05"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/right_piano_key_not_selected"
+            app:layout_constraintLeft_toRightOf="@+id/piano_key_03"
+            android:foregroundGravity="center_vertical" />
+        <ImageView
+            android:id="@+id/piano_key_06"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/left_piano_key_not_selected"
+            app:layout_constraintLeft_toRightOf="@+id/piano_key_05"
+            android:foregroundGravity="center_vertical" />
+        <ImageView
+            android:id="@+id/piano_key_08"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/left_piano_key_not_selected"
+            app:layout_constraintLeft_toRightOf="@+id/piano_key_06"
+            android:foregroundGravity="center_vertical" />
+        <ImageView
+            android:id="@+id/piano_key_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/left_piano_key_not_selected"
+            app:layout_constraintLeft_toRightOf="@+id/piano_key_08"
+            android:foregroundGravity="center_vertical" />
+        <ImageView
+            android:id="@+id/piano_key_12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/left_piano_key_not_selected"
+            app:layout_constraintLeft_toRightOf="@+id/piano_key_10"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:foregroundGravity="center_vertical" />
+    </android.support.constraint.ConstraintLayout>
+
+
+    <ImageView
+        android:id="@+id/piano_key_02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/black_piano_key_not_selected"
+        android:foregroundGravity="center_vertical" />
+    <ImageView
+        android:id="@+id/piano_key_04"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/black_piano_key_not_selected"
+        app:layout_constraintLeft_toRightOf="@+id/piano_key_02"
+        android:foregroundGravity="center_vertical" />
+    <ImageView
+        android:id="@+id/piano_key_07"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/black_piano_key_not_selected"
+        app:layout_constraintLeft_toRightOf="@+id/piano_key_04"
+        android:foregroundGravity="center_vertical" />
+    <ImageView
+        android:id="@+id/piano_key_09"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/black_piano_key_not_selected"
+        app:layout_constraintLeft_toRightOf="@+id/piano_key_07"
+        android:foregroundGravity="center_vertical" />
+    <ImageView
+        android:id="@+id/piano_key_11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/black_piano_key_not_selected"
+        app:layout_constraintLeft_toRightOf="@+id/piano_key_09"
+        android:foregroundGravity="center_vertical" />
+</android.support.constraint.ConstraintLayout>

@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:src="@drawable/guitar_chord_string_00"
+            android:src="@drawable/guitar_chord_chart_frets"
             android:foregroundGravity="center_horizontal" />
 
         <ImageView
