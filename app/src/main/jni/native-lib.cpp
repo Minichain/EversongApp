@@ -6,37 +6,39 @@ extern "C" {
      * ProcessAudio functions
      */
     ProcessAudio* processAudio;
+    jintArray outputIntArray;
+    jdoubleArray outputDoubleArray;
 
     void Java_com_upf_minichain_eversongapp_AudioStack_initProcessAudioJni(JNIEnv *env, jobject, jint sample_rate, jint frame_size, jint hop_size) {
         processAudio = new ProcessAudio(sample_rate, frame_size);
     }
 
     jintArray Java_com_upf_minichain_eversongapp_AudioStack_chordDetectionJni(JNIEnv *env, jobject, jdoubleArray samples, jdoubleArray spectrumSamples, jint chordDetectionAlgorithm) {
-        jintArray output = env->NewIntArray(2);
-        env->SetIntArrayRegion(output, 0, 2, processAudio->chordDetection(env->GetDoubleArrayElements(samples, 0), env->GetDoubleArrayElements(spectrumSamples, 0), chordDetectionAlgorithm));
-        return output;
+        outputIntArray = env->NewIntArray(2);
+        env->SetIntArrayRegion(outputIntArray, 0, 2, processAudio->chordDetection(env->GetDoubleArrayElements(samples, 0), env->GetDoubleArrayElements(spectrumSamples, 0), chordDetectionAlgorithm));
+        return outputIntArray;
     }
 
     jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_getChromagramJni(JNIEnv *env, jobject) {
-        jdoubleArray output = env->NewDoubleArray(12);
-        env->SetDoubleArrayRegion(output, 0, 12, processAudio->getChromagram());
-        return output;
+        outputDoubleArray = env->NewDoubleArray(12);
+        env->SetDoubleArrayRegion(outputDoubleArray, 0, 12, processAudio->getChromagram());
+        return outputDoubleArray;
     }
 
     jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_fftJni(JNIEnv *env, jobject, jdoubleArray inputReal, jboolean DIRECT) {
         jsize length = env->GetArrayLength(inputReal);
-        jdoubleArray output = NULL;
-        output = env->NewDoubleArray(length);
-        env->SetDoubleArrayRegion(output, 0, length, ProcessAudio::fft(env->GetDoubleArrayElements(inputReal, 0), length, DIRECT));
-        return output;
+        double* samplesDouble = ProcessAudio::fft(env->GetDoubleArrayElements(inputReal, 0), length, DIRECT);
+        outputDoubleArray = env->NewDoubleArray(length);
+        env->SetDoubleArrayRegion(outputDoubleArray, 0, length, samplesDouble);
+        delete[] samplesDouble;
+        return outputDoubleArray;
     }
 
     jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_windowJni(JNIEnv *env, jobject, jdoubleArray samples, jint windowType) {
         jsize length = env->GetArrayLength(samples);
-        jdoubleArray output = NULL;
-        output = env->NewDoubleArray(length);
-        env->SetDoubleArrayRegion(output, 0, length, ProcessAudio::window(env->GetDoubleArrayElements(samples, 0), length, windowType));
-        return output;
+        outputDoubleArray = env->NewDoubleArray(length);
+        env->SetDoubleArrayRegion(outputDoubleArray, 0, length, ProcessAudio::window(env->GetDoubleArrayElements(samples, 0), length, windowType));
+        return outputDoubleArray;
     }
 
     jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_bandPassFilterJni(JNIEnv *env, jobject,
@@ -46,10 +48,9 @@ extern "C" {
                                                                                  jint sampleRate,
                                                                                  jint frameSize) {
         jsize length = env->GetArrayLength(spectrumSamples);
-        jdoubleArray output = NULL;
-        output = env->NewDoubleArray(length);
-        env->SetDoubleArrayRegion(output, 0, length, ProcessAudio::bandPassFilter(env->GetDoubleArrayElements(spectrumSamples, 0), lowCutOffFreq, highCutOffFreq, sampleRate, frameSize));
-        return output;
+        outputDoubleArray = env->NewDoubleArray(length);
+        env->SetDoubleArrayRegion(outputDoubleArray, 0, length, ProcessAudio::bandPassFilter(env->GetDoubleArrayElements(spectrumSamples, 0), lowCutOffFreq, highCutOffFreq, sampleRate, frameSize));
+        return outputDoubleArray;
     }
 
     jdouble Java_com_upf_minichain_eversongapp_AudioStack_getAverageLevelJni(JNIEnv *env, jobject, jdoubleArray samples) {
