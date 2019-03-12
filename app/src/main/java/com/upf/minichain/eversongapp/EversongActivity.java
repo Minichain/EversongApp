@@ -453,7 +453,7 @@ public class EversongActivity extends AppCompatActivity {
                 UkuleleChordChart.setTuningChordChart(this, pitchNote, pitchDetected);
                 break;
             case PIANO_TAB:
-                //TODO
+                PianoChordChart.setTuningChordChart(this, pitchNote, pitchDetected);
                 break;
             case STAFF_TAB:
                 StaffChordChart.setTuningChordChart(this, pitchNote);

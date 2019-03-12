@@ -54,8 +54,29 @@ public class PianoChordChart {
                 chordTab[i] = 1;
             }
         }
-
         return chordTab;
+    }
+
+    public static void setTuningChordChart(Context ctx, NotesEnum pitchNote, float pitchFreq) {
+        ImageView chordKeyView;
+        int chordKeyViewId;
+        LinearLayout chordChartLayout = ((Activity)ctx).findViewById(R.id.piano_chord_chart_layout);
+        chordChartLayout.setVisibility(View.VISIBLE);
+
+        for (int i = 1; i <= numberOfKeys; i++) {
+            if (i <= 9) {
+                chordKeyViewId = ctx.getResources().getIdentifier("piano_key_0" + i, "id", ctx.getPackageName());
+            } else {
+                chordKeyViewId = ctx.getResources().getIdentifier("piano_key_" + i, "id", ctx.getPackageName());
+            }
+            chordKeyView = ((Activity)ctx).findViewById(chordKeyViewId);
+            chordKeyView.setVisibility(View.VISIBLE);
+            if (NotesEnum.values()[((i - 1) + firstKeyNote.getValue()) % numberOfKeys] == pitchNote) {
+                chordKeyView.setColorFilter(ctx.getResources().getColor(R.color.mColor01));
+            } else {
+                chordKeyView.setColorFilter(ctx.getResources().getColor(R.color.colorPrimary));
+            }
+        }
     }
 
     public static void hideChordChart(Context ctx) {

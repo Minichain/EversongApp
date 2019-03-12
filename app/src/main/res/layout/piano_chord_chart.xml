@@ -27,7 +27,6 @@
             android:foregroundGravity="center_vertical"
             android:src="@drawable/left_piano_key_not_selected"
             app:layout_constraintStart_toStartOf="parent" />
-
         <ImageView
             android:id="@+id/piano_key_03"
             android:layout_width="30dp"
@@ -37,7 +36,6 @@
             android:foregroundGravity="center_vertical"
             android:src="@drawable/center_piano_key_not_selected"
             app:layout_constraintLeft_toRightOf="@+id/piano_key_01" />
-
         <ImageView
             android:id="@+id/piano_key_05"
             android:layout_width="30dp"
@@ -47,7 +45,6 @@
             android:foregroundGravity="center_vertical"
             android:src="@drawable/right_piano_key_not_selected"
             app:layout_constraintLeft_toRightOf="@+id/piano_key_03" />
-
         <ImageView
             android:id="@+id/piano_key_06"
             android:layout_width="30dp"
@@ -57,7 +54,6 @@
             android:foregroundGravity="center_vertical"
             android:src="@drawable/left_piano_key_not_selected"
             app:layout_constraintLeft_toRightOf="@+id/piano_key_05" />
-
         <ImageView
             android:id="@+id/piano_key_08"
             android:layout_width="30dp"
@@ -67,7 +63,6 @@
             android:foregroundGravity="center_vertical"
             android:src="@drawable/center_piano_key_not_selected"
             app:layout_constraintLeft_toRightOf="@+id/piano_key_06" />
-
         <ImageView
             android:id="@+id/piano_key_10"
             android:layout_width="30dp"
@@ -77,7 +72,6 @@
             android:foregroundGravity="center_vertical"
             android:src="@drawable/center_piano_key_not_selected"
             app:layout_constraintLeft_toRightOf="@+id/piano_key_08" />
-
         <ImageView
             android:id="@+id/piano_key_12"
             android:layout_width="30dp"
@@ -97,7 +91,6 @@
             android:foregroundGravity="center_vertical"
             android:src="@drawable/black_piano_key_not_selected"
             app:layout_constraintStart_toStartOf="parent" />
-
         <ImageView
             android:id="@+id/piano_key_04"
             android:layout_width="30dp"
@@ -107,7 +100,6 @@
             android:foregroundGravity="center_vertical"
             android:src="@drawable/black_piano_key_not_selected"
             app:layout_constraintLeft_toRightOf="@+id/piano_key_02" />
-
         <ImageView
             android:id="@+id/piano_key_07"
             android:layout_width="30dp"
@@ -117,7 +109,6 @@
             android:foregroundGravity="center_vertical"
             android:src="@drawable/black_piano_key_not_selected"
             app:layout_constraintLeft_toRightOf="@+id/piano_key_04" />
-
         <ImageView
             android:id="@+id/piano_key_09"
             android:layout_width="30dp"
@@ -127,7 +118,6 @@
             android:foregroundGravity="center_vertical"
             android:src="@drawable/black_piano_key_not_selected"
             app:layout_constraintLeft_toRightOf="@+id/piano_key_07" />
-
         <ImageView
             android:id="@+id/piano_key_11"
             android:layout_width="30dp"
@@ -138,5 +128,4 @@
             android:src="@drawable/black_piano_key_not_selected"
             app:layout_constraintLeft_toRightOf="@+id/piano_key_09" />
     </android.support.constraint.ConstraintLayout>
-
 </android.support.constraint.ConstraintLayout>
