@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.shawnlin.numberpicker.NumberPicker;
 import com.upf.minichain.eversongapp.chordChart.GuitarChordChart;
+import com.upf.minichain.eversongapp.chordChart.PianoChordChart;
 import com.upf.minichain.eversongapp.chordChart.StaffChordChart;
 import com.upf.minichain.eversongapp.chordChart.UkuleleChordChart;
 import com.upf.minichain.eversongapp.enums.BroadcastExtra;
@@ -393,7 +394,7 @@ public class EversongActivity extends AppCompatActivity {
                 UkuleleChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), alpha);
                 break;
             case PIANO_TAB:
-                //TODO
+                PianoChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), alpha);
                 break;
             case STAFF_TAB:
                 StaffChordChart.setChordChart(this, NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]), alpha);
@@ -412,7 +413,7 @@ public class EversongActivity extends AppCompatActivity {
                 UkuleleChordChart.setChordChart(this, chordScoreTonicNotePicked, chordScoreChordTypePicked, 1f);
                 break;
             case PIANO_TAB:
-                //TODO
+                PianoChordChart.setChordChart(this, chordScoreTonicNotePicked, chordScoreChordTypePicked, 1f);
                 break;
             case STAFF_TAB:
                 StaffChordChart.setChordChart(this, chordScoreTonicNotePicked, chordScoreChordTypePicked, 1f);
@@ -595,6 +596,7 @@ public class EversongActivity extends AppCompatActivity {
     private void setFunctionality() {
         switch(Parameters.getInstance().getFunctionalitySelected()) {
             case CHORD_DETECTION:
+            default:
                 mostProbableChordNoteText.setVisibility(View.VISIBLE);
                 mostProbableChordTypeText.setVisibility(View.VISIBLE);
                 tuningPitchNoteLayout.setVisibility(View.GONE);
@@ -627,6 +629,9 @@ public class EversongActivity extends AppCompatActivity {
         placeHolder = this.findViewById(R.id.ukulele_chord_chart_layout);
         getLayoutInflater().inflate(R.layout.ukulele_chord_chart, placeHolder);
 
+        placeHolder = this.findViewById(R.id.piano_chord_chart_layout);
+        getLayoutInflater().inflate(R.layout.piano_chord_chart, placeHolder);
+
         placeHolder = this.findViewById(R.id.staff_chord_chart_layout);
         getLayoutInflater().inflate(R.layout.staff_chord_chart, placeHolder);
     }
@@ -648,12 +653,15 @@ public class EversongActivity extends AppCompatActivity {
     private void setChordChart() {
         switch(Parameters.getInstance().getChartTabSelected()) {
             case GUITAR_TAB:
+            default:
                 UkuleleChordChart.hideChordChart(this);
                 StaffChordChart.hideChordChart(this);
+                PianoChordChart.hideChordChart(this);
                 break;
             case UKULELE_TAB:
                 GuitarChordChart.hideChordChart(this);
                 StaffChordChart.hideChordChart(this);
+                PianoChordChart.hideChordChart(this);
                 break;
             case PIANO_TAB:
                 GuitarChordChart.hideChordChart(this);
@@ -663,11 +671,13 @@ public class EversongActivity extends AppCompatActivity {
             case STAFF_TAB:
                 GuitarChordChart.hideChordChart(this);
                 UkuleleChordChart.hideChordChart(this);
+                PianoChordChart.hideChordChart(this);
                 break;
             case CHROMAGRAM:
                 GuitarChordChart.hideChordChart(this);
                 UkuleleChordChart.hideChordChart(this);
                 StaffChordChart.hideChordChart(this);
+                PianoChordChart.hideChordChart(this);
                 break;
         }
     }

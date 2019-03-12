@@ -164,6 +164,15 @@
         android:gravity="center_horizontal">
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/piano_chord_chart_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/recording_button"
+        android:gravity="center_horizontal">
+    </LinearLayout>
+    <LinearLayout
         android:id="@+id/staff_chord_chart_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
