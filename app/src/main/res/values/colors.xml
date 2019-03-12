@@ -7,5 +7,6 @@
     <color name="mColor01">#cccccc</color>
     <color name="mColor02">#ff0000</color>
     <color name="mColor03">#2b2b2c</color>
+    <color name="mColor04">#30FF00</color>
     <color name="colorBackground">#2b2b2c</color>
 </resources>

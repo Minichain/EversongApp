@@ -169,7 +169,7 @@ public class EversongService extends Service {
     }
 
     public void processAudio() {
-        if (musicBeingPlayed && Parameters.getInstance().getFunctionalitySelected() == EversongFunctionalities.CHORD_DETECTION) {
+        if (musicBeingPlayed) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -199,9 +199,7 @@ public class EversongService extends Service {
                 pitchDetected = pitchDetectedThread;
                 pitchProbability = pitchProbabilityThread;
                 pitchDetectedBuffer[pitchBufferIterator % Parameters.getInstance().getPitchBufferSize()] = pitchDetected;
-                if (Parameters.getInstance().getFunctionalitySelected() == EversongFunctionalities.CHORD_DETECTION) {
-                    pitchDetected = Utils.getAverage(pitchDetectedBuffer, Parameters.getInstance().getPitchBufferSize());
-                }
+                pitchDetected = Utils.getAverage(pitchDetectedBuffer, Parameters.getInstance().getPitchBufferSize());
                 float stdDeviation = Utils.getStandardDeviation(pitchDetectedBuffer, Parameters.getInstance().getPitchBufferSize());
                 if (stdDeviation > 100) {
                     pitchDetected = -1;

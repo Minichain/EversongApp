@@ -93,6 +93,7 @@ public class EversongActivity extends AppCompatActivity {
     int mColor01;
     int mColor02;
     int mColor03;
+    int mColor04;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,6 +183,7 @@ public class EversongActivity extends AppCompatActivity {
         mColor01 = ResourcesCompat.getColor(getResources(), R.color.mColor01, null);
         mColor02 = ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null);
         mColor03 = ResourcesCompat.getColor(getResources(), R.color.mColor03, null);
+        mColor04 = ResourcesCompat.getColor(getResources(), R.color.mColor04, null);
 
         // CHORD DETECTION
         mostProbableChordNoteText = this.findViewById(R.id.most_probable_chord_note);
@@ -405,6 +407,13 @@ public class EversongActivity extends AppCompatActivity {
     }
 
     private void updateChordScoreViews() {
+        if (chordScoreTonicNotePicked == NotesEnum.fromInteger(mostProbableChord[0])
+                && chordScoreChordTypePicked == ChordTypeEnum.fromInteger(mostProbableChord[1])) {
+            this.findViewById(R.id.chord_score_green_tick).setVisibility(View.VISIBLE);
+        } else {
+            this.findViewById(R.id.chord_score_green_tick).setVisibility(View.GONE);
+        }
+
         switch(Parameters.getInstance().getChartTabSelected()) {
             case GUITAR_TAB:
                 GuitarChordChart.setChordChart(this, chordScoreTonicNotePicked, chordScoreChordTypePicked, 1f);
@@ -420,7 +429,8 @@ public class EversongActivity extends AppCompatActivity {
                 break;
             case CHROMAGRAM:
                 break;
-        }    }
+        }
+    }
 
     private void updateTuningViews() {
         if (pitchDetected != -1) {

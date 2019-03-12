@@ -46,4 +46,17 @@
                 app:np_value="3" />
         </LinearLayout>
     </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/chord_score_green_tick"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/green_tick"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/chord_score_layout"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>
