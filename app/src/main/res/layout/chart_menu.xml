@@ -11,7 +11,7 @@
         <Button
             android:id="@+id/guitar_chart_button"
             android:layout_width="10dp"
-            android:layout_height="30sp"
+            android:layout_height="match_parent"
             android:background="@drawable/chart_menu_button_not_selected"
             android:textSize="10sp"
             android:textColor="@color/colorPrimary"
@@ -20,7 +20,7 @@
         <Button
             android:id="@+id/ukulele_chart_button"
             android:layout_width="10dp"
-            android:layout_height="30sp"
+            android:layout_height="match_parent"
             android:text="@string/ukulele_tab"
             android:background="@drawable/chart_menu_button_not_selected"
             android:textSize="10sp"
@@ -30,7 +30,7 @@
         <Button
             android:id="@+id/piano_chart_button"
             android:layout_width="10dp"
-            android:layout_height="30sp"
+            android:layout_height="match_parent"
             android:text="@string/piano_tab"
             android:background="@drawable/chart_menu_button_not_selected"
             android:textSize="10sp"
@@ -40,7 +40,7 @@
         <Button
             android:id="@+id/staff_chart_button"
             android:layout_width="10dp"
-            android:layout_height="30sp"
+            android:layout_height="match_parent"
             android:text="@string/staff_tab"
             android:background="@drawable/chart_menu_button_not_selected"
             android:textSize="10sp"
@@ -50,7 +50,7 @@
         <Button
             android:id="@+id/chromagram_chart_button"
             android:layout_width="10dp"
-            android:layout_height="30sp"
+            android:layout_height="match_parent"
             android:text="@string/chromagram_tab"
             android:background="@drawable/chart_menu_button_not_selected"
             android:textSize="10sp"

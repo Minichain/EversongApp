@@ -11,7 +11,7 @@
         <Button
             android:id="@+id/chord_detection_functionality_button"
             android:layout_width="10dp"
-            android:layout_height="30sp"
+            android:layout_height="match_parent"
             android:background="@drawable/chart_menu_button_not_selected"
             android:text="@string/chord_detection_functionality"
             android:textSize="10sp"
@@ -20,7 +20,7 @@
         <Button
             android:id="@+id/chord_score_functionality_button"
             android:layout_width="10dp"
-            android:layout_height="30sp"
+            android:layout_height="match_parent"
             android:text="@string/chord_score_functionality"
             android:background="@drawable/chart_menu_button_not_selected"
             android:textSize="10sp"
@@ -30,7 +30,7 @@
         <Button
             android:id="@+id/tuning_functionality_button"
             android:layout_width="10dp"
-            android:layout_height="30sp"
+            android:layout_height="match_parent"
             android:text="@string/tuning_functionality"
             android:background="@drawable/chart_menu_button_not_selected"
             android:textSize="10sp"

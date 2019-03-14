@@ -298,14 +298,16 @@ public class EversongActivity extends AppCompatActivity {
     }
 
     private void setCanvas() {
-        int screenHeight = Utils.getScreenHeightInPixels(this);
-        ConstraintLayout.LayoutParams params;
         ImageView canvasView = this.findViewById(R.id.canvas_view);
+//        int canvasHeight = Utils.getActivityHeightInPixels(this) - (this.findViewById(R.id.chart_menu_layout).getHeight()
+//                + this.findViewById(R.id.functionalities_menu_layout).getHeight());
+        int canvasHeight = Utils.getActivityHeightInPixels(this) - (int)Utils.convertSpToPixels(120, getApplicationContext());
+        int canvasWidth = Utils.getActivityWidthInPixels(this);
+        ConstraintLayout.LayoutParams params;
         params = (ConstraintLayout.LayoutParams) canvasView.getLayoutParams();
-        params.height = screenHeight - (int)Utils.convertSpToPixels(120, getApplicationContext());
-//        params.height = screenHeight - this.findViewById(R.id.functionalities_menu_layout).getLayoutParams().height - this.findViewById(R.id.chart_menu_layout).getLayoutParams().height;
+        params.height = canvasHeight;
         canvasView.setLayoutParams(params);
-        canvas = new EversongCanvas(getResources(), canvasView);
+        canvas = new EversongCanvas(getResources(), canvasView, canvasWidth, canvasHeight);
     }
 
     private void startRecording() {

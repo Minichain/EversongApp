@@ -10,12 +10,12 @@
     <LinearLayout
         android:id="@+id/functionalities_menu_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="25sp"
         android:orientation="vertical" />
     <LinearLayout
         android:id="@+id/chart_menu_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="25sp"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/functionalities_menu_layout" />
     <ImageView

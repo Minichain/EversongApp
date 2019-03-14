@@ -28,7 +28,7 @@ public class EversongCanvas {
 
     private Shader shader1;
 
-    public EversongCanvas(Resources resources, View imageView) {
+    public EversongCanvas(Resources resources, View imageView, final int canvasWidth, final int canvasHeight) {
         mColorBackground = ResourcesCompat.getColor(resources, R.color.colorBackground, null);
         mColor01 = ResourcesCompat.getColor(resources, R.color.mColor01, null);
         mColor02 = ResourcesCompat.getColor(resources, R.color.mColor02, null);
@@ -46,11 +46,9 @@ public class EversongCanvas {
         mImageView.post( new Runnable() {   // Whenever the view is loaded...
             @Override
             public void run() {    //...this is run
-                int vWidth = mImageView.getWidth();
-                int vHeight = mImageView.getHeight();
 //                Log.v(LOG_TAG, "EversongCanvasLog:: drawInCanvas with size: " + vWidth + ", " + vHeight);
-                if (vWidth > 0 && vHeight > 0) {
-                    mBitmap = Bitmap.createBitmap(vWidth, vHeight, Bitmap.Config.ARGB_8888);
+                if (canvasWidth > 0 && canvasHeight > 0) {
+                    mBitmap = Bitmap.createBitmap(canvasWidth, canvasHeight, Bitmap.Config.ARGB_8888);
                     mImageView.setImageBitmap(mBitmap);
                     mCanvas = new Canvas(mBitmap);
                     mCanvas.drawColor(mColorBackground);

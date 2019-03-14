@@ -2,7 +2,12 @@ package com.upf.minichain.eversongapp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Point;
+import android.os.Build;
 import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
@@ -71,11 +76,15 @@ public class Utils {
      * @return A float value to represent dp equivalent to px value
      */
     public static float convertPixelsToDp(float px, Context context){
-        return px / ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return px / (float) context.getResources().getDisplayMetrics().densityDpi;
     }
 
     public static float convertSpToPixels(float sp, Context context) {
         return sp * context.getResources().getDisplayMetrics().scaledDensity;
+    }
+
+    public static float convertPixelsToSp(float px, Context context) {
+        return px / context.getResources().getDisplayMetrics().scaledDensity;
     }
 
     /**
@@ -146,5 +155,27 @@ public class Utils {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.heightPixels;
+    }
+
+    public static int getActivityWidthInPixels(Activity activity) {
+        return getScreenWidthInPixels(activity);
+    }
+
+    public static int getActivityHeightInPixels(Activity activity) {
+        final WindowManager windowManager = activity.getWindowManager();
+        final Point size = new Point();
+        int screenHeight = 0, actionBarHeight = 0;
+        if (activity.getActionBar() != null) {
+            actionBarHeight = activity.getActionBar().getHeight();
+        }
+        int contentTop = ((ViewGroup) activity.findViewById(android.R.id.content)).getTop();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            windowManager.getDefaultDisplay().getSize(size);
+            screenHeight = size.y;
+        } else {
+            Display d = windowManager.getDefaultDisplay();
+            screenHeight = d.getHeight();
+        }
+        return screenHeight - contentTop - actionBarHeight;
     }
 }
