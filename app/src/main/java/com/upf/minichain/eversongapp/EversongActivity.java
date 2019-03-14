@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Process;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
@@ -157,7 +158,15 @@ public class EversongActivity extends AppCompatActivity {
         Parameters.getInstance().loadParameters(getApplicationContext());
 
         Intent serviceIntent = new Intent(getApplicationContext(), EversongService.class);
-        getApplicationContext().startService(serviceIntent);
+
+        //Start service:
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Log.l("EversongActivityLog:: startForegroundService");
+            getApplicationContext().startForegroundService(serviceIntent);
+        } else {
+            Log.l("EversongActivityLog:: startService");
+            getApplicationContext().startService(serviceIntent);
+        }
         registerEversongActivityBroadcastReceiver();
 
         musicBeingPlayed = false;

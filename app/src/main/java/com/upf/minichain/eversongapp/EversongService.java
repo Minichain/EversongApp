@@ -1,5 +1,8 @@
 package com.upf.minichain.eversongapp;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,14 +11,16 @@ import android.content.IntentFilter;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Process;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import com.upf.minichain.eversongapp.enums.BroadcastExtra;
 import com.upf.minichain.eversongapp.enums.BroadcastMessage;
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
-import com.upf.minichain.eversongapp.enums.EversongFunctionalities;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
 import java.util.ArrayList;
@@ -66,6 +71,8 @@ public class EversongService extends Service {
         mostProbableChord[2] = 100;
         arrayOfChordsDetected =  new ArrayList<>();
         detectedChordsFile = new DetectedChordFile(getApplicationContext());
+
+        createEversongServiceNotification();
 
         Log.l("EversongServiceLog:: onCreate service");
     }
@@ -314,5 +321,33 @@ public class EversongService extends Service {
         extras.putBoolean(BroadcastExtra.POLYTONAL_MUSIC_BEING_PLAYED.toString(), polytonalMusicBeingPlayed);
         extras.putDouble(BroadcastExtra.SPECTRAL_FLATNESS.toString(), spectralFlatnessValue);
         sendBroadcastToActivity(BroadcastMessage.MUSIC_DETECTION, extras);
+    }
+
+    private void createEversongServiceNotification() {
+        //Service notification
+        CharSequence name = "Eversong";
+        String description = "EversongApp";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("SERVICE_NOTIFICATION", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "SERVICE_NOTIFICATION")
+                .setSmallIcon(R.drawable.staff_chord_chart_clef_g)
+                .setContentTitle(name)
+                .setContentText(description)
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+        // notificationId is a unique int for each notification that you must define
+        Notification notification = builder.build();
+        notificationManager.notify(1, notification);
+        this.startForeground(1, notification);
     }
 }
