@@ -3,6 +3,7 @@ package com.upf.minichain.eversongapp;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -55,6 +56,11 @@ public class EversongService extends Service {
     double[] audioSpectrumBuffer;
     double[] prevAudioSpectrumBuffer;
 
+    NotificationManager notificationManager;
+    NotificationManagerCompat notificationManagerCompat;
+    final static String serviceNotificationStringId = "SERVICE_NOTIFICATION";
+    final static int serviceNotificationId = 1;
+
     @Override
     public void onCreate() {
         eversongBroadcastReceiver = new EversongServiceBroadcastReceiver();
@@ -105,6 +111,7 @@ public class EversongService extends Service {
     @Override
     public void onDestroy() {
         unregisterReceiver(eversongBroadcastReceiver);
+        notificationManagerCompat.cancel(serviceNotificationId);
         Log.l("EversongServiceLog:: onDestroy service");
     }
 
@@ -325,29 +332,28 @@ public class EversongService extends Service {
 
     private void createEversongServiceNotification() {
         //Service notification
-        CharSequence name = "Eversong";
-        String description = "EversongApp";
+        CharSequence name = getResources().getString(R.string.app_name);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel("SERVICE_NOTIFICATION", name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            NotificationChannel channel = new NotificationChannel(serviceNotificationStringId, name, importance);
+            notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "SERVICE_NOTIFICATION")
-                .setSmallIcon(R.drawable.staff_chord_chart_clef_g)
+        //Notification intent to open the activity when pressing the notification
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, EversongActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, serviceNotificationStringId)
+                .setSmallIcon(R.drawable.app_icon)
                 .setContentTitle(name)
-                .setContentText(description)
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(contentIntent);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManagerCompat = NotificationManagerCompat.from(this);
 
-        // notificationId is a unique int for each notification that you must define
         Notification notification = builder.build();
-        notificationManager.notify(1, notification);
+        notificationManagerCompat.notify(serviceNotificationId, notification);
         this.startForeground(1, notification);
     }
 }
