@@ -21,6 +21,7 @@
 
 #ifndef __CHROMAGRAM_H
 #define __CHROMAGRAM_H
+#define SEMITONES 12
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -39,8 +40,7 @@
 //=======================================================================
 /** A class for calculating a Chromagram from input audio
  * in a real-time context */
-class Chromagram
-{
+class Chromagram {
     
 public:
     /** Constructor
@@ -125,7 +125,7 @@ private:
     std::vector<double> chromagram;
     
     double referenceFrequency;
-    double noteFrequencies[12];
+    double noteFrequencies[SEMITONES];
     
     int bufferSize;
     int samplingFrequency;

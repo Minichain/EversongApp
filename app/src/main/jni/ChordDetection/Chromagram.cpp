@@ -22,37 +22,37 @@
 #include "Chromagram.h"
 
 //==================================================================================
-Chromagram::Chromagram (int frameSize, int fs, int bs)
- :  referenceFrequency (55.0),              // A1
-// :  referenceFrequency (110.0),              // A2
-// :  referenceFrequency (130.81278265),       // C2
-    numHarmonics (2),
-    numOctaves (2),
-    numBinsToSearch (1)
+Chromagram::Chromagram(int frameSize, int fs, int bs)
+ :  referenceFrequency(55.0),              // A1
+// :  referenceFrequency(110.0),              // A2
+// :  referenceFrequency(130.81278265),       // C2
+    numHarmonics(2),
+    numOctaves(2),
+    numBinsToSearch(1)
 {
     bufferSize = bs;    // It must be a power of 2 (2048, 4096, 8192, 16384...)
 
     // calculate note frequencies
     for (int i = 0; i < 12; i++) {
-        noteFrequencies[i] = referenceFrequency * pow (2,(((float) i) / 12));
+        noteFrequencies[i] = referenceFrequency * pow (2,(((float) i) / SEMITONES));
     }
     
     // set up FFT
     setupFFT();
     
     // set buffer size
-    buffer.resize (bufferSize);
+    buffer.resize(bufferSize);
     
     // setup chromagram vector
-    chromagram.resize (12);
+    chromagram.resize(SEMITONES);
     
     // initialise chromagram
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < SEMITONES; i++) {
         chromagram[i] = 0.0;
     }
     
     // setup magnitude spectrum vector
-    magnitudeSpectrum.resize ((bufferSize/2)+1);
+    magnitudeSpectrum.resize ((bufferSize/2) + 1);
     
     // make window function
 //    makeHammingWindow();
@@ -147,8 +147,7 @@ void Chromagram::processAudioFrame (std::vector<double> inputAudioFrame) {
 }
 
 //==================================================================================
-void Chromagram::setInputAudioFrameSize (int frameSize)
-{
+void Chromagram::setInputAudioFrameSize (int frameSize) {
     inputAudioFrameSize = frameSize;
     
     downsampledInputAudioFrame.resize (inputAudioFrameSize / 4);
@@ -157,32 +156,27 @@ void Chromagram::setInputAudioFrameSize (int frameSize)
 }
 
 //==================================================================================
-void Chromagram::setSamplingFrequency (int fs)
-{
+void Chromagram::setSamplingFrequency (int fs) {
     samplingFrequency = fs;
 }
 
 //==================================================================================
-void Chromagram::setChromaCalculationInterval (int numSamples)
-{
+void Chromagram::setChromaCalculationInterval (int numSamples) {
     chromaCalculationInterval = numSamples;
 }
 
 //==================================================================================
-std::vector<double> Chromagram::getChromagram()
-{
+std::vector<double> Chromagram::getChromagram() {
     return chromagram;
 }
 
 //==================================================================================
-bool Chromagram::isReady()
-{
+bool Chromagram::isReady() {
     return chromaReady;
 }
 
 //==================================================================================
-void Chromagram::setupFFT()
-{
+void Chromagram::setupFFT() {
     // ------------------------------------------------------
 #ifdef USE_FFTW
     complexIn = (fftw_complex*) fftw_malloc (sizeof (fftw_complex) * bufferSize);		// complex array to hold fft data
@@ -206,8 +200,7 @@ void Chromagram::setMagnitudeSpectrum(double* spectrumSamples) {
 }
 
 //==================================================================================
-void Chromagram::calculateChromagram()
-{
+void Chromagram::calculateChromagram() {
     /**
      * This function is not working.
      * Instead of using it I set the spectrum value in the processAudio class.
@@ -227,7 +220,7 @@ void Chromagram::calculateChromagram()
 void Chromagram::chromagramAdamStarkAlgorithm() {
     double divisorRatio = (((double) samplingFrequency) / 4.0) / ((double)bufferSize);
 
-    for (int n = 0; n < 12; n++) {
+    for (int n = 0; n < SEMITONES; n++) {
         double chromaSum = 0.0;
 
         for (int octave = 1; octave <= numOctaves; octave++) {
@@ -259,13 +252,13 @@ void Chromagram::chromagramAdamStarkAlgorithm() {
 
 void Chromagram::chromagramEversongAlgorithm() {
     double maxChromagramValue = 0.0;
-    for (int n = 0; n < 12; n++) {
+    for (int n = 0; n < SEMITONES; n++) {
         double chromaSum = 0.0;
 
         for (int octave = 1; octave <= numOctaves; octave++) {
             double noteSum = 0.0;
             //TODO check this 7 semitones shifting
-            int noteChecking = (int)round(noteFrequencies[(n + 7) % 12] * octave);
+            int noteChecking = (int)round(noteFrequencies[(n + 7) % SEMITONES] * octave);
             int binWidth = 5;   // It must be an odd number
 
             for (int i = noteChecking - ((binWidth - 1) / 2); i <= noteChecking + ((binWidth - 1) / 2); i++) {
@@ -288,7 +281,7 @@ void Chromagram::chromagramEversongAlgorithm() {
 
     bool normalizeChromagram = false;
     if (normalizeChromagram) {
-        for (int n = 0; n < 12; n++) {
+        for (int n = 0; n < SEMITONES; n++) {
             chromagram[n] /= maxChromagramValue;
         }
     }
@@ -308,8 +301,7 @@ void Chromagram::setChordDetectionAlgorithm(int algorithm) {
 }
 
 //==================================================================================
-void Chromagram::calculateMagnitudeSpectrum()
-{
+void Chromagram::calculateMagnitudeSpectrum() {
     
 #ifdef USE_FFTW
     // -----------------------------------------------
@@ -360,8 +352,7 @@ void Chromagram::calculateMagnitudeSpectrum()
 }
 
 //==================================================================================
-void Chromagram::downSampleFrame (std::vector<double> inputAudioFrame)
-{
+void Chromagram::downSampleFrame (std::vector<double> inputAudioFrame) {
     std::vector<double> filteredFrame (inputAudioFrameSize);
     
     float b0,b1,b2,a1,a2;
@@ -378,8 +369,7 @@ void Chromagram::downSampleFrame (std::vector<double> inputAudioFrame)
     y_1 = 0;
     y_2 = 0;
     
-    for (int i = 0; i < inputAudioFrameSize; i++)
-    {
+    for (int i = 0; i < inputAudioFrameSize; i++) {
         filteredFrame[i] = inputAudioFrame[i] * b0 + x_1 * b1 + x_2 * b2 - y_1 * a1 - y_2 * a2;
         
         x_2 = x_1;
@@ -388,15 +378,13 @@ void Chromagram::downSampleFrame (std::vector<double> inputAudioFrame)
         y_1 = filteredFrame[i];
     }
     
-    for (int i = 0; i < inputAudioFrameSize / 4; i++)
-    {
+    for (int i = 0; i < inputAudioFrameSize / 4; i++) {
         downsampledInputAudioFrame[i] = filteredFrame[i * 4];
     }
 }
 
 //==================================================================================
-void Chromagram::makeHammingWindow()
-{
+void Chromagram::makeHammingWindow() {
     // set the window to the correct size
     window.resize (bufferSize);
     
@@ -408,7 +396,6 @@ void Chromagram::makeHammingWindow()
 }
 
 //==================================================================================
-double Chromagram::round (double val)
-{
+double Chromagram::round (double val) {
     return floor (val + 0.5);
 }

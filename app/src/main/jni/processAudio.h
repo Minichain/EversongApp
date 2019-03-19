@@ -23,7 +23,7 @@ public:
     int sampleRate;
     int frameSize;
     Chromagram c = Chromagram(0, 0, 0);
-    double* chromagram = new double[12];
+    double* chromagram = new double[SEMITONES];
     ChordDetector chordDetector;
     int* chordDetectionOutput = new int[2];
     Yin yin;

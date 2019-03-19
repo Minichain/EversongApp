@@ -20,8 +20,8 @@ extern "C" {
     }
 
     jdoubleArray Java_com_upf_minichain_eversongapp_AudioStack_getChromagramJni(JNIEnv *env, jobject) {
-        outputDoubleArray = env->NewDoubleArray(12);
-        env->SetDoubleArrayRegion(outputDoubleArray, 0, 12, processAudio->getChromagram());
+        outputDoubleArray = env->NewDoubleArray(SEMITONES);
+        env->SetDoubleArrayRegion(outputDoubleArray, 0, SEMITONES, processAudio->getChromagram());
         return outputDoubleArray;
     }
 

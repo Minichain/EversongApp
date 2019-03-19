@@ -1,10 +1,10 @@
 package com.upf.minichain.eversongapp.enums;
 
 public enum ChordTypeEnum {
-    Minor(0), Major(1), Sus2(2), Sus4(3), Dominant7th(4), Major7th(5), Minor7th(6), Diminished5th(7), Augmented5th(8), NoChord(9);
+    Minor(0), Major(1), Sus2(2), Sus4(3), Dominant7th(4), Major7th(5), Minor7th(6), Diminished5th(7), Augmented5th(8), Power5th(9), NoChord(10);
 
     private final int value;
-    public static int numberOfChordTypes = 9;
+    public static int numberOfChordTypes = 10;
 
     ChordTypeEnum(int value) {
         this.value = value;
@@ -35,6 +35,8 @@ public enum ChordTypeEnum {
             case 8:
                 return Augmented5th;
             case 9:
+                return Power5th;
+            case 10:
             case -1:
             default:
                 return NoChord;
@@ -61,6 +63,8 @@ public enum ChordTypeEnum {
                 return "Diminished5th";
             case Augmented5th:
                 return "Augmented5th";
+            case Power5th:
+                return "Power5th";
             case NoChord:
             default:
                 return "";

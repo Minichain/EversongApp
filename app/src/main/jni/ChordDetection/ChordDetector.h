@@ -21,18 +21,17 @@
 
 #ifndef CHORDDETECT_H
 #define CHORDDETECT_H
+#define SEMITONES 12
 
 #include <vector>
 
 //=======================================================================
 /** A class for estimating chord labels from chromagram input */
-class ChordDetector
-{
+class ChordDetector {
 public:
     
     /** An enum describing the chord qualities used in the algorithm */
-    enum ChordType
-    {
+    enum ChordType {
         Minor,
         Major,
         Sus2,
@@ -41,24 +40,27 @@ public:
 		Major7th,
 		Minor7th,
         Diminished5th,
-        Augmented5th
+        Augmented5th,
+		Power5th
     };
-    
+
+	static const int numOfChordTypes = 10;
+
 	/** Constructor */
 	ChordDetector();
     
     /** Detects the chord from a chromagram. This is the vector interface 
      * @param chroma a vector of length 12 containing the chromagram
      */
-    void detectChord (std::vector<double> chroma);
+    void detectChord(std::vector<double> chroma);
     
     /** Detects the chord from a chromagram. This is the array interface
      * @param chroma an array of length 12 containing the chromagram
      */
-    void detectChord (double* chroma);
+    void detectChord(double* chroma);
 	
     /** The root note of the detected chord */
-	int rootNote;	// C = 0, C# = 1, D = 2 ...
+	int rootNote;
     
     /** The quality of the detected chord (Major, Minor, etc) */
 	int chordType;
@@ -66,12 +68,12 @@ public:
 private:
 	void makeChordProfiles();
 	void classifyChromagram();
-	double calculateChordScore (double* chroma, double* chordProfile, double biasToUse, double N);
-	int minimumIndex (double*array, int length);
+	double calculateChordScore(double* chroma, double* chordProfile, double biasToUse, double N);
+	int minimumIndex(double*array, int length);
 
-	double chromagram[12];
-	double chordProfiles[108][12];
-	double chord[108];
+	double chromagram[SEMITONES];
+	double chordProfiles[numOfChordTypes * SEMITONES][SEMITONES];
+	double chord[numOfChordTypes * SEMITONES];
 	double bias;
 };
 

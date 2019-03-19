@@ -192,7 +192,7 @@ public class EversongService extends Service {
                     final int[] chordDetectedThread = AudioStack.chordDetection(audioSamplesBufferWindowed, audioSpectrumBuffer, Parameters.getInstance().getChordDetectionAlgorithm().getValue());
                     final double[] chromagramThread = AudioStack.getChromagram();
 
-//                    Log.l("EversongActivityLog:: Spectrum diff: " + AudioStack.getDifference(audioSpectrumBuffer, prevAudioSpectrumBuffer));
+                    Log.l("EversongServiceLog:: Chord detected: " + chordDetected[0] + ", " + chordDetected[1]);
 
                     chromagram = chromagramThread;
                     chordDetected = chordDetectedThread;

@@ -138,6 +138,9 @@ public class Utils {
                 chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 4) % NotesEnum.numberOfNotes);    //The major third
                 chordNotes[2] = NotesEnum.fromInteger((tonic.getValue() + 8) % NotesEnum.numberOfNotes);    //The augmented fifth
                 break;
+            case Power5th:
+                chordNotes[1] = NotesEnum.fromInteger((tonic.getValue() + 7) % NotesEnum.numberOfNotes);    //The major third
+                break;
             case NoChord:
             default:
                 break;
