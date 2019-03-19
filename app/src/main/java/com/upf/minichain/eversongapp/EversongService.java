@@ -111,7 +111,7 @@ public class EversongService extends Service {
     @Override
     public void onDestroy() {
         unregisterReceiver(eversongBroadcastReceiver);
-        notificationManagerCompat.cancel(serviceNotificationId);
+        removeEversongServiceNotification();
         Log.l("EversongServiceLog:: onDestroy service");
     }
 
@@ -157,6 +157,8 @@ public class EversongService extends Service {
                         }
                     } else if (broadcast.equals(BroadcastMessage.PAUSE_ACTIVITY.toString())) {
                         keepRecordingAudio = false;
+                    } else if (broadcast.equals(BroadcastMessage.DESTROY_EVERSONG_SERVICE.toString())) {
+                        onDestroy();
                     } else {
 
                     }
@@ -341,19 +343,25 @@ public class EversongService extends Service {
         }
 
         //Notification intent to open the activity when pressing the notification
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, EversongActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+//        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+//                new Intent(this, EversongActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, serviceNotificationStringId)
                 .setSmallIcon(R.drawable.app_icon)
                 .setContentTitle(name)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(contentIntent);
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+//                .setContentIntent(contentIntent);
 
         notificationManagerCompat = NotificationManagerCompat.from(this);
 
         Notification notification = builder.build();
         notificationManagerCompat.notify(serviceNotificationId, notification);
         this.startForeground(1, notification);
+    }
+
+    private void removeEversongServiceNotification() {
+        if (notificationManagerCompat != null) {
+            notificationManagerCompat.cancel(serviceNotificationId);
+        }
     }
 }

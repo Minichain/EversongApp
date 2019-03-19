@@ -145,37 +145,15 @@ public class Utils {
         return chordNotes;
     }
 
-    public static int getScreenWidthInPixels(Activity activity) {
+    public static int getActivityWidthInPixels(Activity activity) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.widthPixels;
     }
 
-    public static int getScreenHeightInPixels(Activity activity) {
+    public static int getActivityHeightInPixels(Activity activity) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.heightPixels;
-    }
-
-    public static int getActivityWidthInPixels(Activity activity) {
-        return getScreenWidthInPixels(activity);
-    }
-
-    public static int getActivityHeightInPixels(Activity activity) {
-        final WindowManager windowManager = activity.getWindowManager();
-        final Point size = new Point();
-        int screenHeight = 0, actionBarHeight = 0;
-        if (activity.getActionBar() != null) {
-            actionBarHeight = activity.getActionBar().getHeight();
-        }
-        int contentTop = ((ViewGroup) activity.findViewById(android.R.id.content)).getTop();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            windowManager.getDefaultDisplay().getSize(size);
-            screenHeight = size.y;
-        } else {
-            Display d = windowManager.getDefaultDisplay();
-            screenHeight = d.getHeight();
-        }
-        return screenHeight - contentTop - actionBarHeight;
     }
 }

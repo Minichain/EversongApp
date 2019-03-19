@@ -308,9 +308,12 @@ public class EversongActivity extends AppCompatActivity {
 
     private void setCanvas() {
         ImageView canvasView = this.findViewById(R.id.canvas_view);
-//        int canvasHeight = Utils.getActivityHeightInPixels(this) - (this.findViewById(R.id.chart_menu_layout).getHeight()
-//                + this.findViewById(R.id.functionalities_menu_layout).getHeight());
-        int canvasHeight = Utils.getActivityHeightInPixels(this) - (int)Utils.convertSpToPixels(120, getApplicationContext());
+        int canvasHeight = Utils.getActivityHeightInPixels(this) - (this.findViewById(R.id.chart_menu_layout).getLayoutParams().height
+                + this.findViewById(R.id.functionalities_menu_layout).getLayoutParams().height
+                + (int)Utils.convertDpToPixel(56, this) //Toolbar
+                + (int)Utils.convertDpToPixel(24, this) //Top menu (where time, battery... are displayed)
+        );
+
         int canvasWidth = Utils.getActivityWidthInPixels(this);
         ConstraintLayout.LayoutParams params;
         params = (ConstraintLayout.LayoutParams) canvasView.getLayoutParams();
@@ -704,7 +707,7 @@ public class EversongActivity extends AppCompatActivity {
     }
 
     private void setFunctionalitiesMenu() {
-        int screenWidth = Utils.getScreenWidthInPixels(this);
+        int screenWidth = Utils.getActivityWidthInPixels(this);
         ConstraintLayout.LayoutParams params;
 
         Button button = this.findViewById(R.id.chord_detection_functionality_button);
@@ -787,7 +790,7 @@ public class EversongActivity extends AppCompatActivity {
     }
 
     private void setChartMenu() {
-        int screenWidth = Utils.getScreenWidthInPixels(this);
+        int screenWidth = Utils.getActivityWidthInPixels(this);
         ConstraintLayout.LayoutParams params;
 
         Button button = this.findViewById(R.id.guitar_chart_button);
@@ -920,8 +923,14 @@ public class EversongActivity extends AppCompatActivity {
     public void closeApp() {
         Intent serviceIntent = new Intent(getApplicationContext(), EversongService.class);
         getApplicationContext().stopService(serviceIntent);
-        this.finish();
+        this.onDestroy();
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(-1);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.l("EversongActivityLog:: onDestroy EversongActivity");
+        super.onDestroy();
     }
 }
