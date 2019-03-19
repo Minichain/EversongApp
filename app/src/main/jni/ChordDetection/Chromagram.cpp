@@ -252,6 +252,8 @@ void Chromagram::chromagramAdamStarkAlgorithm() {
 
 void Chromagram::chromagramEversongAlgorithm() {
     double maxChromagramValue = 0.0;
+    double sumOfAllSemitones = 0.0;
+
     for (int n = 0; n < SEMITONES; n++) {
         double chromaSum = 0.0;
 
@@ -271,18 +273,15 @@ void Chromagram::chromagramEversongAlgorithm() {
             maxChromagramValue = chromaSum;
         }
 
-        //Chromagram amplitude threshold
-        if (chromaSum > 0.05) {
-            chromagram[n] = chromaSum;
-        } else {
-            chromagram[n] = 0;
-        }
+        sumOfAllSemitones += chromaSum;
+        chromagram[n] = chromaSum;
     }
 
-    bool normalizeChromagram = false;
-    if (normalizeChromagram) {
-        for (int n = 0; n < SEMITONES; n++) {
-            chromagram[n] /= maxChromagramValue;
+    double mean = sumOfAllSemitones / SEMITONES;
+    for (int n = 0; n < SEMITONES; n++) {
+        //Chromagram amplitude threshold
+        if (chromagram[n] < mean * 0.25) {
+            chromagram[n] = 0;
         }
     }
     chromaReady = true;
