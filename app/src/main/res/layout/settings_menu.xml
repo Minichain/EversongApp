@@ -252,6 +252,37 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/pitch_buffer_size_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/chord_detector_algorithm_layout">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_pitch_buffer_size"
+                    android:textSize="20sp" />
+                <LinearLayout
+                    android:id="@+id/pitch_buffer_size_seekbar_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <SeekBar
+                        android:id="@+id/pitch_buffer_size_seekbar"
+                        android:layout_width="250dp"
+                        android:layout_height="fill_parent"
+                        android:max="20" />
+                    <TextView
+                        android:id="@+id/pitch_buffer_size_seekbar_text"
+                        android:layout_width="100dp"
+                        android:layout_height="fill_parent"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toRightOf="@+id/pitch_buffer_size_seekbar" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/debug_mode_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

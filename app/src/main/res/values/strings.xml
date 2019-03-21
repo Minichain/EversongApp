@@ -30,6 +30,7 @@
     <string name="setting_hamming_window">Hamming window</string>
     <string name="setting_blackman_window">Blackman window</string>
     <string name="setting_chord_buffer_size">Chord buffer size</string>
+    <string name="setting_pitch_buffer_size">Pitch buffer size</string>
     <string name="setting_audio_buffer_size">Audio buffer size</string>
     <string name="setting_bandpass_filter_low_freq">Bandpass filter low freq</string>
     <string name="setting_bandpass_filter_high_freq">Bandpass filter high freq</string>

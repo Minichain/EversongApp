@@ -29,6 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
         setBandpassFilterLowFreqSetting();
         setBandpassFilterHighFreqSetting();
         setChordDetectionAlgorithmSetting();
+        setPitchBufferSizeSetting();
         setDebugModeSetting();
     }
 
@@ -251,6 +252,32 @@ public class SettingsActivity extends AppCompatActivity {
                     Parameters.getInstance().setChordDetectionAlgorithm(ChordDetectionAlgorithm.EVERSONG_ALGORITHM);
                 break;
         }
+    }
+
+    private void setPitchBufferSizeSetting() {
+        int bufferSize = Parameters.getInstance().getPitchBufferSize();
+        SeekBar seekBar = this.findViewById(R.id.pitch_buffer_size_seekbar);
+        seekBar.setProgress(bufferSize);
+        final TextView textView = this.findViewById(R.id.pitch_buffer_size_seekbar_text);
+        textView.setText(String.valueOf(bufferSize) + " values");
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                int min = 1;
+                if (progress < min) {
+                    progress = min;
+                    seekBar.setProgress(progress);
+                }
+                textView.setText(String.valueOf(progress) + " values");
+                Parameters.getInstance().setPitchBufferSize(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
     }
 
 

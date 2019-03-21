@@ -211,9 +211,14 @@ public class EversongService extends Service {
             public void run() {
                 final float pitchDetectedThread = AudioStack.getPitch(audioSamplesBufferWindowed);
                 final float pitchProbabilityThread = AudioStack.getPitchProbability();
+                if (pitchDetectedThread <= Parameters.BANDPASS_FILTER_LOW_FREQ || Parameters.BANDPASS_FILTER_HIGH_FREQ <= pitchDetectedThread) {
+                    pitchDetected = -1;
+                    pitchProbability = -1;
+                } else {
+                    pitchDetected = pitchDetectedThread;
+                    pitchProbability = pitchProbabilityThread;
+                }
 
-                pitchDetected = pitchDetectedThread;
-                pitchProbability = pitchProbabilityThread;
                 pitchDetectedBuffer[pitchBufferIterator % Parameters.getInstance().getPitchBufferSize()] = pitchDetected;
                 pitchDetected = Utils.getAverage(pitchDetectedBuffer, Parameters.getInstance().getPitchBufferSize());
                 float stdDeviation = Utils.getStandardDeviation(pitchDetectedBuffer, Parameters.getInstance().getPitchBufferSize());

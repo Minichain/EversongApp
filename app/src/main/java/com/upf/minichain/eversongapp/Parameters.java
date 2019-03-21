@@ -53,7 +53,7 @@ public class Parameters {
         musicalNotation = MusicalNotationEnum.ENGLISH_NOTATION;
         windowingFunction = WindowFunctionEnum.HAMMING_WINDOW;
         chordBufferSize = 7;
-        pitchBufferSize = 4;
+        pitchBufferSize = 3;
         chartTab = ChartTab.GUITAR_TAB;
         functionalityTab = EversongFunctionalities.CHORD_DETECTION;
         chordDetectionAlgorithm = ChordDetectionAlgorithm.ADAM_STARK_ALGORITHM;
@@ -104,6 +104,9 @@ public class Parameters {
             tempValue = loadParameter("chordDetectionAlgorithm");
             chordDetectionAlgorithm = (tempValue != -1) ? chordDetectionAlgorithm.values()[tempValue] : chordDetectionAlgorithm;
 
+            tempValue = loadParameter("pitchBufferSize");
+            pitchBufferSize = (tempValue != -1) ? tempValue : pitchBufferSize;
+
             tempValue = loadParameter("debugMode");
             debugMode = tempValue == 1;
         }
@@ -123,16 +126,6 @@ public class Parameters {
         cursor.close();
         return parameterValue;
     }
-
-//    public void setDatabaseParameters(Context context) {
-//        ParametersDatabaseHelper parametersDbHelper = new ParametersDatabaseHelper(context);
-//        parametersDatabase = parametersDbHelper.getWritableDatabase();
-//
-//        setParameterInDataBase("SAMPLE_RATE", SAMPLE_RATE);
-//        setParameterInDataBase("BUFFER_SIZE", BUFFER_SIZE);
-//        setParameterInDataBase("HOP_SIZE", HOP_SIZE);
-//        setParameterInDataBase("FRAMES_PER_SECOND", FRAMES_PER_SECOND);
-//    }
 
     public void setParameterInDataBase(String parameter, int value) {
         if (parametersDatabase != null) {
@@ -215,6 +208,11 @@ public class Parameters {
 
     public int getChordBufferSize() {
         return chordBufferSize;
+    }
+
+    public void setPitchBufferSize(int newSize) {
+        setParameterInDataBase("pitchBufferSize", newSize);
+        pitchBufferSize = newSize;
     }
 
     public int getPitchBufferSize() {
