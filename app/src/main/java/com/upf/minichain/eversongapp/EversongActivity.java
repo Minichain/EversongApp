@@ -421,8 +421,8 @@ public class EversongActivity extends AppCompatActivity {
     }
 
     private void updateChordScoreViews() {
-        if (chordScoreTonicNotePicked == NotesEnum.fromInteger(mostProbableChord[0])
-                && chordScoreChordTypePicked == ChordTypeEnum.fromInteger(mostProbableChord[1])) {
+        if (Utils.compareChords(chordScoreTonicNotePicked, chordScoreChordTypePicked,
+                NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]))) {
             this.findViewById(R.id.chord_score_green_tick).setVisibility(View.VISIBLE);
         } else {
             this.findViewById(R.id.chord_score_green_tick).setVisibility(View.GONE);

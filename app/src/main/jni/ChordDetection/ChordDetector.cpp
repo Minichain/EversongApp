@@ -88,7 +88,12 @@ void ChordDetector::classifyChromagram() {
 
 	// sus4 chords
 	for (j = 60; j < 72; j++) {
-		chord[j] = calculateChordScore(chromagram, chordProfiles[j], 1, 3);
+        /*
+         * The following line is there in order to disable this chord. Sus4 chords have always a Sus2 chord
+         * with the same notes. For example, "Dsus4" has the same notes as "Gsus2"
+         * */
+        chord[j] = 1.0;
+//		chord[j] = calculateChordScore(chromagram, chordProfiles[j], 1, 3);
 	}
 
 	// major 7th chords

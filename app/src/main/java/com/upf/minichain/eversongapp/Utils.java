@@ -159,4 +159,30 @@ public class Utils {
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.heightPixels;
     }
+
+    /**
+     * This method compares chords note by note. If both chords have the same notes, even if they
+     * are not the same chord, it will return true.
+     * Example: "compareChords(Dsus4, Gsus2)" returns true.
+     * */
+    public static boolean compareChords(NotesEnum tonic1, ChordTypeEnum chordType1, NotesEnum tonic2, ChordTypeEnum chordType2) {
+        NotesEnum[] chord1Notes = getChordNotes(tonic1, chordType1);
+        NotesEnum[] chord2Notes = getChordNotes(tonic2, chordType2);
+        NotesEnum note;
+        boolean noteInChord;
+        for (int i = 0; i < 4; i++) {
+            note = chord1Notes[i];
+            noteInChord = false;
+            for (int j = 0; j < 4; j++) {
+                if (note == chord2Notes[j]) {
+                    noteInChord = true;
+                    break;
+                }
+            }
+            if (!noteInChord) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
