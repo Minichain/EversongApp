@@ -71,4 +71,8 @@ extern "C" {
     jfloat Java_com_upf_minichain_eversongapp_AudioStack_getPitchProbabilityJni(JNIEnv *env, jobject) {
         return processAudio->getPitchProbability();
     }
+
+    jdouble Java_com_upf_minichain_eversongapp_AudioStack_getChordProbabilityJni(JNIEnv *env, jobject) {
+        return processAudio->getChordProbability();
+    }
 }

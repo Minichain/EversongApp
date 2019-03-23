@@ -28,6 +28,10 @@ int* ProcessAudio::chordDetection(double* samples, double* spectrumSamples, int 
     return chordDetectionOutput;
 }
 
+double ProcessAudio::getChordProbability() {
+    return chordDetector.chordProbability;
+}
+
 double* ProcessAudio::getChromagram() {
     std::vector<double> chroma(12, -1.0);
     chroma = c.getChromagram();

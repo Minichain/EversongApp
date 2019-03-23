@@ -17,6 +17,10 @@ public class AudioStack {
         return chordDetectionJni(samples, spectrumSamples, chordDetectionAlgorithm);
     }
 
+    public static double getChordProbability() {
+        return getChordProbabilityJni();
+    }
+
     public static double[] getChromagram() {
         return getChromagramJni();
     }
@@ -225,6 +229,8 @@ public class AudioStack {
     private static native int[] chordDetectionJni(double[] samples, double[] spectrumSamples, int chordDetectionAlgorithm);
 
     private static native double[] getChromagramJni();
+
+    private static native double getChordProbabilityJni();
 
     private static native double[] windowJni(double[] samples, int windowType);
 

@@ -43,6 +43,7 @@ public class EversongService extends Service {
     NotesEnum pitchNote;
     double spectralFlatnessValue;
     int[] chordDetected = new int[2];
+    int chordDetectedProbability;
     int[][] mostProbableChordBuffer;
     int chordBufferIterator = 0;
     ArrayList<String> arrayOfChordsDetected;
@@ -72,6 +73,7 @@ public class EversongService extends Service {
         pitchNote = NotesEnum.NO_NOTE;
         chordDetected[0] = -1;
         chordDetected[1] = -1;
+        chordDetectedProbability = -1;
         mostProbableChord[0] = NotesEnum.A.getValue();
         mostProbableChord[1] = ChordTypeEnum.Major.getValue();
         mostProbableChord[2] = 100;
@@ -190,9 +192,11 @@ public class EversongService extends Service {
                 @Override
                 public void run() {
                     final int[] chordDetectedThread = AudioStack.chordDetection(audioSamplesBufferWindowed, audioSpectrumBuffer, Parameters.getInstance().getChordDetectionAlgorithm().getValue());
+                    final double chordDetectedProbabilityThread = AudioStack.getChordProbability();
                     final double[] chromagramThread = AudioStack.getChromagram();
 
-                    Log.l("EversongServiceLog:: Chord detected: " + chordDetected[0] + ", " + chordDetected[1]);
+                    chordDetectedProbability = (int)((1 - chordDetectedProbabilityThread) * 100);
+                    Log.l("EversongServiceLog:: Chord detected: " + chordDetected[0] + ", " + chordDetected[1] + ", Probability: " + chordDetectedProbability);
 
                     chromagram = chromagramThread;
                     chordDetected = chordDetectedThread;
@@ -317,6 +321,7 @@ public class EversongService extends Service {
         Bundle extras = new Bundle();
         extras.putDoubleArray(BroadcastExtra.CHROMAGRAM.toString(), chromagram);
         extras.putIntArray(BroadcastExtra.CHORD_DETECTED.toString(), chordDetected);
+        extras.putInt(BroadcastExtra.CHORD_DETECTED_PROBABILITY.toString(), chordDetectedProbability);
         extras.putIntArray(BroadcastExtra.MOST_PROBABLE_CHORD.toString(), mostProbableChord);
         extras.putSerializable(BroadcastExtra.MOST_PROBABLE_CHORD_BUFFER.toString(), mostProbableChordBuffer);
         sendBroadcastToActivity(BroadcastMessage.CHORD_DETECTION_PROCESSED, extras);

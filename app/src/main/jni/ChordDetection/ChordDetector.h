@@ -65,11 +65,14 @@ public:
     /** The quality of the detected chord (Major, Minor, etc) */
 	int chordType;
 
+    /** The probability of the detected chord **/
+    double chordProbability;
+
 private:
 	void makeChordProfiles();
 	void classifyChromagram();
 	double calculateChordScore(double* chroma, double* chordProfile, double biasToUse, double N);
-	int minimumIndex(double*array, int length);
+    int minimumIndex(double* array, int length);
 
 	double chromagram[SEMITONES];
 	double chordProfiles[numOfChordTypes * SEMITONES][SEMITONES];

@@ -63,7 +63,7 @@ void ChordDetector::classifyChromagram() {
 
 	// major chords
 	for (j = 0; j < 12; j++) {
-		chord[j] = calculateChordScore(chromagram,chordProfiles[j], bias, 3);
+		chord[j] = calculateChordScore(chromagram, chordProfiles[j], bias, 3);
 	}
 
 	// minor chords
@@ -180,7 +180,7 @@ void ChordDetector::classifyChromagram() {
 }
 
 //=======================================================================
-double ChordDetector::calculateChordScore (double* chroma, double* chordProfile, double biasToUse, double N) {
+double ChordDetector::calculateChordScore(double* chroma, double* chordProfile, double biasToUse, double N) {
 	double sum = 0;
 	double delta;
 
@@ -189,18 +189,25 @@ double ChordDetector::calculateChordScore (double* chroma, double* chordProfile,
 	}
 
 	delta = sqrt (sum) / ((SEMITONES - N) * biasToUse);
-	
+
 	return delta;
+
+//	/** EUCLIDEAN DISTANCE **/
+//    double sum = 0;
+//    for (int i = 0; i < SEMITONES; i++) {
+//        sum += (chroma[i] - chordProfile[i]) * (chroma[i] - chordProfile[i]);
+//    }
+//    return sqrt(sum) / ((SEMITONES - N) * biasToUse);
 }
 
 //=======================================================================
-int ChordDetector::minimumIndex (double* array, int arrayLength) {
-	double minValue = 100000;
+int ChordDetector::minimumIndex(double* array, int arrayLength) {
+	chordProbability = 100000;
 	int minIndex = 0;
 	
 	for (int i = 0; i < arrayLength; i++) {
-		if (array[i] < minValue) {
-			minValue = array[i];
+		if (array[i] < chordProbability) {
+			chordProbability = array[i];
 			minIndex = i;
 		}
 	}

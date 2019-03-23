@@ -129,6 +129,16 @@
         android:textSize="10sp"
         app:layout_constraintTop_toBottomOf="@+id/chord_note"/>
     <TextView
+        android:id="@+id/chord_probability"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="end"
+        android:text=""
+        android:textSize="10sp"
+        app:layout_constraintTop_toBottomOf="@+id/chord_type"/>
+    <TextView
         android:id="@+id/algorithm_performance"
         android:layout_width="73dp"
         android:layout_height="59dp"

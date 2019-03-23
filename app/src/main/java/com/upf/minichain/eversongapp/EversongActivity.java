@@ -48,6 +48,7 @@ public class EversongActivity extends AppCompatActivity {
     // CHORD DETECTION
     TextView chordNoteText;
     TextView chordTypeText;
+    TextView chordProbabilityText;
     TextView mostProbableChordNoteText;
     TextView mostProbableChordTypeText;
 
@@ -76,6 +77,7 @@ public class EversongActivity extends AppCompatActivity {
     float pitchNoteError;
     double spectralFlatnessValue;
     int[] chordDetected = new int[2];
+    int chordDetectedProbability;
     int[][] mostProbableChordBuffer;
 
     ArrayList<String> arrayOfChordsDetected;
@@ -177,6 +179,7 @@ public class EversongActivity extends AppCompatActivity {
         pitchDetectedBuffer = new float[Parameters.getInstance().getPitchBufferSize()];
         chordDetected[0] = -1;
         chordDetected[1] = -1;
+        chordDetectedProbability = -1;
         mostProbableChord[0] = NotesEnum.A.getValue();
         mostProbableChord[1] = ChordTypeEnum.Major.getValue();
         mostProbableChord[2] = 100;
@@ -337,6 +340,7 @@ public class EversongActivity extends AppCompatActivity {
     private void setDebugModeViews() {
         chordNoteText = this.findViewById(R.id.chord_note);
         chordTypeText = this.findViewById(R.id.chord_type);
+        chordProbabilityText = this.findViewById(R.id.chord_probability);
         pitchText = this.findViewById(R.id.pitch_text);
         spectralFlatnessText = this.findViewById(R.id.spectral_flatness_text);
         musicPlayingDetectorText = this.findViewById(R.id.music_playing_detector);
@@ -344,18 +348,21 @@ public class EversongActivity extends AppCompatActivity {
         if (Parameters.getInstance().isDebugMode()) {
             chordNoteText.setVisibility(View.VISIBLE);
             chordTypeText.setVisibility(View.VISIBLE);
+            chordProbabilityText.setVisibility(View.VISIBLE);
             pitchText.setVisibility(View.VISIBLE);
             spectralFlatnessText.setVisibility(View.VISIBLE);
             musicPlayingDetectorText.setVisibility(View.VISIBLE);
 
             chordNoteText.setTextColor(mColor01);
             chordTypeText.setTextColor(mColor01);
+            chordProbabilityText.setTextColor(mColor01);
             pitchText.setTextColor(mColor01);
             spectralFlatnessText.setTextColor(mColor01);
             musicPlayingDetectorText.setTextColor(mColor01);
         } else {
             chordNoteText.setVisibility(View.GONE);
             chordTypeText.setVisibility(View.GONE);
+            chordProbabilityText.setVisibility(View.GONE);
             pitchText.setVisibility(View.GONE);
             spectralFlatnessText.setVisibility(View.GONE);
             musicPlayingDetectorText.setVisibility(View.GONE);
@@ -421,7 +428,7 @@ public class EversongActivity extends AppCompatActivity {
     }
 
     private void updateChordScoreViews() {
-        if (Utils.compareChords(chordScoreTonicNotePicked, chordScoreChordTypePicked,
+        if (musicBeingPlayed && Utils.compareChords(chordScoreTonicNotePicked, chordScoreChordTypePicked,
                 NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]))) {
             this.findViewById(R.id.chord_score_green_tick).setVisibility(View.VISIBLE);
         } else {
@@ -508,6 +515,10 @@ public class EversongActivity extends AppCompatActivity {
             chordTypeText.setText(ChordTypeEnum.fromInteger(chordDetected[1]).toString());
         }
 
+        if (chordDetectedProbability != -1) {
+            chordProbabilityText.setText(chordDetectedProbability + "%");
+        }
+
         spectralFlatnessText.setText("Flatness: 0." + ((int)(spectralFlatnessValue * 1000000)));
         if (musicBeingPlayed) {
             musicPlayingDetectorText.setVisibility(View.VISIBLE);
@@ -591,6 +602,7 @@ public class EversongActivity extends AppCompatActivity {
                     } else if (broadcast.equals(BroadcastMessage.CHORD_DETECTION_PROCESSED.toString())) {
                         chromagram = extras.getDoubleArray(BroadcastExtra.CHROMAGRAM.toString());
                         chordDetected = extras.getIntArray(BroadcastExtra.CHORD_DETECTED.toString());
+                        chordDetectedProbability = extras.getInt(BroadcastExtra.CHORD_DETECTED_PROBABILITY.toString());
                         mostProbableChord = extras.getIntArray(BroadcastExtra.MOST_PROBABLE_CHORD.toString());
                         mostProbableChordBuffer = (int[][])extras.getSerializable(BroadcastExtra.MOST_PROBABLE_CHORD_BUFFER.toString());
                     } else {
