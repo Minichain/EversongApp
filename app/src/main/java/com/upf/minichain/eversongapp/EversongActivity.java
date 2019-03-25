@@ -473,9 +473,8 @@ public class EversongActivity extends AppCompatActivity {
             tuningPitchNoteRightArrow.setAlpha(0f);
             pitchNoteError = 0;
         }
-        if (tuningPitchNote.getVisibility() == View.VISIBLE) {
-            tuningPitchNote.setText(pitchNote.toString());
-        }
+        tuningPitchNote.setText(pitchNote.toString());
+
         switch(Parameters.getInstance().getChartTabSelected()) {
             case GUITAR_TAB:
                 GuitarChordChart.setTuningChordChart(this, pitchNote, pitchDetected);
@@ -504,7 +503,7 @@ public class EversongActivity extends AppCompatActivity {
             pitchText.setText(stringBuilder.toString());
         } else {
             pitchNote = NotesEnum.NO_NOTE;
-            pitchText.setText(String.valueOf("Pitch: " + pitchNote.toString() + " Hz"));
+            pitchText.setText(String.valueOf("Pitch: " + pitchNote.toString()));
         }
 
         if (chordDetected[0] != -1) {

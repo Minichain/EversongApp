@@ -37,6 +37,7 @@ public class Parameters {
     private static EversongFunctionalities functionalityTab;
     private static int chordBufferSize;
     private static int pitchBufferSize;
+    private static int chordProbabilityThreshold;
     private static boolean debugMode;
 
     /******************
@@ -57,6 +58,7 @@ public class Parameters {
         chartTab = ChartTab.GUITAR_TAB;
         functionalityTab = EversongFunctionalities.CHORD_DETECTION;
         chordDetectionAlgorithm = ChordDetectionAlgorithm.ADAM_STARK_ALGORITHM;
+        chordProbabilityThreshold = 90;
         debugMode = false;
     }
 
@@ -244,6 +246,10 @@ public class Parameters {
 
     public ChordDetectionAlgorithm getChordDetectionAlgorithm() {
         return chordDetectionAlgorithm;
+    }
+
+    public int getChordProbabilityThreshold() {
+        return chordProbabilityThreshold;
     }
 
     public void setDebugMode(boolean value) {

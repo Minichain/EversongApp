@@ -23,10 +23,10 @@ public class UkuleleChordChart extends ChordChart {
     private static NotesEnum[] ukuleleTuning = new NotesEnum[numberOfStrings];
 
     static {
-        ukuleleTuning[0] = NotesEnum.G;
-        ukuleleTuning[1] = NotesEnum.C;
-        ukuleleTuning[2] = NotesEnum.E;
-        ukuleleTuning[3] = NotesEnum.A;
+        ukuleleTuning[0] = NotesEnum.A;
+        ukuleleTuning[1] = NotesEnum.E;
+        ukuleleTuning[2] = NotesEnum.C;
+        ukuleleTuning[3] = NotesEnum.G;
     }
 
     public static void setChordChart(Context ctx, NotesEnum tonic, ChordTypeEnum chordType, float alpha) {
@@ -42,10 +42,10 @@ public class UkuleleChordChart extends ChordChart {
             chordStringView = ((Activity)ctx).findViewById(chordStringViewId);
             chordStringView.setAlpha(alpha);
             chordStringView.setVisibility(View.VISIBLE);
-            if (chordChart[numberOfStrings - i] == -1) {
+            if (chordChart[i - 1] == -1) {
                 chordStringImageId = ctx.getResources().getIdentifier("guitar_chord_string_0", "drawable", ctx.getPackageName());
             } else {
-                chordStringImageId = ctx.getResources().getIdentifier("guitar_chord_string_0" + chordChart[numberOfStrings - i], "drawable", ctx.getPackageName());
+                chordStringImageId = ctx.getResources().getIdentifier("guitar_chord_string_0" + chordChart[i - 1], "drawable", ctx.getPackageName());
             }
             chordStringView.setImageResource(chordStringImageId);
         }
@@ -64,7 +64,7 @@ public class UkuleleChordChart extends ChordChart {
             stringView = ((Activity)ctx).findViewById(stringViewId);
             stringImageId = ctx.getResources().getIdentifier("guitar_chord_string_00", "drawable", ctx.getPackageName());
             stringView.setImageResource(stringImageId);
-            if (ukuleleTuning[numberOfStrings - i] == pitchNote) {
+            if (ukuleleTuning[i - 1] == pitchNote) {
                 stringView.setAlpha(1f);
             } else {
                 stringView.setAlpha(0.4f);

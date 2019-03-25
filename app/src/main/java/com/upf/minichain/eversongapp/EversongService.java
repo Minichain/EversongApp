@@ -198,8 +198,14 @@ public class EversongService extends Service {
                     chordDetectedProbability = (int)((1 - chordDetectedProbabilityThread) * 100);
                     Log.l("EversongServiceLog:: Chord detected: " + chordDetected[0] + ", " + chordDetected[1] + ", Probability: " + chordDetectedProbability);
 
+                    if (chordDetectedProbability > Parameters.getInstance().getChordProbabilityThreshold()) {
+                        chordDetected = chordDetectedThread;
+                    } else {
+                        chordDetected[0] = -1;
+                        chordDetected[1] = -1;
+                    }
+
                     chromagram = chromagramThread;
-                    chordDetected = chordDetectedThread;
                     mostProbableChordBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][0] = chordDetected[0];
                     mostProbableChordBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][1] = chordDetected[1];
                     mostProbableChord = AudioStack.getMostProbableChord(mostProbableChordBuffer);
