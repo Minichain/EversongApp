@@ -10,7 +10,10 @@ public class AudioStack {
     }
 
     public static void initAudioStack() {
-        initProcessAudioJni(Parameters.SAMPLE_RATE, Parameters.BUFFER_SIZE, Parameters.HOP_SIZE);
+        initProcessAudioJni(Parameters.SAMPLE_RATE, Parameters.BUFFER_SIZE,
+                Parameters.getInstance().getChromagramNumHarmonics(),
+                Parameters.getInstance().getChromagramNumOctaves(),
+                Parameters.getInstance().getChromagramNumBinsToSearch());
     }
 
     public static int[] chordDetection(double[] samples, double[] spectrumSamples, int chordDetectionAlgorithm) {
@@ -224,7 +227,7 @@ public class AudioStack {
      * These methods are used in order
      * to access to the C++ implementation (native-lib.cpp)
      **/
-    private static native void initProcessAudioJni(int sample_rate, int frame_size, int hop_size);
+    private static native void initProcessAudioJni(int sampleRate, int frameSize, int numHarmonics, int numOctaves, int numBinsToSearch);
 
     private static native int[] chordDetectionJni(double[] samples, double[] spectrumSamples, int chordDetectionAlgorithm);
 

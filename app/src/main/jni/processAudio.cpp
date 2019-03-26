@@ -1,11 +1,8 @@
 #include "processAudio.h"
 #include <vector>
 
-ProcessAudio::ProcessAudio(int sample_rate, int frame_size) {
-    sampleRate = sample_rate;
-    frameSize = frame_size;
-
-    c = Chromagram(frameSize, sampleRate, frameSize);
+ProcessAudio::ProcessAudio(int sampleRate, int frameSize, int numHarmonics, int numOctaves, int numBinsToSearch) {
+    c = Chromagram(frameSize, sampleRate, frameSize, numHarmonics, numOctaves, numBinsToSearch);
     c.setInputAudioFrameSize(frameSize);
     c.setSamplingFrequency(sampleRate);
     c.setChromaCalculationInterval(frameSize);

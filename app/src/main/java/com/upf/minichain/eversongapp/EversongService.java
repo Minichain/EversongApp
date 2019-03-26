@@ -198,7 +198,7 @@ public class EversongService extends Service {
                     chordDetectedProbability = (int)((1 - chordDetectedProbabilityThread) * 100);
                     Log.l("EversongServiceLog:: Chord detected: " + chordDetected[0] + ", " + chordDetected[1] + ", Probability: " + chordDetectedProbability);
 
-                    if (chordDetectedProbability > Parameters.getInstance().getChordProbabilityThreshold()) {
+                    if (chordDetectedProbability >= Parameters.getInstance().getChordProbabilityThreshold()) {
                         chordDetected = chordDetectedThread;
                     } else {
                         chordDetected[0] = -1;

@@ -9,8 +9,13 @@ extern "C" {
     jintArray outputIntArray;
     jdoubleArray outputDoubleArray;
 
-    void Java_com_upf_minichain_eversongapp_AudioStack_initProcessAudioJni(JNIEnv *env, jobject, jint sample_rate, jint frame_size, jint hop_size) {
-        processAudio = new ProcessAudio(sample_rate, frame_size);
+    void Java_com_upf_minichain_eversongapp_AudioStack_initProcessAudioJni(JNIEnv *env, jobject,
+                                                                           jint sampleRate,
+                                                                           jint frameSize,
+                                                                           jint numHarmonics,
+                                                                           jint numOctaves,
+                                                                           jint numBinsToSearch) {
+        processAudio = new ProcessAudio(sampleRate, frameSize, numHarmonics, numOctaves, numBinsToSearch);
     }
 
     jintArray Java_com_upf_minichain_eversongapp_AudioStack_chordDetectionJni(JNIEnv *env, jobject, jdoubleArray samples, jdoubleArray spectrumSamples, jint chordDetectionAlgorithm) {

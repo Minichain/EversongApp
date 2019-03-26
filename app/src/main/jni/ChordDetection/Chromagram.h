@@ -43,11 +43,8 @@
 class Chromagram {
     
 public:
-    /** Constructor
-     * @param frameSize the input audio frame size 
-     * @param fs the sampling frequency
-     */
-    Chromagram (int frameSize, int fs, int bs);
+    /** Constructor */
+    Chromagram(int frameSize, int sampleFreq, int bufferSize, int numHarmonics, int numOctaves, int numBinsToSearch);
 
     /** Destructor */
     ~Chromagram();
@@ -58,7 +55,7 @@ public:
      * the length indicated by the input audio frame size passed to the constructor
      * @see setInputAudioFrameSize
      */
-    void processAudioFrame (double* inputAudioFrame);
+    void processAudioFrame(double* inputAudioFrame);
     
     /** Process a single audio frame. This will determine whether enough samples
      * have been accumulated and if so, will calculate the chromagram
@@ -66,17 +63,17 @@ public:
      * the length indicated by the input audio frame size passed to the constructor
      * @see setInputAudioFrameSize
      */
-    void processAudioFrame (std::vector<double> inputAudioFrame);
+    void processAudioFrame(std::vector<double> inputAudioFrame);
     
     /** Sets the input audio frame size
      * @param frameSize the input audio frame size
      */
-    void setInputAudioFrameSize (int frameSize);
+    void setInputAudioFrameSize(int frameSize);
     
     /** Set the sampling frequency of the input audio
      * @param fs the sampling frequency in Hz
      */
-    void setSamplingFrequency (int fs);
+    void setSamplingFrequency(int fs);
     
     /** Set the interval at which the chromagram is calculated. As the algorithm requires
      * a significant amount of audio to be accumulated, it may be desirable to have the algorithm
@@ -85,7 +82,7 @@ public:
      * the audio sampling frequency 
      * @param numSamples the number of samples that the algorithm will receive before calculating a new chromagram
      */
-    void setChromaCalculationInterval (int numSamples);
+    void setChromaCalculationInterval(int numSamples);
     
     /** @returns the chromagram vector */
     std::vector<double> getChromagram();

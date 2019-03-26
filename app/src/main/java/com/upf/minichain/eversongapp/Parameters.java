@@ -40,6 +40,11 @@ public class Parameters {
     private static int chordProbabilityThreshold;
     private static boolean debugMode;
 
+    //Chromagram parameters
+    private static int chromagramNumHarmonics;
+    private static int chromagramNumOctaves;
+    private static int chromagramNumBinsToSearch;
+
     /******************
      * INIT PARAMETERS
      *****************/
@@ -60,6 +65,10 @@ public class Parameters {
         chordDetectionAlgorithm = ChordDetectionAlgorithm.ADAM_STARK_ALGORITHM;
         chordProbabilityThreshold = 90;
         debugMode = false;
+
+        chromagramNumHarmonics = 2;
+        chromagramNumOctaves = 3;
+        chromagramNumBinsToSearch = 2;
     }
 
     public void loadParameters(Context context) {
@@ -111,6 +120,15 @@ public class Parameters {
 
             tempValue = loadParameter("debugMode");
             debugMode = tempValue == 1;
+
+            tempValue = loadParameter("chromagramNumHarmonics");
+            chromagramNumHarmonics = (tempValue != -1) ? tempValue : chromagramNumHarmonics;
+
+            tempValue = loadParameter("chromagramNumBinsToSearch");
+            chromagramNumBinsToSearch = (tempValue != -1) ? tempValue : chromagramNumBinsToSearch;
+
+            tempValue = loadParameter("chromagramNumBinsToSearch");
+            chromagramNumBinsToSearch = (tempValue != -1) ? tempValue : chromagramNumBinsToSearch;
         }
     }
 
@@ -259,5 +277,32 @@ public class Parameters {
 
     public boolean isDebugMode() {
         return debugMode;
+    }
+
+    public void setChromagramNumHarmonics(int numHarmonics) {
+        setParameterInDataBase("chromagramNumHarmonics", numHarmonics);
+        chromagramNumHarmonics = numHarmonics;
+    }
+
+    public int getChromagramNumHarmonics() {
+        return chromagramNumHarmonics;
+    }
+
+    public void setChromagramNumOctaves(int numHarmonics) {
+        setParameterInDataBase("chromagramNumOctaves", numHarmonics);
+        chromagramNumOctaves = numHarmonics;
+    }
+
+    public int getChromagramNumOctaves() {
+        return chromagramNumOctaves;
+    }
+
+    public void setChromagramNumBinsToSearch(int numHarmonics) {
+        setParameterInDataBase("chromagramNumBinsToSearch", numHarmonics);
+        chromagramNumBinsToSearch = numHarmonics;
+    }
+
+    public int getChromagramNumBinsToSearch() {
+        return chromagramNumBinsToSearch;
     }
 }

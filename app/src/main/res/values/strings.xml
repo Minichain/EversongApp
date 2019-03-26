@@ -37,5 +37,8 @@
     <string name="setting_chord_detector_algorithm">Chord detection algorithm</string>
     <string name="setting_adam_stark_algorithm">Adam Stark algorithm</string>
     <string name="setting_eversong_algorithm">Eversong algorithm</string>
+    <string name="setting_chromagram_num_harmonics">Chromagram num of harmonics</string>
+    <string name="setting_chromagram_num_octaves">Chromagram num of octaves</string>
+    <string name="setting_chromagram_num_bins">Chromagram num of bins</string>
     <string name="debug_mode">Debug Mode</string>
 </resources>

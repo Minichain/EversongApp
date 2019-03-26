@@ -22,13 +22,13 @@ public:
     ProcessAudio* processAudio;
     int sampleRate;
     int frameSize;
-    Chromagram c = Chromagram(0, 0, 0);
+    Chromagram c = Chromagram(0, 0, 0, 0, 0, 0);
     double* chromagram = new double[SEMITONES];
     ChordDetector chordDetector;
     int* chordDetectionOutput = new int[2];
     Yin yin;
 
-    ProcessAudio(int sample_rate, int frame_size);
+    ProcessAudio(int sampleRate, int frameSize, int numHarmonics, int numOctaves, int numBinsToSearch);
     int* chordDetection(double* samples, double* spectrumSamples, int chordDetectionAlgorithm);
     double getChordProbability();
     double* getChromagram();

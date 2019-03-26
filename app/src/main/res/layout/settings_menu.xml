@@ -307,6 +307,99 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/chromagram_num_harmonics_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/debug_mode_layout">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_chromagram_num_harmonics"
+                    android:textSize="20sp" />
+                <LinearLayout
+                    android:id="@+id/chromagram_num_harmonics_seekbar_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <SeekBar
+                        android:id="@+id/chromagram_num_harmonics_seekbar"
+                        android:layout_width="250dp"
+                        android:layout_height="fill_parent"
+                        android:max="5" />
+                    <TextView
+                        android:id="@+id/chromagram_num_harmonics_seekbar_text"
+                        android:layout_width="100dp"
+                        android:layout_height="fill_parent"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toRightOf="@+id/chromagram_num_harmonics_seekbar" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/chromagram_num_octaves_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/chromagram_num_harmonics_layout">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_chromagram_num_octaves"
+                    android:textSize="20sp" />
+                <LinearLayout
+                    android:id="@+id/chromagram_num_octaves_seekbar_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <SeekBar
+                        android:id="@+id/chromagram_num_octaves_seekbar"
+                        android:layout_width="250dp"
+                        android:layout_height="fill_parent"
+                        android:max="5" />
+                    <TextView
+                        android:id="@+id/chromagram_num_octaves_seekbar_text"
+                        android:layout_width="100dp"
+                        android:layout_height="fill_parent"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toRightOf="@+id/chromagram_num_octaves_seekbar" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/chromagram_num_bins_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/chromagram_num_octaves_layout">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_chromagram_num_bins"
+                    android:textSize="20sp" />
+                <LinearLayout
+                    android:id="@+id/chromagram_num_bins_seekbar_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <SeekBar
+                        android:id="@+id/chromagram_num_bins_seekbar"
+                        android:layout_width="250dp"
+                        android:layout_height="fill_parent"
+                        android:max="5" />
+                    <TextView
+                        android:id="@+id/chromagram_num_bins_seekbar_text"
+                        android:layout_width="100dp"
+                        android:layout_height="fill_parent"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toRightOf="@+id/chromagram_num_bins_seekbar" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/padding_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="100dp"

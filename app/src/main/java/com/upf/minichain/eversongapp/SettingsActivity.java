@@ -31,6 +31,9 @@ public class SettingsActivity extends AppCompatActivity {
         setChordDetectionAlgorithmSetting();
         setPitchBufferSizeSetting();
         setDebugModeSetting();
+        setChromagramNumHarmonicsSetting();
+        setChromagramNumOctavesSetting();
+        setChromagramNumBinsToSearchSetting();
     }
 
     private void setMusicalNotationSetting() {
@@ -297,6 +300,84 @@ public class SettingsActivity extends AppCompatActivity {
                 toast.show();
                 Parameters.getInstance().setDebugMode(b);
             }
+        });
+    }
+
+    private void setChromagramNumHarmonicsSetting() {
+        int seekBarProgress = Parameters.getInstance().getChromagramNumHarmonics();
+        SeekBar seekBar = this.findViewById(R.id.chromagram_num_harmonics_seekbar);
+        seekBar.setProgress(seekBarProgress);
+        final TextView textView = this.findViewById(R.id.chromagram_num_harmonics_seekbar_text);
+        textView.setText(String.valueOf(seekBarProgress));
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                int min = 1;
+                if (progress < min) {
+                    progress = min;
+                    seekBar.setProgress(progress);
+                }
+                textView.setText(String.valueOf(progress));
+                Parameters.getInstance().setChromagramNumHarmonics(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+    }
+
+    private void setChromagramNumOctavesSetting() {
+        int seekBarProgress = Parameters.getInstance().getChromagramNumOctaves();
+        SeekBar seekBar = this.findViewById(R.id.chromagram_num_octaves_seekbar);
+        seekBar.setProgress(seekBarProgress);
+        final TextView textView = this.findViewById(R.id.chromagram_num_octaves_seekbar_text);
+        textView.setText(String.valueOf(seekBarProgress));
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                int min = 1;
+                if (progress < min) {
+                    progress = min;
+                    seekBar.setProgress(progress);
+                }
+                textView.setText(String.valueOf(progress));
+                Parameters.getInstance().setChromagramNumOctaves(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+    }
+
+    private void setChromagramNumBinsToSearchSetting() {
+        int seekBarProgress = Parameters.getInstance().getChromagramNumBinsToSearch();
+        SeekBar seekBar = this.findViewById(R.id.chromagram_num_bins_seekbar);
+        seekBar.setProgress(seekBarProgress);
+        final TextView textView = this.findViewById(R.id.chromagram_num_bins_seekbar_text);
+        textView.setText(String.valueOf(seekBarProgress));
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                int min = 1;
+                if (progress < min) {
+                    progress = min;
+                    seekBar.setProgress(progress);
+                }
+                textView.setText(String.valueOf(progress));
+                Parameters.getInstance().setChromagramNumBinsToSearch(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
     }
 }

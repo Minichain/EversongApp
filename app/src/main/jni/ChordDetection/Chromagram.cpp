@@ -22,15 +22,15 @@
 #include "Chromagram.h"
 
 //==================================================================================
-Chromagram::Chromagram(int frameSize, int fs, int bs)
- :  referenceFrequency(55.0),              // A1
-// :  referenceFrequency(110.0),              // A2
-// :  referenceFrequency(130.81278265),       // C2
-    numHarmonics(2),
-    numOctaves(2),
-    numBinsToSearch(1)
+Chromagram::Chromagram(int frameSize, int sampleFreq, int bufferSize, int numHarmonics, int numOctaves, int numBinsToSearch)
+// :  referenceFrequency(55.0)          // A1
+ :  referenceFrequency(110.0)         // A2
+// :  referenceFrequency(130.81278265)  // C2
 {
-    bufferSize = bs;    // It must be a power of 2 (2048, 4096, 8192, 16384...)
+    this->bufferSize = bufferSize;    // It must be a power of 2 (2048, 4096, 8192, 16384...)
+    this->numHarmonics = numHarmonics;
+    this->numOctaves = numOctaves;
+    this->numBinsToSearch = numBinsToSearch;
 
     // calculate note frequencies
     for (int i = 0; i < 12; i++) {
@@ -52,16 +52,16 @@ Chromagram::Chromagram(int frameSize, int fs, int bs)
     }
     
     // setup magnitude spectrum vector
-    magnitudeSpectrum.resize ((bufferSize/2) + 1);
+    magnitudeSpectrum.resize((bufferSize/2) + 1);
     
     // make window function
 //    makeHammingWindow();
     
     // set sampling frequency
-    setSamplingFrequency (fs);
+    setSamplingFrequency(sampleFreq);
     
     // set input audio frame size
-    setInputAudioFrameSize (frameSize);
+    setInputAudioFrameSize(frameSize);
     
     // initialise num samples counter
     numSamplesSinceLastCalculation = 0;
@@ -94,7 +94,7 @@ Chromagram::~Chromagram()
 }
 
 //==================================================================================
-void Chromagram::processAudioFrame (double* inputAudioFrame)
+void Chromagram::processAudioFrame(double* inputAudioFrame)
 {
     // create a vector
     std::vector<double> v;
@@ -109,7 +109,7 @@ void Chromagram::processAudioFrame (double* inputAudioFrame)
 }
 
 //==================================================================================
-void Chromagram::processAudioFrame (std::vector<double> inputAudioFrame) {
+void Chromagram::processAudioFrame(std::vector<double> inputAudioFrame) {
     // our default state is that the chroma is not ready
     chromaReady = false;
 
@@ -147,7 +147,7 @@ void Chromagram::processAudioFrame (std::vector<double> inputAudioFrame) {
 }
 
 //==================================================================================
-void Chromagram::setInputAudioFrameSize (int frameSize) {
+void Chromagram::setInputAudioFrameSize(int frameSize) {
     inputAudioFrameSize = frameSize;
     
     downsampledInputAudioFrame.resize (inputAudioFrameSize / 4);
@@ -156,12 +156,12 @@ void Chromagram::setInputAudioFrameSize (int frameSize) {
 }
 
 //==================================================================================
-void Chromagram::setSamplingFrequency (int fs) {
+void Chromagram::setSamplingFrequency(int fs) {
     samplingFrequency = fs;
 }
 
 //==================================================================================
-void Chromagram::setChromaCalculationInterval (int numSamples) {
+void Chromagram::setChromaCalculationInterval(int numSamples) {
     chromaCalculationInterval = numSamples;
 }
 
