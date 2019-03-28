@@ -261,7 +261,7 @@ public class EversongService extends Service {
                     musicBeingPlayed = false;
                     setActivityMusicDetection();
                 }
-            }, 1000, TimeUnit.MILLISECONDS);
+            }, 2000, TimeUnit.MILLISECONDS);
         }
     }
 

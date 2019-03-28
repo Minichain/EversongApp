@@ -9,11 +9,11 @@
     <string name="ukulele_tab">Ukulele</string>
     <string name="piano_tab">Piano</string>
     <string name="staff_tab">Staff</string>
-    <string name="chromagram_tab">Chromagram</string>
+    <string name="chromagram_tab">Chroma</string>
 
     <!--Functionalities-->
     <string name="chord_detection_functionality">Chord detect.</string>
-    <string name="chord_score_functionality">Chord score</string>
+    <string name="chord_score_functionality">Chord lib</string>
     <string name="tuning_functionality">Tuning</string>
 
     <!--Top right menu-->

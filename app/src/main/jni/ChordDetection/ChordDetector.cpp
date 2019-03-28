@@ -197,7 +197,7 @@ double ChordDetector::calculateChordScore(double* chroma, double* chordProfile, 
 //    for (int i = 0; i < SEMITONES; i++) {
 //        sum += (chroma[i] - chordProfile[i]) * (chroma[i] - chordProfile[i]);
 //    }
-//    return sqrt(sum) / ((SEMITONES - N) * biasToUse);
+//    return sqrt(sum);
 }
 
 //=======================================================================

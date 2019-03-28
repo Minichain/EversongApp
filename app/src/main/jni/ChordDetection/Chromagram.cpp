@@ -219,6 +219,7 @@ void Chromagram::calculateChromagram() {
 
 void Chromagram::chromagramAdamStarkAlgorithm() {
     double divisorRatio = (((double) samplingFrequency) / 4.0) / ((double)bufferSize);
+    double sumOfAllSemitones = 0.0;
 
     for (int n = 0; n < SEMITONES; n++) {
         double chromaSum = 0.0;
@@ -244,9 +245,16 @@ void Chromagram::chromagramAdamStarkAlgorithm() {
 
             chromaSum += noteSum;
         }
+        sumOfAllSemitones += chromaSum;
         chromagram[n] = chromaSum;
     }
-
+    double mean = sumOfAllSemitones / SEMITONES;
+    for (int n = 0; n < SEMITONES; n++) {
+        //Chromagram amplitude threshold
+        if (chromagram[n] < mean * 0.25) {
+            chromagram[n] = 0;
+        }
+    }
     chromaReady = true;
 }
 
@@ -259,9 +267,9 @@ void Chromagram::chromagramEversongAlgorithm() {
 
         for (int octave = 1; octave <= numOctaves; octave++) {
             double noteSum = 0.0;
-            //TODO check this 7 semitones shifting
+            //TODO check this 7 semitones shifting (n + 7)
             int noteChecking = (int)round(noteFrequencies[(n + 7) % SEMITONES] * octave);
-            int binWidth = 5;   // It must be an odd number
+            int binWidth = (int)round(noteChecking * (samplingFrequency / 360448));
 
             for (int i = noteChecking - ((binWidth - 1) / 2); i <= noteChecking + ((binWidth - 1) / 2); i++) {
                 noteSum += magnitudeSpectrum[i];
@@ -385,16 +393,28 @@ void Chromagram::downSampleFrame (std::vector<double> inputAudioFrame) {
 //==================================================================================
 void Chromagram::makeHammingWindow() {
     // set the window to the correct size
-    window.resize (bufferSize);
+    window.resize(bufferSize);
     
     // apply hanning window to buffer
-    for (int n = 0; n < bufferSize;n++)
-    {
+    for (int n = 0; n < bufferSize; n++) {
         window[n] = 0.54 - 0.46 * cos (2 * M_PI * (((double) n) / ((double) bufferSize)));
     }
 }
 
 //==================================================================================
-double Chromagram::round (double val) {
+double Chromagram::round(double val) {
     return floor (val + 0.5);
+}
+
+std::vector<double> Chromagram::normalize(std::vector<double> vector) {
+    double maxValue = 0;
+    for (int i = 0; i < vector.size(); i++) {
+        if (vector[i] > maxValue) {
+            maxValue = vector[i];
+        }
+    }
+    for (int i = 0; i < vector.size(); i++) {
+        vector[i] /= maxValue;
+    }
+    return vector;
 }

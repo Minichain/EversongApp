@@ -111,10 +111,11 @@ private:
     void chromagramEversongAlgorithm();
 
     void calculateMagnitudeSpectrum();
-	void downSampleFrame (std::vector<double> inputAudioFrame);
+	void downSampleFrame(std::vector<double> inputAudioFrame);
     void makeHammingWindow();
-    double round (double val);
-    
+    double round(double val);
+    std::vector<double> normalize(std::vector<double> vector);
+
     std::vector<double> window;
     std::vector<double> buffer;
     std::vector<double> magnitudeSpectrum;
