@@ -211,8 +211,11 @@ void Chromagram::calculateChromagram() {
         case ADAM_STARK:
             chromagramAdamStarkAlgorithm();
             break;
-        case EVERSONG:
-            chromagramEversongAlgorithm();
+        case EVERSONG1:
+            chromagramEversongAlgorithm1();
+            break;
+        case EVERSONG2:
+            chromagramEversongAlgorithm2();
             break;
     }
 }
@@ -258,7 +261,7 @@ void Chromagram::chromagramAdamStarkAlgorithm() {
     chromaReady = true;
 }
 
-void Chromagram::chromagramEversongAlgorithm() {
+void Chromagram::chromagramEversongAlgorithm1() {
     double maxChromagramValue = 0.0;
     double sumOfAllSemitones = 0.0;
 
@@ -295,14 +298,57 @@ void Chromagram::chromagramEversongAlgorithm() {
     chromaReady = true;
 }
 
+void Chromagram::chromagramEversongAlgorithm2() {
+    double divisorRatio = (((double) samplingFrequency) / 4.0) / ((double)bufferSize);
+    double sumOfAllSemitones = 0.0;
+
+    for (int n = 0; n < SEMITONES; n++) {
+        double chromaSum = 0.0;
+
+        for (int octave = 1; octave <= numOctaves; octave++) {
+            double noteSum = 0.0;
+
+            for (int harmonic = 1; harmonic <= numHarmonics; harmonic++) {
+                int centerBin = (int)round((noteFrequencies[n] * octave * harmonic) / divisorRatio);
+                int minBin = centerBin - (numBinsToSearch * harmonic);
+                int maxBin = centerBin + (numBinsToSearch * harmonic);
+
+                double sumVal = 0.0;
+
+                for (int k = minBin; k < maxBin; k++) {
+                    sumVal += magnitudeSpectrum[k];
+                }
+                sumVal /= (maxBin - minBin);
+
+                noteSum += (sumVal / (double) harmonic);
+            }
+
+            chromaSum += noteSum;
+        }
+        sumOfAllSemitones += chromaSum;
+        chromagram[n] = chromaSum;
+    }
+    double mean = sumOfAllSemitones / SEMITONES;
+    for (int n = 0; n < SEMITONES; n++) {
+        //Chromagram amplitude threshold
+        if (chromagram[n] < mean * 0.25) {
+            chromagram[n] = 0;
+        }
+    }
+    chromaReady = true;
+}
+
 void Chromagram::setChordDetectionAlgorithm(int algorithm) {
     switch(algorithm) {
         case ADAM_STARK:
             chromagramAlgorithm = ADAM_STARK;
             break;
-        case EVERSONG:
+        case EVERSONG1:
+            chromagramAlgorithm = EVERSONG1;
+            break;
+        case EVERSONG2:
         default:
-            chromagramAlgorithm = EVERSONG;
+            chromagramAlgorithm = EVERSONG2;
             break;
     }
 }

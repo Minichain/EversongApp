@@ -102,13 +102,15 @@ private:
 
     enum ChromagramAlgorithm {
         ADAM_STARK = 0,
-        EVERSONG = 1
+        EVERSONG1 = 1,
+        EVERSONG2 = 2
     };
     ChromagramAlgorithm chromagramAlgorithm;
 
     void calculateChromagram();
     void chromagramAdamStarkAlgorithm();
-    void chromagramEversongAlgorithm();
+    void chromagramEversongAlgorithm2();
+    void chromagramEversongAlgorithm1();
 
     void calculateMagnitudeSpectrum();
 	void downSampleFrame(std::vector<double> inputAudioFrame);

@@ -11,7 +11,6 @@ ProcessAudio::ProcessAudio(int sampleRate, int frameSize, int numHarmonics, int 
 }
 
 int* ProcessAudio::chordDetection(double* samples, double* spectrumSamples, int chordDetectionAlgorithm) {
-
     c.setMagnitudeSpectrum(spectrumSamples);
     c.setChordDetectionAlgorithm(chordDetectionAlgorithm);
     c.processAudioFrame(NULL);

@@ -233,9 +233,13 @@ public class SettingsActivity extends AppCompatActivity {
                 view = this.findViewById(R.id.adam_stark_algorithm_option);
                 view.setChecked(true);
                 break;
-            case EVERSONG_ALGORITHM:
+            case EVERSONG_ALGORITHM_1:
+                view = this.findViewById(R.id.eversong_algorithm_1_option);
+                view.setChecked(true);
+                break;
+            case EVERSONG_ALGORITHM_2:
             default:
-                view = this.findViewById(R.id.eversong_algorithm_option);
+                view = this.findViewById(R.id.eversong_algorithm_2_option);
                 view.setChecked(true);
                 break;
         }
@@ -249,10 +253,14 @@ public class SettingsActivity extends AppCompatActivity {
                 if (checked)
                     Parameters.getInstance().setChordDetectionAlgorithm(ChordDetectionAlgorithm.ADAM_STARK_ALGORITHM);
                 break;
-            case R.id.eversong_algorithm_option:
+            case R.id.eversong_algorithm_1_option:
+                if (checked)
+                    Parameters.getInstance().setChordDetectionAlgorithm(ChordDetectionAlgorithm.EVERSONG_ALGORITHM_1);
+                break;
+            case R.id.eversong_algorithm_2_option:
             default:
                 if (checked)
-                    Parameters.getInstance().setChordDetectionAlgorithm(ChordDetectionAlgorithm.EVERSONG_ALGORITHM);
+                    Parameters.getInstance().setChordDetectionAlgorithm(ChordDetectionAlgorithm.EVERSONG_ALGORITHM_2);
                 break;
         }
     }

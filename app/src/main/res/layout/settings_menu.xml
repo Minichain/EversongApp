@@ -243,11 +243,17 @@
                         android:onClick="onChordDetectionAlgorithmSettingClicked"
                         android:text="@string/setting_adam_stark_algorithm" />
                     <RadioButton
-                        android:id="@+id/eversong_algorithm_option"
+                        android:id="@+id/eversong_algorithm_1_option"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:onClick="onChordDetectionAlgorithmSettingClicked"
-                        android:text="@string/setting_eversong_algorithm" />
+                        android:text="@string/setting_eversong_algorithm_1" />
+                    <RadioButton
+                        android:id="@+id/eversong_algorithm_2_option"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onChordDetectionAlgorithmSettingClicked"
+                        android:text="@string/setting_eversong_algorithm_2" />
                 </RadioGroup>
             </LinearLayout>
 
