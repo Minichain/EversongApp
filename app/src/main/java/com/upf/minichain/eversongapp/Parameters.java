@@ -23,7 +23,7 @@ public class Parameters {
     /*************
      * PARAMETERS
      ************/
-    public static int SAMPLE_RATE;          // The sampling rate (16000, 22050, 44100)
+    public static int SAMPLE_RATE;          // The sampling rate (11025, 16000, 22050, 44100)
     public static int BUFFER_SIZE;          // It must be a power of 2 (2048, 4096, 8192, 16384...)
     public static int HOP_SIZE;             // It must be a power of 2
     public static int FRAMES_PER_SECOND;
@@ -49,6 +49,7 @@ public class Parameters {
      * INIT PARAMETERS
      *****************/
     private Parameters() {
+//        SAMPLE_RATE = 22050;
         SAMPLE_RATE = 44100;
         BUFFER_SIZE = 8192;
         HOP_SIZE = 2048;

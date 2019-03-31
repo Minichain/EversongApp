@@ -330,6 +330,7 @@ public class EversongService extends Service {
         extras.putInt(BroadcastExtra.CHORD_DETECTED_PROBABILITY.toString(), chordDetectedProbability);
         extras.putIntArray(BroadcastExtra.MOST_PROBABLE_CHORD.toString(), mostProbableChord);
         extras.putSerializable(BroadcastExtra.MOST_PROBABLE_CHORD_BUFFER.toString(), mostProbableChordBuffer);
+        extras.putStringArrayList(BroadcastExtra.ARRAY_OF_CHORD_DETECTED.toString(), arrayOfChordsDetected);
         sendBroadcastToActivity(BroadcastMessage.CHORD_DETECTION_PROCESSED, extras);
     }
 

@@ -73,7 +73,7 @@ public class TestAlgorithm {
         return list;
     }
 
-    private static long parseTimeFromChordElement(String element) {
+    public static long parseTimeFromChordElement(String element) {
         long millisecondsParsed = -1;
         String subString;
         subString = element.substring(0, element.indexOf(" ms:"));
@@ -81,7 +81,7 @@ public class TestAlgorithm {
         return millisecondsParsed;
     }
 
-    private static String parseChordFromChordElement(String element) {
+    public static String parseChordFromChordElement(String element) {
         String chord;
         chord = element.substring(element.indexOf(" ms: ") + (" ms: ").length(), element.length());
         return chord;
