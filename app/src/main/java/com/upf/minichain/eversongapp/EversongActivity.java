@@ -43,7 +43,7 @@ public class EversongActivity extends AppCompatActivity {
     Button recordingButton;
     TextView pitchText;
     TextView spectralFlatnessText;
-    TextView musicPlayingDetectorText;
+    ImageView musicPlayingDetectorImageView;
 
     // CHORD DETECTION
     TextView chordNoteText;
@@ -229,6 +229,10 @@ public class EversongActivity extends AppCompatActivity {
         algorithmPerformanceText = this.findViewById(R.id.algorithm_performance);
         algorithmPerformanceText.setTextColor(mColor01);
 
+        musicPlayingDetectorImageView = this.findViewById(R.id.music_playing_detector);
+        musicPlayingDetectorImageView.setVisibility(View.VISIBLE);
+        musicPlayingDetectorImageView.setImageResource(R.drawable.baseline_music_off_white_18dp);
+
         versionNumberTextView = this.findViewById(R.id.version_number_text);
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -352,7 +356,6 @@ public class EversongActivity extends AppCompatActivity {
         chordProbabilityText = this.findViewById(R.id.chord_probability);
         pitchText = this.findViewById(R.id.pitch_text);
         spectralFlatnessText = this.findViewById(R.id.spectral_flatness_text);
-        musicPlayingDetectorText = this.findViewById(R.id.music_playing_detector);
 
         if (Parameters.getInstance().isDebugMode()) {
             chordNoteText.setVisibility(View.VISIBLE);
@@ -360,21 +363,18 @@ public class EversongActivity extends AppCompatActivity {
             chordProbabilityText.setVisibility(View.VISIBLE);
             pitchText.setVisibility(View.VISIBLE);
             spectralFlatnessText.setVisibility(View.VISIBLE);
-            musicPlayingDetectorText.setVisibility(View.VISIBLE);
 
             chordNoteText.setTextColor(mColor01);
             chordTypeText.setTextColor(mColor01);
             chordProbabilityText.setTextColor(mColor01);
             pitchText.setTextColor(mColor01);
             spectralFlatnessText.setTextColor(mColor01);
-            musicPlayingDetectorText.setTextColor(mColor01);
         } else {
             chordNoteText.setVisibility(View.GONE);
             chordTypeText.setVisibility(View.GONE);
             chordProbabilityText.setVisibility(View.GONE);
             pitchText.setVisibility(View.GONE);
             spectralFlatnessText.setVisibility(View.GONE);
-            musicPlayingDetectorText.setVisibility(View.GONE);
         }
     }
 
@@ -391,6 +391,20 @@ public class EversongActivity extends AppCompatActivity {
 
         if (Parameters.getInstance().isDebugMode()) {
             updateDebugModeViews();
+        }
+
+        musicPlayingDetectorImageView.setVisibility(View.VISIBLE);
+        if (musicBeingPlayed) {
+            musicPlayingDetectorImageView.setImageResource(R.drawable.baseline_music_note_white_18dp);
+            musicPlayingDetectorImageView.setAlpha(1f);
+            if (polytonalMusicBeingPlayed) {
+                Log.l("EversongActivityLog:: Polytonal music being played");
+            } else {
+                Log.l("EversongActivityLog:: Monotonal music being played");
+            }
+        } else {
+            musicPlayingDetectorImageView.setImageResource(R.drawable.baseline_music_off_white_18dp);
+            musicPlayingDetectorImageView.setAlpha(0.5f);
         }
 
         switch (Parameters.getInstance().getFunctionalitySelected()) {
@@ -541,16 +555,6 @@ public class EversongActivity extends AppCompatActivity {
         }
 
         spectralFlatnessText.setText("Flatness: 0." + ((int)(spectralFlatnessValue * 1000000)));
-        if (musicBeingPlayed) {
-            musicPlayingDetectorText.setVisibility(View.VISIBLE);
-            if (polytonalMusicBeingPlayed) {
-                musicPlayingDetectorText.setText("POLYTONAL MUSIC PLAYING!");
-            } else {
-                musicPlayingDetectorText.setText("MONOTONAL MUSIC PLAYING!");
-            }
-        } else {
-            musicPlayingDetectorText.setVisibility(View.GONE);
-        }
     }
 
     @Override
