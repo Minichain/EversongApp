@@ -208,7 +208,10 @@ public class EversongService extends Service {
                     chromagram = chromagramThread;
                     mostProbableChordBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][0] = chordDetected[0];
                     mostProbableChordBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][1] = chordDetected[1];
-                    mostProbableChord = AudioStack.getMostProbableChord(mostProbableChordBuffer);
+                    int[] tempMostProbableChord = AudioStack.getMostProbableChord(mostProbableChordBuffer);
+                    if (tempMostProbableChord[2] >= 50) {
+                        mostProbableChord = tempMostProbableChord;
+                    }
                     chordBufferIterator++;
                     updateDetectedChordsList();
                     setActivityChordsDetected();
