@@ -29,12 +29,12 @@ public class EversongCanvas {
     private Shader shader1;
 
     public EversongCanvas(Resources resources, View imageView, final int canvasWidth, final int canvasHeight) {
-        mColorBackground = ResourcesCompat.getColor(resources, R.color.colorBackground, null);
-        mColor01 = ResourcesCompat.getColor(resources, R.color.mColor01, null);
-        mColor02 = ResourcesCompat.getColor(resources, R.color.mColor02, null);
+        mColorBackground = ResourcesCompat.getColor(resources, R.color.colorBackgroundDark, null);
+        mColor01 = ResourcesCompat.getColor(resources, R.color.colorWhite, null);
+        mColor02 = ResourcesCompat.getColor(resources, R.color.colorRed, null);
 
-        int[] color01RGB = Utils.hexadecimalToRgb(resources.getString(R.color.colorBackground));
-        int[] color02RGB = Utils.hexadecimalToRgb(resources.getString(R.color.mColor02));
+        int[] color01RGB = Utils.hexadecimalToRgb(resources.getString(R.color.colorBackgroundDark));
+        int[] color02RGB = Utils.hexadecimalToRgb(resources.getString(R.color.colorRed));
         shader1 = new LinearGradient(0, 400, 0, 500, Color.rgb(color01RGB[0], color01RGB[1], color01RGB[2]),
                 Color.rgb(color02RGB[0], color02RGB[1], color02RGB[2]), Shader.TileMode.CLAMP);
 

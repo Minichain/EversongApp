@@ -34,7 +34,7 @@ public class PianoChordChart {
             if (chordChart[i - 1] == -1) {
                 chordKeyView.setColorFilter(ctx.getResources().getColor(R.color.colorPrimary));
             } else {
-                chordKeyView.setColorFilter(ctx.getResources().getColor(R.color.mColor01));
+                chordKeyView.setColorFilter(ctx.getResources().getColor(R.color.colorWhite));
             }
         }
     }
@@ -72,7 +72,7 @@ public class PianoChordChart {
             chordKeyView = ((Activity)ctx).findViewById(chordKeyViewId);
             chordKeyView.setVisibility(View.VISIBLE);
             if (NotesEnum.values()[((i - 1) + firstKeyNote.getValue()) % numberOfKeys] == pitchNote) {
-                chordKeyView.setColorFilter(ctx.getResources().getColor(R.color.mColor01));
+                chordKeyView.setColorFilter(ctx.getResources().getColor(R.color.colorWhite));
             } else {
                 chordKeyView.setColorFilter(ctx.getResources().getColor(R.color.colorPrimary));
             }

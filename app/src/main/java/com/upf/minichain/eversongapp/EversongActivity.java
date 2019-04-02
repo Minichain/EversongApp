@@ -29,9 +29,7 @@ import com.upf.minichain.eversongapp.chordChart.StaffChordChart;
 import com.upf.minichain.eversongapp.chordChart.UkuleleChordChart;
 import com.upf.minichain.eversongapp.enums.BroadcastExtra;
 import com.upf.minichain.eversongapp.enums.BroadcastMessage;
-import com.upf.minichain.eversongapp.enums.ChartTab;
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
-import com.upf.minichain.eversongapp.enums.EversongFunctionalities;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
 import java.util.ArrayList;
@@ -95,10 +93,11 @@ public class EversongActivity extends AppCompatActivity {
 
     TextView versionNumberTextView;
 
-    int mColor01;
-    int mColor02;
-    int mColor03;
-    int mColor04;
+    int colorWhite;
+    int colorPrimary;
+    int colorPrimaryDark;
+    int colorBackgroundDark;
+    int colorGreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,14 +105,6 @@ public class EversongActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkCaptureAudioPermission();
-
-        LinearLayout placeHolder;
-
-        placeHolder = this.findViewById(R.id.functionalities_menu_layout);
-        getLayoutInflater().inflate(R.layout.functionalities_menu, placeHolder);
-
-        placeHolder = this.findViewById(R.id.chart_menu_layout);
-        getLayoutInflater().inflate(R.layout.chart_menu, placeHolder);
 
         inflateChordChartLayouts();
         inflateChordScoreLayout();
@@ -194,24 +185,25 @@ public class EversongActivity extends AppCompatActivity {
         recordingButton = this.findViewById(R.id.recording_button);
         recordingButton.setText(R.string.start_record_button);
 
-        mColor01 = ResourcesCompat.getColor(getResources(), R.color.mColor01, null);
-        mColor02 = ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null);
-        mColor03 = ResourcesCompat.getColor(getResources(), R.color.mColor03, null);
-        mColor04 = ResourcesCompat.getColor(getResources(), R.color.mColor04, null);
+        colorWhite = ResourcesCompat.getColor(getResources(), R.color.colorWhite, null);
+        colorPrimary = ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null);
+        colorPrimaryDark = ResourcesCompat.getColor(getResources(), R.color.colorPrimaryDark, null);
+        colorBackgroundDark = ResourcesCompat.getColor(getResources(), R.color.colorBackgroundDark, null);
+        colorGreen = ResourcesCompat.getColor(getResources(), R.color.colorGreen, null);
 
         // CHORD DETECTION
         mostProbableChordNoteText = this.findViewById(R.id.most_probable_chord_note);
         mostProbableChordTypeText = this.findViewById(R.id.most_probable_chord_type);
-        mostProbableChordNoteText.setTextColor(mColor01);
+        mostProbableChordNoteText.setTextColor(colorWhite);
         mostProbableChordNoteText.setText(NotesEnum.A.toString());
-        mostProbableChordTypeText.setTextColor(mColor01);
+        mostProbableChordTypeText.setTextColor(colorWhite);
         mostProbableChordTypeText.setText(ChordTypeEnum.Major.toString());
 
         previousMostProbableChordNoteText = this.findViewById(R.id.previous_most_probable_chord_note);
         previousMostProbableChordTypeText = this.findViewById(R.id.previous_most_probable_chord_type);
-        previousMostProbableChordNoteText.setTextColor(mColor01);
+        previousMostProbableChordNoteText.setTextColor(colorWhite);
         previousMostProbableChordNoteText.setText(NotesEnum.A.toString());
-        previousMostProbableChordTypeText.setTextColor(mColor01);
+        previousMostProbableChordTypeText.setTextColor(colorWhite);
         previousMostProbableChordTypeText.setText(ChordTypeEnum.Major.toString());
 
         // CHORD SCORE
@@ -219,7 +211,7 @@ public class EversongActivity extends AppCompatActivity {
 
         // TUNING
         tuningPitchNote = this.findViewById(R.id.tuning_pitch_note);
-        tuningPitchNote.setTextColor(mColor01);
+        tuningPitchNote.setTextColor(colorWhite);
         tuningPitchNote.setText(NotesEnum.NO_NOTE.toString());
         tuningPitchNoteLayout = this.findViewById(R.id.tuning_pitch_note_layout);
         tuningPitchNoteTopArrow = this.findViewById(R.id.tuning_pitch_note_top_arrow);
@@ -227,7 +219,7 @@ public class EversongActivity extends AppCompatActivity {
         tuningPitchNoteRightArrow = this.findViewById(R.id.tuning_pitch_note_right_arrow);
 
         algorithmPerformanceText = this.findViewById(R.id.algorithm_performance);
-        algorithmPerformanceText.setTextColor(mColor01);
+        algorithmPerformanceText.setTextColor(colorWhite);
 
         musicPlayingDetectorImageView = this.findViewById(R.id.music_playing_detector);
         musicPlayingDetectorImageView.setVisibility(View.VISIBLE);
@@ -242,11 +234,13 @@ public class EversongActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        ChartFloatingMenu chartFloatingMenu = new ChartFloatingMenu(this, this, colorPrimary, colorPrimaryDark);
+        FunctionalitiesFloatingMenu functionalitiesFloatingMenu = new FunctionalitiesFloatingMenu(this, this, colorPrimary, colorPrimaryDark);
+
         setDebugModeViews();
         setFunctionality();
-        setChordChart();
-        setFunctionalitiesMenu();
-        setChartMenu();
+        chartFloatingMenu.createChartMenuFloatingMenu();
+        functionalitiesFloatingMenu.createChartMenuFloatingMenu();
         setChordScoreViews();
         setCanvas();
 
@@ -286,8 +280,8 @@ public class EversongActivity extends AppCompatActivity {
 
     private void setChordScoreViews() {
         chordScoreTonicNotePicker = this.findViewById(R.id.tonic_note_picker);
-        chordScoreTonicNotePicker.setTextColor(mColor01);
-        chordScoreTonicNotePicker.setSelectedTextColor(mColor01);
+        chordScoreTonicNotePicker.setTextColor(colorWhite);
+        chordScoreTonicNotePicker.setSelectedTextColor(colorWhite);
         String[] tonicNotePickerData = new String[NotesEnum.numberOfNotes];
         for (int i = 0; i < NotesEnum.numberOfNotes; i++) {
             tonicNotePickerData[i] = NotesEnum.values()[i].toString();
@@ -304,8 +298,8 @@ public class EversongActivity extends AppCompatActivity {
         });
 
         chordScoreChordTypePicker = this.findViewById(R.id.chord_type_picker);
-        chordScoreChordTypePicker.setTextColor(mColor01);
-        chordScoreChordTypePicker.setSelectedTextColor(mColor01);
+        chordScoreChordTypePicker.setTextColor(colorWhite);
+        chordScoreChordTypePicker.setSelectedTextColor(colorWhite);
         String[] chordTypePickerData = new String[ChordTypeEnum.numberOfChordTypes];
         for (int i = 0; i < ChordTypeEnum.numberOfChordTypes; i++) {
             chordTypePickerData[i] = ChordTypeEnum.values()[i].toString();
@@ -324,8 +318,7 @@ public class EversongActivity extends AppCompatActivity {
 
     private void setCanvas() {
         ImageView canvasView = this.findViewById(R.id.canvas_view);
-        int canvasHeight = Utils.getActivityHeightInPixels(this) - (this.findViewById(R.id.chart_menu_layout).getLayoutParams().height
-                + this.findViewById(R.id.functionalities_menu_layout).getLayoutParams().height
+        int canvasHeight = Utils.getActivityHeightInPixels(this) - (
                 + (int)Utils.convertDpToPixel(56, this) //Toolbar
                 + (int)Utils.convertDpToPixel(24, this) //Top menu (where time, battery... are displayed)
         );
@@ -364,11 +357,11 @@ public class EversongActivity extends AppCompatActivity {
             pitchText.setVisibility(View.VISIBLE);
             spectralFlatnessText.setVisibility(View.VISIBLE);
 
-            chordNoteText.setTextColor(mColor01);
-            chordTypeText.setTextColor(mColor01);
-            chordProbabilityText.setTextColor(mColor01);
-            pitchText.setTextColor(mColor01);
-            spectralFlatnessText.setTextColor(mColor01);
+            chordNoteText.setTextColor(colorWhite);
+            chordTypeText.setTextColor(colorWhite);
+            chordProbabilityText.setTextColor(colorWhite);
+            pitchText.setTextColor(colorWhite);
+            spectralFlatnessText.setTextColor(colorWhite);
         } else {
             chordNoteText.setVisibility(View.GONE);
             chordTypeText.setVisibility(View.GONE);
@@ -393,6 +386,22 @@ public class EversongActivity extends AppCompatActivity {
             updateDebugModeViews();
         }
 
+        updateMusicPlayingDetector();
+
+        switch (Parameters.getInstance().getFunctionalitySelected()) {
+            case CHORD_DETECTION:
+                updateChordDetectionViews();
+                break;
+            case CHORD_SCORE:
+                updateChordScoreViews();
+                break;
+            case TUNING:
+                updateTuningViews();
+                break;
+        }
+    }
+
+    public void updateMusicPlayingDetector() {
         musicPlayingDetectorImageView.setVisibility(View.VISIBLE);
         if (musicBeingPlayed) {
             musicPlayingDetectorImageView.setImageResource(R.drawable.baseline_music_note_white_18dp);
@@ -405,18 +414,6 @@ public class EversongActivity extends AppCompatActivity {
         } else {
             musicPlayingDetectorImageView.setImageResource(R.drawable.baseline_music_off_white_18dp);
             musicPlayingDetectorImageView.setAlpha(0.5f);
-        }
-
-        switch (Parameters.getInstance().getFunctionalitySelected()) {
-            case CHORD_DETECTION:
-                updateChordDetectionViews();
-                break;
-            case CHORD_SCORE:
-                updateChordScoreViews();
-                break;
-            case TUNING:
-                updateTuningViews();
-                break;
         }
     }
 
@@ -655,7 +652,7 @@ public class EversongActivity extends AppCompatActivity {
         }
     }
 
-    private void setFunctionality() {
+    public void setFunctionality() {
         switch(Parameters.getInstance().getFunctionalitySelected()) {
             case CHORD_DETECTION:
             default:
@@ -716,252 +713,6 @@ public class EversongActivity extends AppCompatActivity {
 
         placeHolder = this.findViewById(R.id.tuning_pitch_note_layout);
         getLayoutInflater().inflate(R.layout.tuning_pitch_note, placeHolder);
-    }
-
-    private void setChordChart() {
-        switch(Parameters.getInstance().getChartTabSelected()) {
-            case GUITAR_TAB:
-            default:
-                UkuleleChordChart.hideChordChart(this);
-                StaffChordChart.hideChordChart(this);
-                PianoChordChart.hideChordChart(this);
-                break;
-            case UKULELE_TAB:
-                GuitarChordChart.hideChordChart(this);
-                StaffChordChart.hideChordChart(this);
-                PianoChordChart.hideChordChart(this);
-                break;
-            case PIANO_TAB:
-                GuitarChordChart.hideChordChart(this);
-                UkuleleChordChart.hideChordChart(this);
-                StaffChordChart.hideChordChart(this);
-                break;
-            case STAFF_TAB:
-                GuitarChordChart.hideChordChart(this);
-                UkuleleChordChart.hideChordChart(this);
-                PianoChordChart.hideChordChart(this);
-                break;
-            case CHROMAGRAM:
-                GuitarChordChart.hideChordChart(this);
-                UkuleleChordChart.hideChordChart(this);
-                StaffChordChart.hideChordChart(this);
-                PianoChordChart.hideChordChart(this);
-                break;
-        }
-    }
-
-    private void setFunctionalitiesMenu() {
-        int screenWidth = Utils.getActivityWidthInPixels(this);
-        ConstraintLayout.LayoutParams params;
-
-        Button button = this.findViewById(R.id.chord_detection_functionality_button);
-        params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
-        params.width = screenWidth/ EversongFunctionalities.values().length;
-        button.setLayoutParams(params);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Parameters.getInstance().getFunctionalitySelected() != EversongFunctionalities.CHORD_DETECTION) {
-                    Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.CHORD_DETECTION);
-                    setFunctionality();
-                    updateFunctionalitiesMenu();
-                }
-            }
-        });
-
-        button = this.findViewById(R.id.chord_score_functionality_button);
-        params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
-        params.width = screenWidth/ EversongFunctionalities.values().length;
-        button.setLayoutParams(params);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Parameters.getInstance().getFunctionalitySelected() != EversongFunctionalities.CHORD_SCORE) {
-                    Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.CHORD_SCORE);
-                    setFunctionality();
-                    updateFunctionalitiesMenu();
-                }
-            }
-        });
-
-        button = this.findViewById(R.id.tuning_functionality_button);
-        params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
-        params.width = screenWidth/ EversongFunctionalities.values().length;
-        button.setLayoutParams(params);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Parameters.getInstance().getFunctionalitySelected() != EversongFunctionalities.TUNING) {
-                    Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.TUNING);
-                    setFunctionality();
-                    updateFunctionalitiesMenu();
-                }
-            }
-        });
-
-        updateFunctionalitiesMenu();
-    }
-
-    private void updateFunctionalitiesMenu() {
-        Button button;
-
-        button = this.findViewById(R.id.chord_detection_functionality_button);
-        if (Parameters.getInstance().getFunctionalitySelected() == EversongFunctionalities.CHORD_DETECTION) {
-            button.setBackgroundResource(R.drawable.chart_menu_button_selected);
-            button.setTextColor(mColor01);
-        } else {
-            button.setBackgroundResource(R.drawable.chart_menu_button_not_selected);
-            button.setTextColor(mColor02);
-        }
-
-        button = this.findViewById(R.id.chord_score_functionality_button);
-        if (Parameters.getInstance().getFunctionalitySelected() == EversongFunctionalities.CHORD_SCORE) {
-            button.setBackgroundResource(R.drawable.chart_menu_button_selected);
-            button.setTextColor(mColor01);
-        } else {
-            button.setBackgroundResource(R.drawable.chart_menu_button_not_selected);
-            button.setTextColor(mColor02);
-        }
-
-        button = this.findViewById(R.id.tuning_functionality_button);
-        if (Parameters.getInstance().getFunctionalitySelected() == EversongFunctionalities.TUNING) {
-            button.setBackgroundResource(R.drawable.chart_menu_button_selected);
-            button.setTextColor(mColor01);
-        } else {
-            button.setBackgroundResource(R.drawable.chart_menu_button_not_selected);
-            button.setTextColor(mColor02);
-        }
-    }
-
-    private void setChartMenu() {
-        int screenWidth = Utils.getActivityWidthInPixels(this);
-        ConstraintLayout.LayoutParams params;
-
-        Button button = this.findViewById(R.id.guitar_chart_button);
-        params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
-        params.width = screenWidth/ ChartTab.values().length;
-        button.setLayoutParams(params);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Parameters.getInstance().getChartTabSelected() != ChartTab.GUITAR_TAB) {
-                    Parameters.getInstance().setChartTabSelected(ChartTab.GUITAR_TAB);
-                    setChordChart();
-                    updateChartMenu();
-                }
-            }
-        });
-
-        button = this.findViewById(R.id.ukulele_chart_button);
-        params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
-        params.width = screenWidth/ ChartTab.values().length;
-        button.setLayoutParams(params);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Parameters.getInstance().getChartTabSelected() != ChartTab.UKULELE_TAB) {
-                    Parameters.getInstance().setChartTabSelected(ChartTab.UKULELE_TAB);
-                    setChordChart();
-                    updateChartMenu();
-                }
-            }
-        });
-
-        button = this.findViewById(R.id.piano_chart_button);
-        params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
-        params.width = screenWidth/ ChartTab.values().length;
-        button.setLayoutParams(params);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Parameters.getInstance().getChartTabSelected() != ChartTab.PIANO_TAB) {
-                    Parameters.getInstance().setChartTabSelected(ChartTab.PIANO_TAB);
-                    setChordChart();
-                    updateChartMenu();
-                }
-            }
-        });
-
-        button = this.findViewById(R.id.staff_chart_button);
-        params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
-        params.width = screenWidth/ ChartTab.values().length;
-        button.setLayoutParams(params);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Parameters.getInstance().getChartTabSelected() != ChartTab.STAFF_TAB) {
-                    Parameters.getInstance().setChartTabSelected(ChartTab.STAFF_TAB);
-                    setChordChart();
-                    updateChartMenu();
-                }
-            }
-        });
-
-        button = this.findViewById(R.id.chromagram_chart_button);
-        params = (ConstraintLayout.LayoutParams) button.getLayoutParams();
-        params.width = screenWidth/ ChartTab.values().length;
-        button.setLayoutParams(params);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Parameters.getInstance().getChartTabSelected() != ChartTab.CHROMAGRAM) {
-                    Parameters.getInstance().setChartTabSelected(ChartTab.CHROMAGRAM);
-                    setChordChart();
-                    updateChartMenu();
-                }
-            }
-        });
-
-        updateChartMenu();
-    }
-
-    private void updateChartMenu() {
-        Button button;
-
-        button = this.findViewById(R.id.guitar_chart_button);
-        if (Parameters.getInstance().getChartTabSelected() == ChartTab.GUITAR_TAB) {
-            button.setBackgroundResource(R.drawable.chart_menu_button_selected);
-            button.setTextColor(mColor01);
-        } else {
-            button.setBackgroundResource(R.drawable.chart_menu_button_not_selected);
-            button.setTextColor(mColor02);
-        }
-
-        button = this.findViewById(R.id.ukulele_chart_button);
-        if (Parameters.getInstance().getChartTabSelected() == ChartTab.UKULELE_TAB) {
-            button.setBackgroundResource(R.drawable.chart_menu_button_selected);
-            button.setTextColor(mColor01);
-        } else {
-            button.setBackgroundResource(R.drawable.chart_menu_button_not_selected);
-            button.setTextColor(mColor02);
-        }
-
-        button = this.findViewById(R.id.piano_chart_button);
-        if (Parameters.getInstance().getChartTabSelected() == ChartTab.PIANO_TAB) {
-            button.setBackgroundResource(R.drawable.chart_menu_button_selected);
-            button.setTextColor(mColor01);
-        } else {
-            button.setBackgroundResource(R.drawable.chart_menu_button_not_selected);
-            button.setTextColor(mColor02);
-        }
-
-        button = this.findViewById(R.id.staff_chart_button);
-        if (Parameters.getInstance().getChartTabSelected() == ChartTab.STAFF_TAB) {
-            button.setBackgroundResource(R.drawable.chart_menu_button_selected);
-            button.setTextColor(mColor01);
-        } else {
-            button.setBackgroundResource(R.drawable.chart_menu_button_not_selected);
-            button.setTextColor(mColor02);
-        }
-
-        button = this.findViewById(R.id.chromagram_chart_button);
-        if (Parameters.getInstance().getChartTabSelected() == ChartTab.CHROMAGRAM) {
-            button.setBackgroundResource(R.drawable.chart_menu_button_selected);
-            button.setTextColor(mColor01);
-        } else {
-            button.setBackgroundResource(R.drawable.chart_menu_button_not_selected);
-            button.setTextColor(mColor02);
-        }
     }
 
     public void closeApp() {
