@@ -367,7 +367,7 @@ public class EversongService extends Service {
 //                new Intent(this, EversongActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, serviceNotificationStringId)
-                .setSmallIcon(R.drawable.app_icon)
+                .setSmallIcon(R.drawable.app_icon_24dp)
                 .setContentTitle(name)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 //                .setContentIntent(contentIntent);

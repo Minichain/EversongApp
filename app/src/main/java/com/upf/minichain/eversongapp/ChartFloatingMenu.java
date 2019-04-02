@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -82,6 +83,8 @@ public class ChartFloatingMenu {
                 setFloatingMenuIcon();
                 setChordChart();
                 chartFloatingMenu.toggle(true);
+                Toast toast = Toast.makeText(context, context.getString(R.string.toast_chart_menu_guitar), Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
 
@@ -92,6 +95,8 @@ public class ChartFloatingMenu {
                 setFloatingMenuIcon();
                 setChordChart();
                 chartFloatingMenu.toggle(true);
+                Toast toast = Toast.makeText(context, context.getString(R.string.toast_chart_menu_ukulele), Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
 
@@ -102,6 +107,8 @@ public class ChartFloatingMenu {
                 setFloatingMenuIcon();
                 setChordChart();
                 chartFloatingMenu.toggle(true);
+                Toast toast = Toast.makeText(context, context.getString(R.string.toast_chart_menu_piano), Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
 
@@ -112,6 +119,8 @@ public class ChartFloatingMenu {
                 setFloatingMenuIcon();
                 setChordChart();
                 chartFloatingMenu.toggle(true);
+                Toast toast = Toast.makeText(context, context.getString(R.string.toast_chart_menu_staff), Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
 
@@ -122,6 +131,8 @@ public class ChartFloatingMenu {
                 setFloatingMenuIcon();
                 setChordChart();
                 chartFloatingMenu.toggle(true);
+                Toast toast = Toast.makeText(context, context.getString(R.string.toast_chart_menu_chromagram), Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
 

@@ -42,4 +42,16 @@
     <string name="setting_chromagram_num_octaves">Chromagram num of octaves</string>
     <string name="setting_chromagram_num_bins">Chromagram num of bins</string>
     <string name="debug_mode">Debug Mode</string>
+
+    <!--Toasts-->
+    <string name="toast_debug_mode_enabled">Debug mode enabled</string>
+    <string name="toast_debug_mode_disabled">Debug mode disabled</string>
+    <string name="toast_chart_menu_guitar">Guitar</string>
+    <string name="toast_chart_menu_ukulele">Ukulele</string>
+    <string name="toast_chart_menu_piano">Piano</string>
+    <string name="toast_chart_menu_staff">Staff</string>
+    <string name="toast_chart_menu_chromagram">Chromagram</string>
+    <string name="toast_functionalities_menu_chord_detection">Chord detection</string>
+    <string name="toast_functionalities_menu_chord_library">Chord library</string>
+    <string name="toast_functionalities_menu_tuner">Tuner</string>
 </resources>

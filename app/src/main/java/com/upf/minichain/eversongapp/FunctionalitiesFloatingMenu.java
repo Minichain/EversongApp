@@ -1,7 +1,9 @@
 package com.upf.minichain.eversongapp;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -10,6 +12,7 @@ import com.upf.minichain.eversongapp.enums.EversongFunctionalities;
 public class FunctionalitiesFloatingMenu {
     EversongActivity activity;
     Context context;
+    FloatingActionMenu functionalitiesFloatingMenu;
     int colorNormal;
     int colorPressed;
 
@@ -22,24 +25,29 @@ public class FunctionalitiesFloatingMenu {
 
     public void createChartMenuFloatingMenu() {
         // Floating menu
-        FloatingActionMenu functionalitiesFloatingMenu = activity.findViewById(R.id.functionalities_menu_floating_menu);
+        functionalitiesFloatingMenu = activity.findViewById(R.id.functionalities_menu_floating_menu);
         functionalitiesFloatingMenu.setClosedOnTouchOutside(true);
         functionalitiesFloatingMenu.setMenuButtonColorNormal(colorNormal);
         functionalitiesFloatingMenu.setMenuButtonColorPressed(colorPressed);
+
+        setFloatingMenuIcon();
 
         // Floating buttons
         FloatingActionButton chordDetectionFloatingButton = new FloatingActionButton(context);
         chordDetectionFloatingButton.setButtonSize(FloatingActionButton.SIZE_MINI);
         chordDetectionFloatingButton.setColorNormal(colorNormal);
         chordDetectionFloatingButton.setColorPressed(colorPressed);
+        chordDetectionFloatingButton.setImageResource(R.drawable.ear_24dp);
         FloatingActionButton chordLibFloatingButton = new FloatingActionButton(context);
         chordLibFloatingButton.setButtonSize(FloatingActionButton.SIZE_MINI);
         chordLibFloatingButton.setColorNormal(colorNormal);
         chordLibFloatingButton.setColorPressed(colorPressed);
+        chordLibFloatingButton.setImageResource(R.drawable.open_book_24dp);
         FloatingActionButton tuningFloatingButton = new FloatingActionButton(context);
         tuningFloatingButton.setButtonSize(FloatingActionButton.SIZE_MINI);
         tuningFloatingButton.setColorNormal(colorNormal);
         tuningFloatingButton.setColorPressed(colorPressed);
+        tuningFloatingButton.setImageResource(R.drawable.tuner_24dp);
 
         functionalitiesFloatingMenu.addMenuButton(chordDetectionFloatingButton);
         functionalitiesFloatingMenu.addMenuButton(chordLibFloatingButton);
@@ -56,6 +64,10 @@ public class FunctionalitiesFloatingMenu {
             public void onClick(View view) {
                 Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.CHORD_DETECTION);
                 activity.setFunctionality();
+                setFloatingMenuIcon();
+                functionalitiesFloatingMenu.toggle(true);
+                Toast toast = Toast.makeText(context, context.getString(R.string.toast_functionalities_menu_chord_detection), Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
 
@@ -64,6 +76,10 @@ public class FunctionalitiesFloatingMenu {
             public void onClick(View view) {
                 Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.CHORD_SCORE);
                 activity.setFunctionality();
+                setFloatingMenuIcon();
+                functionalitiesFloatingMenu.toggle(true);
+                Toast toast = Toast.makeText(context, context.getString(R.string.toast_functionalities_menu_chord_library), Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
 
@@ -72,7 +88,29 @@ public class FunctionalitiesFloatingMenu {
             public void onClick(View view) {
                 Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.TUNING);
                 activity.setFunctionality();
+                setFloatingMenuIcon();
+                functionalitiesFloatingMenu.toggle(true);
+                Toast toast = Toast.makeText(context, context.getString(R.string.toast_functionalities_menu_tuner), Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
+    }
+
+    private void setFloatingMenuIcon() {
+        Drawable menuDrawable = null;
+        switch(Parameters.getInstance().getFunctionalitySelected()) {
+            case CHORD_DETECTION:
+                menuDrawable = context.getDrawable(R.drawable.ear_24dp);
+                break;
+            case CHORD_SCORE:
+                menuDrawable = context.getDrawable(R.drawable.open_book_24dp);
+                break;
+            case TUNING:
+                menuDrawable = context.getDrawable(R.drawable.tuner_24dp);
+                break;
+        }
+        if (menuDrawable != null) {
+            functionalitiesFloatingMenu.getMenuIconView().setImageDrawable(menuDrawable);
+        }
     }
 }

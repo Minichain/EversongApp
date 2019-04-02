@@ -303,7 +303,7 @@ public class SettingsActivity extends AppCompatActivity {
         switchView.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                String toastString = b ? "Debug mode enabled" : "Debug mode disabled";
+                String toastString = b ? getString(R.string.toast_debug_mode_enabled) : getString(R.string.toast_debug_mode_disabled);
                 Toast toast = Toast.makeText(getApplicationContext(), toastString, Toast.LENGTH_SHORT);
                 toast.show();
                 Parameters.getInstance().setDebugMode(b);
