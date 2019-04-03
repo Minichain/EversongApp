@@ -3,6 +3,7 @@ package com.upf.minichain.eversongapp;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,6 +19,11 @@ public class ChartFloatingMenu {
     Activity activity;
     Context context;
     FloatingActionMenu chartFloatingMenu;
+    FloatingActionButton guitarFloatingButton;
+    FloatingActionButton ukuleleFloatingButton;
+    FloatingActionButton pianoFloatingButton;
+    FloatingActionButton staffFloatingButton;
+    FloatingActionButton chromaFloatingButton;
     int colorNormal;
     int colorPressed;
 
@@ -34,41 +40,38 @@ public class ChartFloatingMenu {
         chartFloatingMenu.setClosedOnTouchOutside(true);
         chartFloatingMenu.setMenuButtonColorNormal(colorNormal);
         chartFloatingMenu.setMenuButtonColorPressed(colorPressed);
+        chartFloatingMenu.setIconAnimated(false);
 
         setFloatingMenuIcon();
 
         // Floating buttons
-        FloatingActionButton guitarFloatingButton = new FloatingActionButton(context);
+        guitarFloatingButton = new FloatingActionButton(context);
         guitarFloatingButton.setButtonSize(FloatingActionButton.SIZE_MINI);
         guitarFloatingButton.setColorNormal(colorNormal);
         guitarFloatingButton.setColorPressed(colorPressed);
         guitarFloatingButton.setImageResource(R.drawable.guitar_24dp);
-        FloatingActionButton ukuleleFloatingButton = new FloatingActionButton(context);
+        ukuleleFloatingButton = new FloatingActionButton(context);
         ukuleleFloatingButton.setButtonSize(FloatingActionButton.SIZE_MINI);
         ukuleleFloatingButton.setColorNormal(colorNormal);
         ukuleleFloatingButton.setColorPressed(colorPressed);
         ukuleleFloatingButton.setImageResource(R.drawable.ukulele_24dp);
-        FloatingActionButton pianoFloatingButton = new FloatingActionButton(context);
+        pianoFloatingButton = new FloatingActionButton(context);
         pianoFloatingButton.setButtonSize(FloatingActionButton.SIZE_MINI);
         pianoFloatingButton.setColorNormal(colorNormal);
         pianoFloatingButton.setColorPressed(colorPressed);
         pianoFloatingButton.setImageResource(R.drawable.piano_24dp);
-        FloatingActionButton staffFloatingButton = new FloatingActionButton(context);
+        staffFloatingButton = new FloatingActionButton(context);
         staffFloatingButton.setButtonSize(FloatingActionButton.SIZE_MINI);
         staffFloatingButton.setColorNormal(colorNormal);
         staffFloatingButton.setColorPressed(colorPressed);
         staffFloatingButton.setImageResource(R.drawable.g_clef_symbol_24dp);
-        FloatingActionButton chromaFloatingButton = new FloatingActionButton(context);
+        chromaFloatingButton = new FloatingActionButton(context);
         chromaFloatingButton.setButtonSize(FloatingActionButton.SIZE_MINI);
         chromaFloatingButton.setColorNormal(colorNormal);
         chromaFloatingButton.setColorPressed(colorPressed);
         chromaFloatingButton.setImageResource(R.drawable.bar_chart_24dp);
 
-        chartFloatingMenu.addMenuButton(guitarFloatingButton);
-        chartFloatingMenu.addMenuButton(ukuleleFloatingButton);
-        chartFloatingMenu.addMenuButton(pianoFloatingButton);
-        chartFloatingMenu.addMenuButton(staffFloatingButton);
-        chartFloatingMenu.addMenuButton(chromaFloatingButton);
+        updateFloatingMenu();
 
         chartFloatingMenu.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
@@ -80,11 +83,9 @@ public class ChartFloatingMenu {
             @Override
             public void onClick(View view) {
                 Parameters.getInstance().setChartTabSelected(ChartTab.GUITAR_TAB);
-                setFloatingMenuIcon();
-                setChordChart();
-                chartFloatingMenu.toggle(true);
                 Toast toast = Toast.makeText(context, context.getString(R.string.toast_chart_menu_guitar), Toast.LENGTH_SHORT);
                 toast.show();
+                onFloatingButtonPressed();
             }
         });
 
@@ -92,11 +93,9 @@ public class ChartFloatingMenu {
             @Override
             public void onClick(View view) {
                 Parameters.getInstance().setChartTabSelected(ChartTab.UKULELE_TAB);
-                setFloatingMenuIcon();
-                setChordChart();
-                chartFloatingMenu.toggle(true);
                 Toast toast = Toast.makeText(context, context.getString(R.string.toast_chart_menu_ukulele), Toast.LENGTH_SHORT);
                 toast.show();
+                onFloatingButtonPressed();
             }
         });
 
@@ -104,11 +103,9 @@ public class ChartFloatingMenu {
             @Override
             public void onClick(View view) {
                 Parameters.getInstance().setChartTabSelected(ChartTab.PIANO_TAB);
-                setFloatingMenuIcon();
-                setChordChart();
-                chartFloatingMenu.toggle(true);
                 Toast toast = Toast.makeText(context, context.getString(R.string.toast_chart_menu_piano), Toast.LENGTH_SHORT);
                 toast.show();
+                onFloatingButtonPressed();
             }
         });
 
@@ -116,11 +113,9 @@ public class ChartFloatingMenu {
             @Override
             public void onClick(View view) {
                 Parameters.getInstance().setChartTabSelected(ChartTab.STAFF_TAB);
-                setFloatingMenuIcon();
-                setChordChart();
-                chartFloatingMenu.toggle(true);
                 Toast toast = Toast.makeText(context, context.getString(R.string.toast_chart_menu_staff), Toast.LENGTH_SHORT);
                 toast.show();
+                onFloatingButtonPressed();
             }
         });
 
@@ -128,34 +123,58 @@ public class ChartFloatingMenu {
             @Override
             public void onClick(View view) {
                 Parameters.getInstance().setChartTabSelected(ChartTab.CHROMAGRAM);
-                setFloatingMenuIcon();
-                setChordChart();
-                chartFloatingMenu.toggle(true);
                 Toast toast = Toast.makeText(context, context.getString(R.string.toast_chart_menu_chromagram), Toast.LENGTH_SHORT);
                 toast.show();
+                onFloatingButtonPressed();
             }
         });
 
         setChordChart();
     }
 
+    private void onFloatingButtonPressed() {
+        setChordChart();
+        setFloatingMenuIcon();
+        chartFloatingMenu.toggle(true);
+        updateFloatingMenu();
+    }
+
+    private void updateFloatingMenu() {
+        chartFloatingMenu.removeAllMenuButtons();
+        if (Parameters.getInstance().getChartTabSelected() != ChartTab.GUITAR_TAB) {
+            chartFloatingMenu.addMenuButton(guitarFloatingButton);
+        }
+        if (Parameters.getInstance().getChartTabSelected() != ChartTab.UKULELE_TAB) {
+            chartFloatingMenu.addMenuButton(ukuleleFloatingButton);
+        }
+        if (Parameters.getInstance().getChartTabSelected() != ChartTab.PIANO_TAB) {
+            chartFloatingMenu.addMenuButton(pianoFloatingButton);
+        }
+        if (Parameters.getInstance().getChartTabSelected() != ChartTab.STAFF_TAB) {
+            chartFloatingMenu.addMenuButton(staffFloatingButton);
+        }
+        if (Parameters.getInstance().getChartTabSelected() != ChartTab.CHROMAGRAM) {
+            chartFloatingMenu.addMenuButton(chromaFloatingButton);
+        }
+    }
+
     private void setFloatingMenuIcon() {
         Drawable menuDrawable = null;
         switch(Parameters.getInstance().getChartTabSelected()) {
             case GUITAR_TAB:
-                menuDrawable = context.getDrawable(R.drawable.guitar_24dp);
+                menuDrawable = ContextCompat.getDrawable(activity, R.drawable.guitar_24dp);
                 break;
             case UKULELE_TAB:
-                menuDrawable = context.getDrawable(R.drawable.ukulele_24dp);
+                menuDrawable = ContextCompat.getDrawable(activity, R.drawable.ukulele_24dp);
                 break;
             case PIANO_TAB:
-                menuDrawable = context.getDrawable(R.drawable.piano_24dp);
+                menuDrawable = ContextCompat.getDrawable(activity, R.drawable.piano_24dp);
                 break;
             case STAFF_TAB:
-                menuDrawable = context.getDrawable(R.drawable.g_clef_symbol_24dp);
+                menuDrawable = ContextCompat.getDrawable(activity, R.drawable.g_clef_symbol_24dp);
                 break;
             case CHROMAGRAM:
-                menuDrawable = context.getDrawable(R.drawable.bar_chart_24dp);
+                menuDrawable = ContextCompat.getDrawable(activity, R.drawable.bar_chart_24dp);
                 break;
         }
         if (menuDrawable != null) {

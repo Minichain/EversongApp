@@ -156,8 +156,13 @@ public class EversongActivity extends AppCompatActivity {
 
         //Start service:
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Log.l("EversongActivityLog:: startForegroundService");
-            getApplicationContext().startForegroundService(serviceIntent);
+            try {
+                getApplicationContext().startForegroundService(serviceIntent);
+                Log.l("EversongActivityLog:: startForegroundService");
+            } catch (Exception e) {
+                getApplicationContext().startService(serviceIntent);
+                Log.l("EversongActivityLog:: startService");
+            }
         } else {
             Log.l("EversongActivityLog:: startService");
             getApplicationContext().startService(serviceIntent);

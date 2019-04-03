@@ -2,6 +2,7 @@ package com.upf.minichain.eversongapp;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,6 +14,9 @@ public class FunctionalitiesFloatingMenu {
     EversongActivity activity;
     Context context;
     FloatingActionMenu functionalitiesFloatingMenu;
+    FloatingActionButton chordDetectionFloatingButton;
+    FloatingActionButton chordLibFloatingButton;
+    FloatingActionButton tuningFloatingButton;
     int colorNormal;
     int colorPressed;
 
@@ -29,29 +33,28 @@ public class FunctionalitiesFloatingMenu {
         functionalitiesFloatingMenu.setClosedOnTouchOutside(true);
         functionalitiesFloatingMenu.setMenuButtonColorNormal(colorNormal);
         functionalitiesFloatingMenu.setMenuButtonColorPressed(colorPressed);
+        functionalitiesFloatingMenu.setIconAnimated(false);
 
         setFloatingMenuIcon();
 
         // Floating buttons
-        FloatingActionButton chordDetectionFloatingButton = new FloatingActionButton(context);
+        chordDetectionFloatingButton = new FloatingActionButton(context);
         chordDetectionFloatingButton.setButtonSize(FloatingActionButton.SIZE_MINI);
         chordDetectionFloatingButton.setColorNormal(colorNormal);
         chordDetectionFloatingButton.setColorPressed(colorPressed);
         chordDetectionFloatingButton.setImageResource(R.drawable.ear_24dp);
-        FloatingActionButton chordLibFloatingButton = new FloatingActionButton(context);
+        chordLibFloatingButton = new FloatingActionButton(context);
         chordLibFloatingButton.setButtonSize(FloatingActionButton.SIZE_MINI);
         chordLibFloatingButton.setColorNormal(colorNormal);
         chordLibFloatingButton.setColorPressed(colorPressed);
         chordLibFloatingButton.setImageResource(R.drawable.open_book_24dp);
-        FloatingActionButton tuningFloatingButton = new FloatingActionButton(context);
+        tuningFloatingButton = new FloatingActionButton(context);
         tuningFloatingButton.setButtonSize(FloatingActionButton.SIZE_MINI);
         tuningFloatingButton.setColorNormal(colorNormal);
         tuningFloatingButton.setColorPressed(colorPressed);
         tuningFloatingButton.setImageResource(R.drawable.tuner_24dp);
 
-        functionalitiesFloatingMenu.addMenuButton(chordDetectionFloatingButton);
-        functionalitiesFloatingMenu.addMenuButton(chordLibFloatingButton);
-        functionalitiesFloatingMenu.addMenuButton(tuningFloatingButton);
+        updateFloatingMenu();
 
         functionalitiesFloatingMenu.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
@@ -63,11 +66,9 @@ public class FunctionalitiesFloatingMenu {
             @Override
             public void onClick(View view) {
                 Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.CHORD_DETECTION);
-                activity.setFunctionality();
-                setFloatingMenuIcon();
-                functionalitiesFloatingMenu.toggle(true);
                 Toast toast = Toast.makeText(context, context.getString(R.string.toast_functionalities_menu_chord_detection), Toast.LENGTH_SHORT);
                 toast.show();
+                onFloatingButtonPressed();
             }
         });
 
@@ -75,11 +76,9 @@ public class FunctionalitiesFloatingMenu {
             @Override
             public void onClick(View view) {
                 Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.CHORD_SCORE);
-                activity.setFunctionality();
-                setFloatingMenuIcon();
-                functionalitiesFloatingMenu.toggle(true);
                 Toast toast = Toast.makeText(context, context.getString(R.string.toast_functionalities_menu_chord_library), Toast.LENGTH_SHORT);
                 toast.show();
+                onFloatingButtonPressed();
             }
         });
 
@@ -87,26 +86,44 @@ public class FunctionalitiesFloatingMenu {
             @Override
             public void onClick(View view) {
                 Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.TUNING);
-                activity.setFunctionality();
-                setFloatingMenuIcon();
-                functionalitiesFloatingMenu.toggle(true);
                 Toast toast = Toast.makeText(context, context.getString(R.string.toast_functionalities_menu_tuner), Toast.LENGTH_SHORT);
                 toast.show();
+                onFloatingButtonPressed();
             }
         });
+    }
+
+    private void onFloatingButtonPressed() {
+        activity.setFunctionality();
+        setFloatingMenuIcon();
+        functionalitiesFloatingMenu.toggle(true);
+        updateFloatingMenu();
+    }
+
+    private void updateFloatingMenu() {
+        functionalitiesFloatingMenu.removeAllMenuButtons();
+        if (Parameters.getInstance().getFunctionalitySelected() != EversongFunctionalities.CHORD_DETECTION) {
+            functionalitiesFloatingMenu.addMenuButton(chordDetectionFloatingButton);
+        }
+        if (Parameters.getInstance().getFunctionalitySelected() != EversongFunctionalities.CHORD_SCORE) {
+            functionalitiesFloatingMenu.addMenuButton(chordLibFloatingButton);
+        }
+        if (Parameters.getInstance().getFunctionalitySelected() != EversongFunctionalities.TUNING) {
+            functionalitiesFloatingMenu.addMenuButton(tuningFloatingButton);
+        }
     }
 
     private void setFloatingMenuIcon() {
         Drawable menuDrawable = null;
         switch(Parameters.getInstance().getFunctionalitySelected()) {
             case CHORD_DETECTION:
-                menuDrawable = context.getDrawable(R.drawable.ear_24dp);
+                menuDrawable = ContextCompat.getDrawable(activity, R.drawable.ear_24dp);
                 break;
             case CHORD_SCORE:
-                menuDrawable = context.getDrawable(R.drawable.open_book_24dp);
+                menuDrawable = ContextCompat.getDrawable(activity, R.drawable.open_book_24dp);
                 break;
             case TUNING:
-                menuDrawable = context.getDrawable(R.drawable.tuner_24dp);
+                menuDrawable = ContextCompat.getDrawable(activity, R.drawable.tuner_24dp);
                 break;
         }
         if (menuDrawable != null) {
