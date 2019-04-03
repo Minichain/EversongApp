@@ -228,7 +228,7 @@ public class EversongActivity extends AppCompatActivity {
 
         musicPlayingDetectorImageView = this.findViewById(R.id.music_playing_detector);
         musicPlayingDetectorImageView.setVisibility(View.VISIBLE);
-        musicPlayingDetectorImageView.setImageResource(R.drawable.baseline_music_off_white_18dp);
+        musicPlayingDetectorImageView.setImageResource(R.drawable.ear_24dp);
 
         versionNumberTextView = this.findViewById(R.id.version_number_text);
         try {
@@ -409,7 +409,7 @@ public class EversongActivity extends AppCompatActivity {
     public void updateMusicPlayingDetector() {
         musicPlayingDetectorImageView.setVisibility(View.VISIBLE);
         if (musicBeingPlayed) {
-            musicPlayingDetectorImageView.setImageResource(R.drawable.baseline_music_note_white_18dp);
+            musicPlayingDetectorImageView.setImageResource(R.drawable.ear_24dp);
             musicPlayingDetectorImageView.setAlpha(1f);
             if (polytonalMusicBeingPlayed) {
                 Log.l("EversongActivityLog:: Polytonal music being played");
@@ -417,7 +417,7 @@ public class EversongActivity extends AppCompatActivity {
                 Log.l("EversongActivityLog:: Monotonal music being played");
             }
         } else {
-            musicPlayingDetectorImageView.setImageResource(R.drawable.baseline_music_off_white_18dp);
+            musicPlayingDetectorImageView.setImageResource(R.drawable.ear_deaf_24dp);
             musicPlayingDetectorImageView.setAlpha(0.5f);
         }
     }
