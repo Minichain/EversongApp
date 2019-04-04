@@ -93,6 +93,9 @@ public class EversongActivity extends AppCompatActivity {
 
     TextView versionNumberTextView;
 
+    ChartFloatingMenu chartFloatingMenu;
+    FunctionalitiesFloatingMenu functionalitiesFloatingMenu;
+
     int colorWhite;
     int colorPrimary;
     int colorPrimaryDark;
@@ -109,6 +112,8 @@ public class EversongActivity extends AppCompatActivity {
         inflateChordChartLayouts();
         inflateChordScoreLayout();
         inflateTuningPitchNoteLayout();
+
+        initMainActivity();
     }
 
     @Override
@@ -118,9 +123,15 @@ public class EversongActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        Log.l("EversongActivityLog:: onStart");
+        super.onStart();
+        registerEversongActivityBroadcastReceiver();
+    }
+
+    @Override
     protected void onResume() {
         Log.l("EversongActivityLog:: onResume");
-        initMainActivity();
         super.onResume();
     }
 
@@ -132,7 +143,7 @@ public class EversongActivity extends AppCompatActivity {
         try {
             unregisterReceiver(eversongBroadcastReceiver);
         } catch(IllegalArgumentException e) {
-
+            Log.e("EversongActivityLog:: error un-registering receiver " + e);
         }
     }
 
@@ -167,7 +178,6 @@ public class EversongActivity extends AppCompatActivity {
             Log.l("EversongActivityLog:: startService");
             getApplicationContext().startService(serviceIntent);
         }
-        registerEversongActivityBroadcastReceiver();
 
         musicBeingPlayed = false;
         polytonalMusicBeingPlayed = false;
@@ -239,13 +249,14 @@ public class EversongActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        ChartFloatingMenu chartFloatingMenu = new ChartFloatingMenu(this, this, colorPrimary, colorPrimaryDark);
-        FunctionalitiesFloatingMenu functionalitiesFloatingMenu = new FunctionalitiesFloatingMenu(this, this, colorPrimary, colorPrimaryDark);
+        chartFloatingMenu = new ChartFloatingMenu(this, this, colorPrimary, colorPrimaryDark);
+        chartFloatingMenu.createChartMenuFloatingMenu();
+        functionalitiesFloatingMenu = new FunctionalitiesFloatingMenu(this, this, colorPrimary, colorPrimaryDark);
+        functionalitiesFloatingMenu.createChartMenuFloatingMenu();
 
         setDebugModeViews();
         setFunctionality();
-        chartFloatingMenu.createChartMenuFloatingMenu();
-        functionalitiesFloatingMenu.createChartMenuFloatingMenu();
+
         setChordScoreViews();
         setCanvas();
 
