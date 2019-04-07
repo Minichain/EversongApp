@@ -35,7 +35,7 @@ import com.upf.minichain.eversongapp.enums.NotesEnum;
 import java.util.ArrayList;
 
 public class EversongActivity extends AppCompatActivity {
-    EversongActivityBroadcastReceiver eversongBroadcastReceiver = new EversongActivityBroadcastReceiver();
+    EversongActivityBroadcastReceiver eversongBroadcastReceiver;
 
     boolean keepProcessingFrame;
     Button recordingButton;
@@ -127,6 +127,7 @@ public class EversongActivity extends AppCompatActivity {
         Log.l("EversongActivityLog:: onStart");
         super.onStart();
         registerEversongActivityBroadcastReceiver();
+        startProcessingFrames();
     }
 
     @Override
@@ -142,7 +143,7 @@ public class EversongActivity extends AppCompatActivity {
         stopRecording();
         try {
             unregisterReceiver(eversongBroadcastReceiver);
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             Log.e("EversongActivityLog:: error un-registering receiver " + e);
         }
     }
@@ -154,7 +155,7 @@ public class EversongActivity extends AppCompatActivity {
         stopRecording();
         try {
             unregisterReceiver(eversongBroadcastReceiver);
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
 
         }
     }
@@ -260,6 +261,20 @@ public class EversongActivity extends AppCompatActivity {
         setChordScoreViews();
         setCanvas();
 
+        recordingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.l("EversongActivityLog:: recordingButton pressed!");
+                if (recordingButton.getText().equals(getString(R.string.start_record_button))) {
+                    startRecording();
+                } else if (recordingButton.getText().equals(getString(R.string.stop_record_button))) {
+                    stopRecording();
+                }
+            }
+        });
+    }
+
+    private void startProcessingFrames() {
         keepProcessingFrame = true;
         new Thread(new Runnable() {
             @Override
@@ -280,18 +295,6 @@ public class EversongActivity extends AppCompatActivity {
                 }
             }
         }).start();
-
-        recordingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.l("EversongActivityLog:: recordingButton pressed!");
-                if (recordingButton.getText().equals(getString(R.string.start_record_button))) {
-                    startRecording();
-                } else if (recordingButton.getText().equals(getString(R.string.stop_record_button))) {
-                    stopRecording();
-                }
-            }
-        });
     }
 
     private void setChordScoreViews() {
@@ -656,6 +659,7 @@ public class EversongActivity extends AppCompatActivity {
     }
 
     private void registerEversongActivityBroadcastReceiver() {
+        eversongBroadcastReceiver = new EversongActivityBroadcastReceiver();
         try {
             IntentFilter intentFilter = new IntentFilter();
             for (int i = 0; i < BroadcastMessage.values().length; i++) {

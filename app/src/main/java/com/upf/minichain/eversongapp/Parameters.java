@@ -69,7 +69,7 @@ public class Parameters {
 
         chromagramNumHarmonics = 2;
         chromagramNumOctaves = 3;
-        chromagramNumBinsToSearch = 2;
+        chromagramNumBinsToSearch = 1;
     }
 
     public void loadParameters(Context context) {
