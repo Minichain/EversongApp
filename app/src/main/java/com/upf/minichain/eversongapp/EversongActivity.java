@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,8 +38,10 @@ import java.util.ArrayList;
 public class EversongActivity extends AppCompatActivity {
     EversongActivityBroadcastReceiver eversongBroadcastReceiver;
 
+    boolean keepRecordingAudio;
     boolean keepProcessingFrame;
-    Button recordingButton;
+
+    ImageButton recordingButton;
     TextView pitchText;
     TextView spectralFlatnessText;
     ImageView musicPlayingDetectorImageView;
@@ -199,7 +202,11 @@ public class EversongActivity extends AppCompatActivity {
         audioSpectrumBuffer = new double[Parameters.BUFFER_SIZE];
 
         recordingButton = this.findViewById(R.id.recording_button);
-        recordingButton.setText(R.string.start_record_button);
+        if (keepRecordingAudio) {
+            recordingButton.setImageResource(R.drawable.baseline_mic_white_24);
+        } else {
+            recordingButton.setImageResource(R.drawable.baseline_mic_off_white_24);
+        }
 
         colorWhite = ResourcesCompat.getColor(getResources(), R.color.colorWhite, null);
         colorPrimary = ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null);
@@ -265,9 +272,9 @@ public class EversongActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.l("EversongActivityLog:: recordingButton pressed!");
-                if (recordingButton.getText().equals(getString(R.string.start_record_button))) {
+                if (!keepRecordingAudio) {
                     startRecording();
-                } else if (recordingButton.getText().equals(getString(R.string.stop_record_button))) {
+                } else {
                     stopRecording();
                 }
             }
@@ -351,15 +358,17 @@ public class EversongActivity extends AppCompatActivity {
     }
 
     private void startRecording() {
+        recordingButton.setImageResource(R.drawable.baseline_mic_white_24);
         sendBroadcastToService(BroadcastMessage.START_RECORDING_AUDIO);
-        recordingButton.setText(R.string.stop_record_button);
         detectedChordsFile.startTime = System.currentTimeMillis();
         arrayOfChordsDetected.clear();
+        keepRecordingAudio = true;
     }
 
     private void stopRecording() {
-        recordingButton.setText(R.string.start_record_button);
+        recordingButton.setImageResource(R.drawable.baseline_mic_off_white_24);
         sendBroadcastToService(BroadcastMessage.STOP_RECORDING_AUDIO);
+        keepRecordingAudio = false;
     }
 
     private void setDebugModeViews() {
@@ -398,7 +407,11 @@ public class EversongActivity extends AppCompatActivity {
 
     public void processFrame() {
         if (canvas.getCanvas() != null) {
-            canvas.updateCanvas(audioSamplesBuffer, audioSpectrumBuffer, AudioStack.getAverageLevel(audioSpectrumBuffer), pitchDetected, chromagram, chordDetected);
+            if (keepRecordingAudio) {
+                canvas.updateCanvas(audioSamplesBuffer, audioSpectrumBuffer, AudioStack.getAverageLevel(audioSpectrumBuffer), pitchDetected, chromagram, chordDetected);
+            } else {
+                canvas.updateCanvas(new double[Parameters.BUFFER_SIZE], audioSpectrumBuffer, 0.0, pitchDetected, chromagram, chordDetected);
+            }
         }
 
         if (Parameters.getInstance().isDebugMode()) {

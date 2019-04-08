@@ -32,8 +32,8 @@ import java.util.concurrent.TimeUnit;
 
 public class EversongService extends Service {
     EversongServiceBroadcastReceiver eversongBroadcastReceiver;
-    boolean keepRecordingAudio;
 
+    boolean keepRecordingAudio;
     boolean musicBeingPlayed;
     boolean polytonalMusicBeingPlayed;
     float pitchDetected;
@@ -291,7 +291,6 @@ public class EversongService extends Service {
                 Log.l("EversongActivityLog:: Start recording");
 
                 keepRecordingAudio = true;
-                final long startTime = System.currentTimeMillis();
 
                 while (keepRecordingAudio) {
                     numberOfShortRead = record.read(tempAudioSamples, 0, tempAudioSamples.length);
