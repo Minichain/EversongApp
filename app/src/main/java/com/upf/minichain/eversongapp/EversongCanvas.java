@@ -1,5 +1,6 @@
 package com.upf.minichain.eversongapp;
 
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -12,6 +13,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.upf.minichain.eversongapp.enums.ChartTab;
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
@@ -33,8 +35,11 @@ public class EversongCanvas {
         mColor01 = ResourcesCompat.getColor(resources, R.color.colorWhite, null);
         mColor02 = ResourcesCompat.getColor(resources, R.color.colorRed, null);
 
+        @SuppressLint("ResourceType")
         int[] color01RGB = Utils.hexadecimalToRgb(resources.getString(R.color.colorBackgroundDark));
+        @SuppressLint("ResourceType")
         int[] color02RGB = Utils.hexadecimalToRgb(resources.getString(R.color.colorRed));
+
         shader1 = new LinearGradient(0, 400, 0, 500, Color.rgb(color01RGB[0], color01RGB[1], color01RGB[2]),
                 Color.rgb(color02RGB[0], color02RGB[1], color02RGB[2]), Shader.TileMode.CLAMP);
 
@@ -61,26 +66,22 @@ public class EversongCanvas {
         mImageView.setImageBitmap(mBitmap);
         mCanvas.drawColor(mColorBackground);    //Reset background color
 
-        if (bufferSamples != null && bufferFrequency != null) {
-            drawBufferSamples(bufferSamples, spectrumAverage, mPaint01);
-            switch(Parameters.getInstance().getChartTabSelected()) {
-                case GUITAR_TAB:
-                case UKULELE_TAB:
-                case PIANO_TAB:
-                case STAFF_TAB:
-                    break;
-                case CHROMAGRAM:
-                    drawChromagram(chromagram, spectrumAverage, chordDetected, mPaint01, mPaint02);
-                    break;
-            }
-            if (Parameters.getInstance().isDebugMode()) {
-                drawSpectrum(bufferFrequency, spectrumAverage, pitch, mPaint01);
-            }
+        drawBufferSamples(bufferSamples, spectrumAverage, mPaint01);
+
+        if (bufferSamples != null && Parameters.getInstance().getChartTabSelected() == ChartTab.CHROMAGRAM) {
+            drawChromagram(chromagram, spectrumAverage, chordDetected, mPaint01, mPaint02);
+        }
+
+        if (bufferFrequency != null && Parameters.getInstance().isDebugMode()) {
+            drawSpectrum(bufferFrequency, spectrumAverage, pitch, mPaint01);
         }
     }
 
     public void drawBufferSamples(double[] bufferSamples, double spectrumAverage, Paint paint) {
-        float amplifyDrawFactor = 100f * 0.00025f / (float)spectrumAverage;
+        float amplifyDrawFactor = 0;
+        if (spectrumAverage > 0) {
+            amplifyDrawFactor = 100f * 0.00025f / (float)spectrumAverage;
+        }
         double smoothEffectValue;
         int numberOfSamplesToPaint;
         int firstSampleToPaint;
@@ -93,10 +94,12 @@ public class EversongCanvas {
         }
         firstSampleToPaint = (bufferSamples.length / 2) - (numberOfSamplesToPaint / 2);
 
-        for (int i = firstSampleToPaint; i < numberOfSamplesToPaint + firstSampleToPaint; i++) {
-            smoothEffectValue = (0.5 * (1.0 - Math.cos(2.0*Math.PI*(double)(i - firstSampleToPaint)/(double)(mCanvas.getWidth() - 1))));
+        int step = 2;
+        for (int i = firstSampleToPaint; i < numberOfSamplesToPaint + firstSampleToPaint; i = i + step) {
+            smoothEffectValue = (0.5 * (1.0 - Math.cos(2.0 * Math.PI * (double)(i - firstSampleToPaint) / (double)(numberOfSamplesToPaint - 1))));
+//            paint.setAlpha((int)(smoothEffectValue * 255));
             mCanvas.drawLine(i - firstSampleToPaint, (float) (bufferSamples[i] * 100 * smoothEffectValue * amplifyDrawFactor) + verticalDisplacement,
-                    i + 1 - firstSampleToPaint, (float) (bufferSamples[i + 1] * 100 * smoothEffectValue * amplifyDrawFactor) + verticalDisplacement, paint);
+                    i + 1 - firstSampleToPaint, (float) (bufferSamples[i + step] * 100 * smoothEffectValue * amplifyDrawFactor) + verticalDisplacement, paint);
         }
     }
 
