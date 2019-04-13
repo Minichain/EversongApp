@@ -53,17 +53,17 @@ public enum ChordTypeEnum {
             case Sus4:
                 return "Sus4";
             case Dominant7th:
-                return "Dominant7th";
+                return "7th";
             case Major7th:
                 return "Major7th";
             case Minor7th:
                 return "Minor7th";
             case Diminished5th:
-                return "Diminished5th";
+                return "Dim";
             case Augmented5th:
-                return "Augmented5th";
+                return "Aug";
             case Power5th:
-                return "Power5th";
+                return "5th";
             case NoChord:
             default:
                 return "---";

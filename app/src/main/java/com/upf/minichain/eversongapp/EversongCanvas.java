@@ -44,7 +44,7 @@ public class EversongCanvas {
                 Color.rgb(color02RGB[0], color02RGB[1], color02RGB[2]), Shader.TileMode.CLAMP);
 
         mPaint01.setColor(mColor01);
-        mPaint01.setStrokeWidth(5f);
+        mPaint01.setStrokeWidth(7.5f);
         mPaint02.setColor(mColor02);
         mPaint02.setStrokeWidth(5f);
         mImageView = (ImageView) imageView;
@@ -80,7 +80,7 @@ public class EversongCanvas {
     public void drawBufferSamples(double[] bufferSamples, double spectrumAverage, Paint paint) {
         float amplifyDrawFactor = 0;
         if (spectrumAverage > 0) {
-            amplifyDrawFactor = 100f * 0.00025f / (float)spectrumAverage;
+            amplifyDrawFactor = 100f * 0.025f / (float)spectrumAverage;
         }
         double smoothEffectValue;
         int numberOfSamplesToPaint;
@@ -94,12 +94,13 @@ public class EversongCanvas {
         }
         firstSampleToPaint = (bufferSamples.length / 2) - (numberOfSamplesToPaint / 2);
 
-        int step = 2;
+        int step = 16;
         for (int i = firstSampleToPaint; i < numberOfSamplesToPaint + firstSampleToPaint; i = i + step) {
             smoothEffectValue = (0.5 * (1.0 - Math.cos(2.0 * Math.PI * (double)(i - firstSampleToPaint) / (double)(numberOfSamplesToPaint - 1))));
 //            paint.setAlpha((int)(smoothEffectValue * 255));
-            mCanvas.drawLine(i - firstSampleToPaint, (float) (bufferSamples[i] * 100 * smoothEffectValue * amplifyDrawFactor) + verticalDisplacement,
-                    i + 1 - firstSampleToPaint, (float) (bufferSamples[i + step] * 100 * smoothEffectValue * amplifyDrawFactor) + verticalDisplacement, paint);
+            mCanvas.drawLine(i - firstSampleToPaint, (float) (bufferSamples[i] * smoothEffectValue * amplifyDrawFactor) + verticalDisplacement,
+                    i + step - firstSampleToPaint, (float) (bufferSamples[i + step] * smoothEffectValue * amplifyDrawFactor) + verticalDisplacement,
+                    paint);
         }
     }
 
@@ -111,9 +112,11 @@ public class EversongCanvas {
         }
 
         float amplifyDrawFactor = 1000f * 0.00025f / (float)spectrumAverage;
-        for (int i = 0; i < (spectrumBuffer.length / 2) - 1; i++) {
+        int step = 8;
+        for (int i = 0; i < (spectrumBuffer.length / 2) - 1; i = i + step) {
             mCanvas.drawLine(i, ((float)spectrumBuffer[i] * (-amplifyDrawFactor)) + (mCanvas.getHeight()),
-                    i + 1, ((float)spectrumBuffer[(i) + 1] * (-amplifyDrawFactor)) + (mCanvas.getHeight()), paint);
+                    i + step, ((float)spectrumBuffer[i + step] * (-amplifyDrawFactor)) + (mCanvas.getHeight()),
+                    paint);
         }
         spectrumAverage = (spectrumAverage * -amplifyDrawFactor) + mCanvas.getHeight();
         //Spectrum average

@@ -8,4 +8,13 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorRed">#ff0000</color>
     <color name="colorGreen">#30FF00</color>
+
+    <!--<color name="colorWhite">#ffffff</color>-->
+    <!--<color name="colorPrimary">#383870</color>-->
+    <!--<color name="colorPrimaryDark">#27274e</color>-->
+    <!--<color name="colorBackgroundDark">#121226</color>-->
+
+    <!--<color name="colorAccent">#3b3bef</color>-->
+    <!--<color name="colorRed">#3232e2</color>-->
+    <!--<color name="colorGreen">#36ba18</color>-->
 </resources>
