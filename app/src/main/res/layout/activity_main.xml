@@ -210,19 +210,15 @@
         android:text=""
         android:textSize="10sp"
         app:layout_constraintTop_toBottomOf="@+id/chord_type"/>
+
     <TextView
         android:id="@+id/algorithm_performance"
-        android:layout_width="73dp"
-        android:layout_height="59dp"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:gravity="bottom"
+        android:gravity="end"
         android:textSize="10sp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/recording_button" />
+        app:layout_constraintEnd_toEndOf="parent" />
 </android.support.constraint.ConstraintLayout>

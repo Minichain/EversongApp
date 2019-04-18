@@ -20,32 +20,22 @@ public class TestAlgorithm {
 
         ArrayList<String> testingChords = initTestingChordsList();
 
-        long lastTimeToCheck = parseTimeFromChordElement(chordsDetected.get(chordsDetected.size() - 1));
-        if (lastTimeToCheck > parseTimeFromChordElement(testingChords.get(testingChords.size() - 2))) {
-            lastTimeToCheck = parseTimeFromChordElement(testingChords.get(testingChords.size() - 2));
-        }
         int testingChordChecking = 0;
-        int chordDetectedChecking = 0;
         int chordsChecked = 0;
         int chordsRight = 0;
 
-//        Log.l("TestingAlgorithmLog:: Check from 0 ms to " + lastTimeToCheck + " ms");
-        for (long i = 0; i < lastTimeToCheck; i = i + 100) {
-            while (parseTimeFromChordElement(testingChords.get(testingChordChecking + 1)) < i) {
+        for (int i = 0; i < chordsDetected.size(); i++) {
+            while(parseTimeFromChordElement(testingChords.get(testingChordChecking + 1)) < parseTimeFromChordElement(chordsDetected.get(i))) {
                 testingChordChecking++;
             }
-            while (chordsDetected.size() > (chordDetectedChecking + 1) && parseTimeFromChordElement(chordsDetected.get(chordDetectedChecking + 1)) < i) {
-                chordDetectedChecking++;
-            }
+            String testingChord = parseChordFromChordElement(testingChords.get(testingChordChecking));
+            String detectedChord = parseChordFromChordElement(chordsDetected.get(i));
 
-//            Log.l("TestingAlgorithmLog:: comparing \"" + parseChordFromChordElement(testingChords.get(testingChordChecking))
-//                    + "\" with \"" + parseChordFromChordElement(chordsDetected.get(chordDetectedChecking)) + "\"");
-            if (parseChordFromChordElement(testingChords.get(testingChordChecking)).equalsIgnoreCase(parseChordFromChordElement(chordsDetected.get(chordDetectedChecking)))) {
+            Log.l("TestingAlgorithmLog:: testingChord: " + testingChord + ", detectedChord: " + detectedChord);
+            if (testingChord.equals(detectedChord)) {
                 chordsRight++;
-                chordsChecked++;
-            } else {
-                chordsChecked++;
             }
+            chordsChecked++;
         }
         performance = ((double)chordsRight / (double)chordsChecked);
         return performance;

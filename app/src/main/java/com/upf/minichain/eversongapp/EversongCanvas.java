@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.support.v4.content.res.ResourcesCompat;
@@ -21,6 +22,7 @@ public class EversongCanvas {
     private Canvas mCanvas;
     private Paint mPaint01 = new Paint();
     private Paint mPaint02 = new Paint();
+    private Paint chromagramPaint = new Paint();
     private Bitmap mBitmap;
     private ImageView mImageView;
     private Rect mRect = new Rect();
@@ -45,8 +47,10 @@ public class EversongCanvas {
 
         mPaint01.setColor(mColor01);
         mPaint01.setStrokeWidth(7.5f);
+        mPaint01.setStyle(Paint.Style.STROKE);
         mPaint02.setColor(mColor02);
         mPaint02.setStrokeWidth(5f);
+        chromagramPaint.setColor(mColor01);
         mImageView = (ImageView) imageView;
         mImageView.post( new Runnable() {   // Whenever the view is loaded...
             @Override
@@ -62,14 +66,15 @@ public class EversongCanvas {
         });
     }
 
-    public void updateCanvas(final double[] bufferSamples, final double[] bufferFrequency, final double spectrumAverage, final float pitch, final double[] chromagram, final int[] chordDetected) {
+    public void updateCanvas(final double[] bufferSamples, final double[] bufferFrequency, final double spectrumAverage,
+                             final float pitch, final double[] chromagram, final int[] chordDetected) {
         mImageView.setImageBitmap(mBitmap);
         mCanvas.drawColor(mColorBackground);    //Reset background color
 
         drawBufferSamples(bufferSamples, spectrumAverage, mPaint01);
 
         if (bufferSamples != null && Parameters.getInstance().getChartTabSelected() == ChartTab.CHROMAGRAM) {
-            drawChromagram(chromagram, spectrumAverage, chordDetected, mPaint01, mPaint02);
+            drawChromagram(chromagram, spectrumAverage, chordDetected, chromagramPaint, mPaint02);
         }
 
         if (bufferFrequency != null && Parameters.getInstance().isDebugMode()) {
@@ -94,14 +99,21 @@ public class EversongCanvas {
         }
         firstSampleToPaint = (bufferSamples.length / 2) - (numberOfSamplesToPaint / 2);
 
+        Path path = new Path();
         int step = 16;
+        float x;
+        float y;
         for (int i = firstSampleToPaint; i < numberOfSamplesToPaint + firstSampleToPaint; i = i + step) {
             smoothEffectValue = (0.5 * (1.0 - Math.cos(2.0 * Math.PI * (double)(i - firstSampleToPaint) / (double)(numberOfSamplesToPaint - 1))));
-//            paint.setAlpha((int)(smoothEffectValue * 255));
-            mCanvas.drawLine(i - firstSampleToPaint, (float) (bufferSamples[i] * smoothEffectValue * amplifyDrawFactor) + verticalDisplacement,
-                    i + step - firstSampleToPaint, (float) (bufferSamples[i + step] * smoothEffectValue * amplifyDrawFactor) + verticalDisplacement,
-                    paint);
+            x = i - firstSampleToPaint;
+            y = (float) (bufferSamples[i] * smoothEffectValue * amplifyDrawFactor) + verticalDisplacement;
+            if (i == firstSampleToPaint) {
+                path.moveTo(x, y);
+            } else {
+                path.lineTo(x, y);
+            }
         }
+        mCanvas.drawPath(path, paint);
     }
 
     public void drawSpectrum(double[] spectrumBuffer, double spectrumAverage, float pitch, Paint paint) {
@@ -112,14 +124,23 @@ public class EversongCanvas {
         }
 
         float amplifyDrawFactor = 1000f * 0.00025f / (float)spectrumAverage;
+        Path path = new Path();
         int step = 8;
+        float x;
+        float y;
         for (int i = 0; i < (spectrumBuffer.length / 2) - 1; i = i + step) {
-            mCanvas.drawLine(i, ((float)spectrumBuffer[i] * (-amplifyDrawFactor)) + (mCanvas.getHeight()),
-                    i + step, ((float)spectrumBuffer[i + step] * (-amplifyDrawFactor)) + (mCanvas.getHeight()),
-                    paint);
+            x = i;
+            y = ((float)spectrumBuffer[i] * (-amplifyDrawFactor)) + (mCanvas.getHeight());
+            if (i == 0) {
+                path.moveTo(x, y);
+            } else {
+                path.lineTo(x, y);
+            }
         }
-        spectrumAverage = (spectrumAverage * -amplifyDrawFactor) + mCanvas.getHeight();
+        mCanvas.drawPath(path, paint);
+
         //Spectrum average
+        spectrumAverage = (spectrumAverage * -amplifyDrawFactor) + mCanvas.getHeight();
         mCanvas.drawLine(0, (float)spectrumAverage, mCanvas.getWidth(), (float)spectrumAverage, mPaint01);
     }
 

@@ -211,9 +211,9 @@ public class EversongService extends Service {
                     int[] tempMostProbableChord = AudioStack.getMostProbableChord(mostProbableChordBuffer);
                     if (tempMostProbableChord[2] >= 50) {
                         mostProbableChord = tempMostProbableChord;
+                        updateDetectedChordsList();
                     }
                     chordBufferIterator++;
-                    updateDetectedChordsList();
                     setActivityChordsDetected();
                 }
             }).start();
