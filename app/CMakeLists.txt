@@ -30,7 +30,6 @@ add_library(# Specifies the name of the library.
             # Provides a relative path to your source file(s).
             src/main/jni/ChordDetection/ChordDetector.cpp
             src/main/jni/ChordDetection/Chromagram.cpp
-            src/main/jni/ChordDetection/kiss_fft.c
             )
 
 add_library(# Specifies the name of the library.

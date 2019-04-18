@@ -210,7 +210,6 @@
         android:text=""
         android:textSize="10sp"
         app:layout_constraintTop_toBottomOf="@+id/chord_type"/>
-
     <TextView
         android:id="@+id/algorithm_performance"
         android:layout_width="wrap_content"

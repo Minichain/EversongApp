@@ -27,16 +27,6 @@
 #include <math.h>
 #include <vector>
 
-//#define USE_KISS_FFT
-
-#ifdef USE_FFTW
-#include "fftw3.h"
-#endif
-
-#ifdef USE_KISS_FFT
-#include "kiss_fft.h"
-#endif
-
 //=======================================================================
 /** A class for calculating a Chromagram from input audio
  * in a real-time context */
@@ -137,19 +127,6 @@ private:
     int numSamplesSinceLastCalculation;
     int chromaCalculationInterval;
     bool chromaReady;
-
-#ifdef USE_FFTW
-    fftw_plan p;
-	fftw_complex* complexOut;
-    fftw_complex* complexIn;
-#endif
-    
-#ifdef USE_KISS_FFT
-    kiss_fft_cfg cfg;
-    kiss_fft_cpx* fftIn;
-    kiss_fft_cpx* fftOut;
-#endif
-
 };
 
 #endif /* defined(__CHROMAGRAM_H) */
