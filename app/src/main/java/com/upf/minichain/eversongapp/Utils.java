@@ -188,13 +188,9 @@ public class Utils {
 
     public static String[] parseChordString(String chordString) {
         String chordArray[] = new String[2];
-        if (chordString.contains("#")) {
-            chordArray[0] = chordString.substring(0, 2);
-            chordArray[1] = chordString.substring(2, chordString.length());
-        } else {
-            chordArray[0] = chordString.substring(0, 1);
-            chordArray[1] = chordString.substring(2, chordString.length());
-        }
+        int position = chordString.indexOf(" ");
+        chordArray[0] = chordString.substring(0, position);
+        chordArray[1] = chordString.substring(position, chordString.length());
         return chordArray;
     }
 }

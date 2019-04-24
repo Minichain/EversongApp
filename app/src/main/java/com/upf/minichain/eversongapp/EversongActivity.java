@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +32,7 @@ import com.upf.minichain.eversongapp.chordChart.UkuleleChordChart;
 import com.upf.minichain.eversongapp.enums.BroadcastExtra;
 import com.upf.minichain.eversongapp.enums.BroadcastMessage;
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
+import com.upf.minichain.eversongapp.enums.MusicalNotationEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
 import java.util.ArrayList;
@@ -453,10 +455,16 @@ public class EversongActivity extends AppCompatActivity {
 
     private void updateChordDetectionViews() {
         float alpha = ((float)mostProbableChord[2] / 100f) > 0.5 ? ((float)mostProbableChord[2] / 100f) : 0.5f;
+        boolean isSolfegeMusicalNotation = Parameters.getInstance().getMusicalNotation() == MusicalNotationEnum.SOLFEGE_NOTATION;
         if (mostProbableChord[0] != -1 && mostProbableChord[1] != -1) {
             if (mostProbableChordNoteText.getVisibility() == View.VISIBLE) {
                 mostProbableChordNoteText.setText(NotesEnum.fromInteger(mostProbableChord[0]).toString());
                 mostProbableChordNoteText.setAlpha(alpha);
+                if (isSolfegeMusicalNotation) {
+                    mostProbableChordNoteText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 60);
+                } else {
+                    mostProbableChordNoteText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 90);
+                }
             }
             if (mostProbableChordTypeText.getVisibility() == View.VISIBLE) {
                 mostProbableChordTypeText.setText(ChordTypeEnum.fromInteger(mostProbableChord[1]).toString());
@@ -469,6 +477,11 @@ public class EversongActivity extends AppCompatActivity {
                 if (previousMostProbableChordNoteText.getVisibility() == View.VISIBLE) {
                     previousMostProbableChordNoteText.setText(chordArray[0]);
                     previousMostProbableChordNoteText.setAlpha(alpha);
+                    if (isSolfegeMusicalNotation) {
+                        previousMostProbableChordNoteText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+                    } else {
+                        previousMostProbableChordNoteText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                    }
                 }
                 if (previousMostProbableChordTypeText.getVisibility() == View.VISIBLE) {
                     previousMostProbableChordTypeText.setText(chordArray[1]);

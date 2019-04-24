@@ -357,6 +357,7 @@ public class EversongService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(serviceNotificationStringId, name, importance);
+            channel.setShowBadge(false);
             notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
