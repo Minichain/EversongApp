@@ -18,7 +18,6 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -49,6 +48,7 @@ public class EversongActivity extends AppCompatActivity {
     ImageView musicPlayingDetectorImageView;
 
     // CHORD DETECTION
+    LinearLayout chordDetectedLayout;
     TextView chordNoteText;
     TextView chordTypeText;
     TextView chordProbabilityText;
@@ -114,6 +114,7 @@ public class EversongActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         checkCaptureAudioPermission();
 
+        inflateChordDetectedLayout();
         inflateChordChartLayouts();
         inflateChordScoreLayout();
         inflateTuningPitchNoteLayout();
@@ -217,6 +218,8 @@ public class EversongActivity extends AppCompatActivity {
         colorGreen = ResourcesCompat.getColor(getResources(), R.color.colorGreen, null);
 
         // CHORD DETECTION
+        chordDetectedLayout = this.findViewById(R.id.chord_detected_layout);
+
         mostProbableChordNoteText = this.findViewById(R.id.most_probable_chord_note);
         mostProbableChordTypeText = this.findViewById(R.id.most_probable_chord_type);
         mostProbableChordNoteText.setTextColor(colorWhite);
@@ -461,7 +464,7 @@ public class EversongActivity extends AppCompatActivity {
                 mostProbableChordNoteText.setText(NotesEnum.fromInteger(mostProbableChord[0]).toString());
                 mostProbableChordNoteText.setAlpha(alpha);
                 if (isSolfegeMusicalNotation) {
-                    mostProbableChordNoteText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 60);
+                    mostProbableChordNoteText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 80);
                 } else {
                     mostProbableChordNoteText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 90);
                 }
@@ -480,7 +483,7 @@ public class EversongActivity extends AppCompatActivity {
                     if (isSolfegeMusicalNotation) {
                         previousMostProbableChordNoteText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
                     } else {
-                        previousMostProbableChordNoteText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                        previousMostProbableChordNoteText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
                     }
                 }
                 if (previousMostProbableChordTypeText.getVisibility() == View.VISIBLE) {
@@ -704,33 +707,30 @@ public class EversongActivity extends AppCompatActivity {
         switch(Parameters.getInstance().getFunctionalitySelected()) {
             case CHORD_DETECTION:
             default:
-                mostProbableChordNoteText.setVisibility(View.VISIBLE);
-                mostProbableChordTypeText.setVisibility(View.VISIBLE);
-                previousMostProbableChordNoteText.setVisibility(View.VISIBLE);
-                previousMostProbableChordTypeText.setVisibility(View.VISIBLE);
+                chordDetectedLayout.setVisibility(View.VISIBLE);
                 tuningPitchNoteLayout.setVisibility(View.GONE);
                 tuningPitchNote.setVisibility(View.GONE);
                 chordScoreLayout.setVisibility(View.GONE);
                 break;
             case CHORD_SCORE:
-                mostProbableChordNoteText.setVisibility(View.GONE);
-                mostProbableChordTypeText.setVisibility(View.GONE);
-                previousMostProbableChordNoteText.setVisibility(View.GONE);
-                previousMostProbableChordTypeText.setVisibility(View.GONE);
                 tuningPitchNoteLayout.setVisibility(View.GONE);
                 tuningPitchNote.setVisibility(View.GONE);
+                chordDetectedLayout.setVisibility(View.GONE);
                 chordScoreLayout.setVisibility(View.VISIBLE);
                 break;
             case TUNING:
-                mostProbableChordNoteText.setVisibility(View.GONE);
-                mostProbableChordTypeText.setVisibility(View.GONE);
-                previousMostProbableChordNoteText.setVisibility(View.GONE);
-                previousMostProbableChordTypeText.setVisibility(View.GONE);
                 tuningPitchNoteLayout.setVisibility(View.VISIBLE);
                 tuningPitchNote.setVisibility(View.VISIBLE);
+                chordDetectedLayout.setVisibility(View.GONE);
                 chordScoreLayout.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    private void inflateChordDetectedLayout() {
+        LinearLayout placeHolder;
+        placeHolder = this.findViewById(R.id.chord_detected_layout);
+        getLayoutInflater().inflate(R.layout.chord_detected, placeHolder);
     }
 
     private void inflateChordChartLayouts() {
@@ -751,14 +751,12 @@ public class EversongActivity extends AppCompatActivity {
 
     private void inflateChordScoreLayout() {
         LinearLayout placeHolder;
-
         placeHolder = this.findViewById(R.id.chord_score_layout);
         getLayoutInflater().inflate(R.layout.chord_score, placeHolder);
     }
 
     private void inflateTuningPitchNoteLayout() {
         LinearLayout placeHolder;
-
         placeHolder = this.findViewById(R.id.tuning_pitch_note_layout);
         getLayoutInflater().inflate(R.layout.tuning_pitch_note, placeHolder);
     }
