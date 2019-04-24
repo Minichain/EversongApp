@@ -464,7 +464,7 @@ public class EversongActivity extends AppCompatActivity {
                 mostProbableChordNoteText.setText(NotesEnum.fromInteger(mostProbableChord[0]).toString());
                 mostProbableChordNoteText.setAlpha(alpha);
                 if (isSolfegeMusicalNotation) {
-                    mostProbableChordNoteText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 80);
+                    mostProbableChordNoteText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 70);
                 } else {
                     mostProbableChordNoteText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 90);
                 }
@@ -483,7 +483,7 @@ public class EversongActivity extends AppCompatActivity {
                     if (isSolfegeMusicalNotation) {
                         previousMostProbableChordNoteText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
                     } else {
-                        previousMostProbableChordNoteText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
+                        previousMostProbableChordNoteText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
                     }
                 }
                 if (previousMostProbableChordTypeText.getVisibility() == View.VISIBLE) {

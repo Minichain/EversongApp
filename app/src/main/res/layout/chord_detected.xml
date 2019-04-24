@@ -24,7 +24,7 @@
 
             <TextView
                 android:id="@+id/most_probable_chord_note"
-                android:layout_width="100dp"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:textSize="90sp"
@@ -32,7 +32,7 @@
 
             <TextView
                 android:id="@+id/most_probable_chord_type"
-                android:layout_width="100dp"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:textSize="25sp"
