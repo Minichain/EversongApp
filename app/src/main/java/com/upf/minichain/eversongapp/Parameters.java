@@ -64,7 +64,7 @@ public class Parameters {
         chartTab = ChartTab.GUITAR_TAB;
         functionalityTab = EversongFunctionalities.CHORD_DETECTION;
         chordDetectionAlgorithm = ChordDetectionAlgorithm.ADAM_STARK_ALGORITHM;
-        chordProbabilityThreshold = 90;
+        chordProbabilityThreshold = 95;
         debugMode = false;
 
         chromagramNumHarmonics = 2;

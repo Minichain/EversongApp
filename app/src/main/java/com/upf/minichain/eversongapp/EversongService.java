@@ -43,7 +43,7 @@ public class EversongService extends Service {
     NotesEnum pitchNote;
     double spectralFlatnessValue;
     int[] chordDetected = new int[2];
-    int chordDetectedProbability;
+    float chordDetectedProbability;
     int[][] mostProbableChordBuffer;
     int chordBufferIterator = 0;
     ArrayList<String> arrayOfChordsDetected;
@@ -192,13 +192,13 @@ public class EversongService extends Service {
                 @Override
                 public void run() {
                     final int[] chordDetectedThread = AudioStack.chordDetection(audioSamplesBufferWindowed, audioSpectrumBuffer, Parameters.getInstance().getChordDetectionAlgorithm().getValue());
-                    final double chordDetectedProbabilityThread = AudioStack.getChordProbability();
+                    final double chordDetectedProbabilityThread = (float)((1 - AudioStack.getChordProbability()) * 100);
                     final double[] chromagramThread = AudioStack.getChromagram();
 
-                    chordDetectedProbability = (int)((1 - chordDetectedProbabilityThread) * 100);
-                    Log.l("EversongServiceLog:: Chord detected: " + chordDetected[0] + ", " + chordDetected[1] + ", Probability: " + chordDetectedProbability);
+                    Log.l("EversongServiceLog:: Chord detected: " + chordDetected[0] + ", " + chordDetected[1] + ", Probability: " + chordDetectedProbabilityThread);
 
-                    if (chordDetectedProbability >= Parameters.getInstance().getChordProbabilityThreshold()) {
+                    if (chordDetectedProbabilityThread >= Parameters.getInstance().getChordProbabilityThreshold()) {
+                        chordDetectedProbability = (float)chordDetectedProbabilityThread;
                         chordDetected = chordDetectedThread;
                     } else {
                         chordDetected[0] = -1;
@@ -329,7 +329,7 @@ public class EversongService extends Service {
         Bundle extras = new Bundle();
         extras.putDoubleArray(BroadcastExtra.CHROMAGRAM.toString(), chromagram);
         extras.putIntArray(BroadcastExtra.CHORD_DETECTED.toString(), chordDetected);
-        extras.putInt(BroadcastExtra.CHORD_DETECTED_PROBABILITY.toString(), chordDetectedProbability);
+        extras.putFloat(BroadcastExtra.CHORD_DETECTED_PROBABILITY.toString(), chordDetectedProbability);
         extras.putIntArray(BroadcastExtra.MOST_PROBABLE_CHORD.toString(), mostProbableChord);
         extras.putSerializable(BroadcastExtra.MOST_PROBABLE_CHORD_BUFFER.toString(), mostProbableChordBuffer);
         extras.putStringArrayList(BroadcastExtra.ARRAY_OF_CHORD_DETECTED.toString(), arrayOfChordsDetected);
