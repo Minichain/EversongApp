@@ -18,6 +18,7 @@
 
     <!--Top right menu-->
     <string name="open_settings_menu">Settings</string>
+    <string name="open_credits">Credits</string>
     <string name="close_app">Close App</string>
 
     <!--Settings-->

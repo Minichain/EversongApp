@@ -613,12 +613,20 @@ public class EversongActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        Intent intent;
         switch (id){
             case R.id.open_settings_menu_option:
                 sendBroadcastToService(BroadcastMessage.PAUSE_ACTIVITY);
                 keepProcessingFrame = false;
                 this.onPause();
-                Intent intent = new Intent(this, SettingsActivity.class);
+                intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.open_credits:
+                sendBroadcastToService(BroadcastMessage.PAUSE_ACTIVITY);
+                keepProcessingFrame = false;
+                this.onPause();
+                intent = new Intent(this, CreditsActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.exit_app_option:

@@ -29,6 +29,14 @@
                 android:value=".EversongActivity"/>
         </activity>
 
+        <activity android:name=".CreditsActivity"
+            android:label="Credits"
+            android:parentActivityName=".EversongActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".EversongActivity"/>
+        </activity>
+
         <service
             android:name=".EversongService" >
         </service>
