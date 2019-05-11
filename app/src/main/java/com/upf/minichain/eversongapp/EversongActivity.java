@@ -82,7 +82,7 @@ public class EversongActivity extends AppCompatActivity {
     float pitchNoteError;
     double spectralFlatnessValue;
     int[] chordDetected = new int[2];
-    int chordDetectedProbability;
+    float chordDetectedProbability;
     int[][] mostProbableChordBuffer;
 
     ArrayList<String> arrayOfChordsDetected;
@@ -674,7 +674,7 @@ public class EversongActivity extends AppCompatActivity {
                     } else if (broadcast.equals(BroadcastMessage.CHORD_DETECTION_PROCESSED.toString())) {
                         chromagram = extras.getDoubleArray(BroadcastExtra.CHROMAGRAM.toString());
                         chordDetected = extras.getIntArray(BroadcastExtra.CHORD_DETECTED.toString());
-                        chordDetectedProbability = extras.getInt(BroadcastExtra.CHORD_DETECTED_PROBABILITY.toString());
+                        chordDetectedProbability = extras.getFloat(BroadcastExtra.CHORD_DETECTED_PROBABILITY.toString());
                         mostProbableChord = extras.getIntArray(BroadcastExtra.MOST_PROBABLE_CHORD.toString());
                         mostProbableChordBuffer = (int[][])extras.getSerializable(BroadcastExtra.MOST_PROBABLE_CHORD_BUFFER.toString());
                         arrayOfChordsDetected = extras.getStringArrayList(BroadcastExtra.ARRAY_OF_CHORD_DETECTED.toString());

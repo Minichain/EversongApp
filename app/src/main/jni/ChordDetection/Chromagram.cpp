@@ -331,7 +331,7 @@ void Chromagram::chromagramEversongAlgorithm2() {
     double mean = sumOfAllSemitones / SEMITONES;
     for (int n = 0; n < SEMITONES; n++) {
         //Chromagram amplitude threshold
-        if (chromagram[n] < mean * 0.50) {
+        if (chromagram[n] < mean * 0.60) {
             chromagram[n] = 0;
         }
     }
