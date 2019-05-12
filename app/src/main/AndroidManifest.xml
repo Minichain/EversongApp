@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EversongActivity">
+        <activity android:name=".EversongActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,7 +24,8 @@
 
         <activity android:name=".SettingsActivity"
             android:label="Settings"
-            android:parentActivityName=".EversongActivity">
+            android:parentActivityName=".EversongActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".EversongActivity"/>
@@ -31,7 +33,8 @@
 
         <activity android:name=".CreditsActivity"
             android:label="Credits"
-            android:parentActivityName=".EversongActivity">
+            android:parentActivityName=".EversongActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".EversongActivity"/>
