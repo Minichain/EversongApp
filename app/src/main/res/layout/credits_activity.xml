@@ -1,6 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme = "@style/ThemeOverlay.AppCompat"
+    tools:context=".CreditsActivity">
 
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <LinearLayout
+            android:id="@+id/credits_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/padding_layout"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:orientation="vertical">
+            </LinearLayout>
+
+            <TextView
+                app:layout_constraintTop_toBottomOf="@id/padding_layout"
+                android:id="@+id/credits_recording_audio_in_android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/credits_recording_audio_in_android"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:orientation="vertical"/>
+
+            <TextView
+                app:layout_constraintTop_toBottomOf="@id/credits_recording_audio_in_android"
+                android:id="@+id/credits_adam_stark_algorithm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/credits_adam_stark_algorithm"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:orientation="vertical"/>
+
+            <TextView
+                app:layout_constraintTop_toBottomOf="@id/credits_adam_stark_algorithm"
+                android:id="@+id/credits_yin_algorithm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/credits_yin_algorithm"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:orientation="vertical"/>
+
+            <TextView
+                app:layout_constraintTop_toBottomOf="@id/credits_yin_algorithm"
+                android:id="@+id/credits_fft_algorithm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/credits_fft_algorithm"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:orientation="vertical"/>
+
+            <TextView
+                app:layout_constraintTop_toBottomOf="@id/credits_fft_algorithm"
+                android:id="@+id/credits_app_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/credits_app_icon"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:orientation="vertical"/>
+
+            <ImageView
+                app:layout_constraintTop_toBottomOf="@id/credits_app_icon"
+                android:id="@+id/image_app_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/app_icon_24dp"
+                android:foregroundGravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:orientation="vertical" />
+
+            <TextView
+                app:layout_constraintTop_toBottomOf="@id/image_app_icon"
+                android:id="@+id/credits_freepik_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/credits_freepik_icon"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:orientation="vertical"/>
+
+            <LinearLayout
+                app:layout_constraintTop_toBottomOf="@id/credits_freepik_icon"
+                android:id="@+id/image_freepik_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:foregroundGravity="center">
+
+                <ImageView
+                    android:id="@+id/image_freepik_piano_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/piano_black_24dp" />
+                <ImageView
+                    app:layout_constraintLeft_toRightOf="@id/image_freepik_piano_icon"
+                    android:id="@+id/image_freepik_guitar_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/guitar_black_24dp" />
+                <ImageView
+                    app:layout_constraintLeft_toRightOf="@id/image_freepik_guitar_icon"
+                    android:id="@+id/image_freepik_book_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/book_black_24dp" />
+            </LinearLayout>
+
+            <TextView
+                app:layout_constraintTop_toBottomOf="@id/image_freepik_icon"
+                android:id="@+id/credits_bqlqn_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/credits_bqlqn_icon"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:orientation="vertical"/>
+
+            <ImageView
+                app:layout_constraintTop_toBottomOf="@id/credits_bqlqn_icon"
+                android:id="@+id/image_bqlqn_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/tuner_black_24dp"
+                android:foregroundGravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:orientation="vertical"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/image_bqlqn_icon">
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>

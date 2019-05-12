@@ -23,8 +23,8 @@
 
     <!--Settings-->
     <string name="setting_musical_notation">Musical notation</string>
-    <string name="setting_english_notation">English notation (A, B...)</string>
-    <string name="setting_solfege_notation">Solfège notation (La, Si...)</string>
+    <string name="setting_english_notation">English notation (A, B…)</string>
+    <string name="setting_solfege_notation">Solfège notation (La, Si…)</string>
     <string name="setting_windowing">Window function</string>
     <string name="setting_rectangular_window">Rectangular window</string>
     <string name="setting_hanning_window">Hanning window</string>
@@ -55,4 +55,13 @@
     <string name="toast_functionalities_menu_chord_detection">Chord detection</string>
     <string name="toast_functionalities_menu_chord_library">Chord library</string>
     <string name="toast_functionalities_menu_tuner">Tuner</string>
+
+    <!--Credits-->
+    <string name="credits_recording_audio_in_android">-New Venture Software.\nRecord, Replay and Visualize Raw Audio Data in Android.\nOct 12, 2017.</string>
+    <string name="credits_adam_stark_algorithm">-Chord detector and Chromagram algorithm.\nDeveloped by Adam Stark</string>
+    <string name="credits_yin_algorithm">-YIN, a fundamental frequency estimator for speech and music.\nDeveloped by A. de Cheveigné and H. Kawahara.</string>
+    <string name="credits_fft_algorithm">-Orlando Selenu, FFT Java code. Oct 7, 2011.</string>
+    <string name="credits_app_icon">-Icon made by SimpleIcon from www.flaticon.com </string>
+    <string name="credits_freepik_icon">-Icons made by Freepik from www.flaticon.com </string>
+    <string name="credits_bqlqn_icon">-Icon made by Bqlqn from www.flaticon.com </string>
 </resources>
