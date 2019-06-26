@@ -38,7 +38,7 @@ Chromagram::Chromagram(int frameSize, int sampleFreq, int bufferSize, int numHar
     }
     
     // set up FFT
-    setupFFT();
+//    setupFFT();
     
     // set buffer size
     buffer.resize(bufferSize);
@@ -251,13 +251,7 @@ void Chromagram::chromagramAdamStarkAlgorithm() {
         sumOfAllSemitones += chromaSum;
         chromagram[n] = chromaSum;
     }
-    double mean = sumOfAllSemitones / SEMITONES;
-    for (int n = 0; n < SEMITONES; n++) {
-        //Chromagram amplitude threshold
-        if (chromagram[n] < mean * 0.50) {
-            chromagram[n] = 0;
-        }
-    }
+    applyChromagramAmplitudeThreshold(sumOfAllSemitones);
     chromaReady = true;
 }
 
@@ -288,13 +282,7 @@ void Chromagram::chromagramEversongAlgorithm1() {
         chromagram[n] = chromaSum;
     }
 
-    double mean = sumOfAllSemitones / SEMITONES;
-    for (int n = 0; n < SEMITONES; n++) {
-        //Chromagram amplitude threshold
-        if (chromagram[n] < mean * 0.50) {
-            chromagram[n] = 0;
-        }
-    }
+    applyChromagramAmplitudeThreshold(sumOfAllSemitones);
     chromaReady = true;
 }
 
@@ -328,14 +316,18 @@ void Chromagram::chromagramEversongAlgorithm2() {
         sumOfAllSemitones += chromaSum;
         chromagram[n] = chromaSum;
     }
-    double mean = sumOfAllSemitones / SEMITONES;
-    for (int n = 0; n < SEMITONES; n++) {
-        //Chromagram amplitude threshold
-        if (chromagram[n] < mean * 0.60) {
-            chromagram[n] = 0;
-        }
-    }
+    applyChromagramAmplitudeThreshold(sumOfAllSemitones);
     chromaReady = true;
+}
+
+void Chromagram::applyChromagramAmplitudeThreshold(double sumOfAllSemitones) {
+//    double mean = sumOfAllSemitones / SEMITONES;
+//    for (int n = 0; n < SEMITONES; n++) {
+//        //Chromagram amplitude threshold
+//        if (chromagram[n] < mean * 0.60) {
+//            chromagram[n] = 0;
+//        }
+//    }
 }
 
 void Chromagram::setChordDetectionAlgorithm(int algorithm) {

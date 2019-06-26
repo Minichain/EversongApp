@@ -58,7 +58,7 @@ public class Parameters {
         BANDPASS_FILTER_HIGH_FREQ = 4000;
 
         musicalNotation = MusicalNotationEnum.ENGLISH_NOTATION;
-        windowingFunction = WindowFunctionEnum.HAMMING_WINDOW;
+        windowingFunction = WindowFunctionEnum.HANNING_WINDOW;
         chordBufferSize = 7;
         pitchBufferSize = 3;
         chartTab = ChartTab.GUITAR_TAB;
@@ -69,7 +69,7 @@ public class Parameters {
 
         chromagramNumHarmonics = 2;
         chromagramNumOctaves = 3;
-        chromagramNumBinsToSearch = 1;
+        chromagramNumBinsToSearch = 2;
     }
 
     public void loadParameters(Context context) {
