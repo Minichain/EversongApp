@@ -13,8 +13,8 @@ import com.upf.minichain.eversongapp.enums.NotesEnum;
 /**
  * This class is designed to retrieve the ukulele tabs of a certain chord.
  * For example...
- *      for the chord "G major" it would be {0, 2, 3, 2}
- *      for the chord "C major" it would be {0, 0, 0, 3}
+ *      for the chord "G major" it would be {2, 3, 2, 0}
+ *      for the chord "C major" it would be {3, 0, 0, 0}
  */
 //TODO include all chordChart classes into one big chordChart class
 public class UkuleleChordChart extends ChordChart {
@@ -30,7 +30,11 @@ public class UkuleleChordChart extends ChordChart {
     }
 
     public static void setChordChart(Context ctx, NotesEnum tonic, ChordTypeEnum chordType, float alpha) {
-        int[] chordChart = getChordTab(tonic, chordType, numberOfFrets, numberOfStrings, ukuleleTuning);
+        int[] chordChart;
+        chordChart = checkKnownChords(tonic, chordType, numberOfFrets, numberOfStrings, ukuleleTuning);
+        if (chordChart == null) {
+            chordChart = getChordTab(tonic, chordType, numberOfFrets, numberOfStrings, ukuleleTuning);
+        }
         ImageView chordStringView;
         int chordStringViewId;
         int chordStringImageId;
@@ -52,6 +56,59 @@ public class UkuleleChordChart extends ChordChart {
         ImageView fretView = ((Activity)ctx).findViewById(R.id.ukulele_chord_chart_frets);
         fretView.setVisibility(View.VISIBLE);
     }
+
+    /**
+     * Known chords for guitar in standard tuning
+     * */
+    private static int[] checkKnownChords(NotesEnum tonic, ChordTypeEnum chordType, int numberOfFrets, int numberOfStrings, NotesEnum[] ukuleleTuning) {
+        int[] chordTab = null;
+
+        if (!isStandardTuning(ukuleleTuning) || numberOfStrings != 4) {
+            return chordTab;
+        }
+
+        switch(tonic) {
+            case A:
+                break;
+            case A_SHARP:
+                break;
+            case B:
+                break;
+            case C:
+                switch(chordType) {
+                    case Minor:
+                        chordTab = new int[] {3, 3, 3, 0};
+                        break;
+                }
+                break;
+            case C_SHARP:
+                break;
+            case D:
+                break;
+            case D_SHARP:
+                break;
+            case E:
+                switch(chordType) {
+                    case Major:
+                        chordTab = new int[] {2, 4, 4, 4};
+                        break;
+                    case Minor:
+                        chordTab = new int[] {2, 3, 4, 0};
+                        break;
+                }
+                break;
+            case F:
+                break;
+            case F_SHARP:
+                break;
+            case G:
+                break;
+            case G_SHARP:
+                break;
+        }
+        return chordTab;
+    }
+
 
     public static void setTuningChordChart(Context ctx, NotesEnum pitchNote, float pitchFreq) {
         ImageView stringView;
@@ -75,5 +132,16 @@ public class UkuleleChordChart extends ChordChart {
     public static void hideChordChart(Context ctx) {
         LinearLayout chordChartLayout = ((Activity)ctx).findViewById(R.id.ukulele_chord_chart_layout);
         chordChartLayout.setVisibility(View.GONE);
+    }
+
+    private static boolean isStandardTuning(NotesEnum[] guitarTuning) {
+        if (guitarTuning[0] == NotesEnum.A
+                && guitarTuning[1] == NotesEnum.E
+                && guitarTuning[2] == NotesEnum.C
+                && guitarTuning[3] == NotesEnum.G) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -13,9 +13,9 @@ import com.upf.minichain.eversongapp.enums.NotesEnum;
 /**
  * This class is designed to retrieve the guitar tabs of a certain chord.
  * For example...
- *      for the chord "A minor" it would be {0, 0, 2, 2, 1, 0}
- *      for the chord "C major" it would be {0, 3, 2, 0, 1, 0}
- *      for the chord "F major" it would be {1, 3, 3, 2, 1, 1}
+ *      for the chord "A minor" it would be {0, 1, 2, 2, 0, 0}
+ *      for the chord "C major" it would be {0, 1, 0, 2, 3, 0}
+ *      for the chord "F major" it would be {1, 1, 2, 3, 3, 1}
  */
 public class GuitarChordChart extends ChordChart {
     private static int numberOfStrings = 6;
@@ -64,7 +64,7 @@ public class GuitarChordChart extends ChordChart {
     private static int[] checkKnownChords(NotesEnum tonic, ChordTypeEnum chordType, int numberOfFrets, int numberOfStrings, NotesEnum[] guitarTuning) {
         int[] chordTab = null;
 
-        if (!isStandardGuitarTuning(guitarTuning) || numberOfStrings != 6) {
+        if (!isStandardTuning(guitarTuning) || numberOfStrings != 6) {
             return chordTab;
         }
 
@@ -219,7 +219,7 @@ public class GuitarChordChart extends ChordChart {
         chordChartLayout.setVisibility(View.GONE);
     }
 
-    private static boolean isStandardGuitarTuning(NotesEnum[] guitarTuning) {
+    private static boolean isStandardTuning(NotesEnum[] guitarTuning) {
         if (guitarTuning[0] == NotesEnum.E
                 && guitarTuning[1] == NotesEnum.B
                 && guitarTuning[2] == NotesEnum.G
