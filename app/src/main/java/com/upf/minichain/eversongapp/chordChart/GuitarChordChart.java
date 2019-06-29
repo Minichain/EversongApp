@@ -62,87 +62,137 @@ public class GuitarChordChart extends ChordChart {
      * Known chords for guitar in standard tuning
      * */
     private static int[] checkKnownChords(NotesEnum tonic, ChordTypeEnum chordType, int numberOfFrets, int numberOfStrings, NotesEnum[] guitarTuning) {
-        int[] chordTab = new int[numberOfStrings];
+        int[] chordTab = null;
+
+        if (!isStandardGuitarTuning(guitarTuning) || numberOfStrings != 6) {
+            return chordTab;
+        }
 
         switch(tonic) {
+            case A:
+                break;
+            case A_SHARP:
+                switch(chordType) {
+                    case Major:
+                        chordTab = new int[] {1, 3, 3, 3, 1, -1};
+                        break;
+                    case Minor:
+                        chordTab = new int[] {1, 2, 3, 3, 1, -1};
+                        break;
+                    case Sus2:
+                        chordTab = new int[] {1, 1, 3, 3, 1, -1};
+                        break;
+                    case Sus4:
+                        chordTab = new int[] {1, 4, 3, 3, 1, -1};
+                        break;
+                    case Dominant7th:
+                        chordTab = new int[] {1, 3, 1, 3, 1, -1};
+                        break;
+                    case Major7th:
+                        chordTab = new int[] {1, 3, 2, 3, 1, -1};
+                        break;
+                    case Minor7th:
+                        chordTab = new int[] {1, 2, 1, 3, 1, -1};
+                        break;
+                    case Augmented5th:
+                        chordTab = new int[] {2, 3, 3, 4, -1, -1};
+                        break;
+                    case Power5th:
+                        chordTab = new int[] {-1, -1, 3, 3, 1, -1};
+                        break;
+                }
+                break;
             case B:
                 switch(chordType) {
                     case Major:
-                        chordTab[0] = 2;
-                        chordTab[1] = 4;
-                        chordTab[2] = 4;
-                        chordTab[3] = 4;
-                        chordTab[4] = 2;
-                        chordTab[5] = -1;
-                        return chordTab;
+                        chordTab = new int[] {2, 4, 4, 4, 2, -1};
+                        break;
                     case Minor:
-                        chordTab[0] = 2;
-                        chordTab[1] = 3;
-                        chordTab[2] = 4;
-                        chordTab[3] = 4;
-                        chordTab[4] = 2;
-                        chordTab[5] = -1;
-                        return chordTab;
+                        chordTab = new int[] {2, 3, 4, 4, 2, -1};
+                        break;
+                    case Sus2:
+                        chordTab = new int[] {2, 2, 4, 4, 2, -1};
+                        break;
+                    case Sus4:
+                        chordTab = new int[] {2, 5, 4, 4, 2, -1};
+                        break;
+                    case Dominant7th:
+                        chordTab = new int[] {2, 4, 2, 4, 2, -1};
+                        break;
+                    case Major7th:
+                        chordTab = new int[] {2, 4, 3, 4, 2, -1};
+                        break;
+                    case Minor7th:
+                        chordTab = new int[] {2, 3, 2, 4, 2, -1};
+                        break;
+                    case Augmented5th:
+                        chordTab = new int[] {2, 4, 4, 5, -1, -1};
+                        break;
+                    case Power5th:
+                        chordTab = new int[] {-1, -1, 4, 4, 2, -1};
+                        break;
                 }
+                break;
             case C:
                 switch(chordType) {
                     case Major:
-                        chordTab[0] = 0;
-                        chordTab[1] = 1;
-                        chordTab[2] = 0;
-                        chordTab[3] = 2;
-                        chordTab[4] = 3;
-                        chordTab[5] = 0;
-                        return chordTab;
+                        chordTab = new int[] {0, 1, 0, 2, 3, 0};
+                        break;
                     case Minor:
-                        chordTab[0] = 3;
-                        chordTab[1] = 4;
-                        chordTab[2] = 5;
-                        chordTab[3] = 5;
-                        chordTab[4] = 3;
-                        chordTab[5] = -1;
-                        return chordTab;
+                        chordTab = new int[] {3, 4, 5, 5, 3, -1};
+                        break;
                 }
+                break;
+            case C_SHARP:
+                break;
+            case D:
+                break;
+            case D_SHARP:
+                break;
+            case E:
+                switch(chordType) {
+                    case Major:
+                        chordTab = new int[] {0, 0, 1, 2, 2, 0};
+                        break;
+                    case Minor:
+                        chordTab = new int[] {0, 0, 0, 2, 2, 0};
+                        break;
+                }
+                break;
             case F:
                 switch(chordType) {
                     case Major:
-                        chordTab[0] = 1;
-                        chordTab[1] = 1;
-                        chordTab[2] = 2;
-                        chordTab[3] = 3;
-                        chordTab[4] = 3;
-                        chordTab[5] = 1;
-                        return chordTab;
+                        chordTab = new int[] {1, 1, 2, 3, 3, 1};
+                        break;
                     case Minor:
-                        chordTab[0] = 1;
-                        chordTab[1] = 1;
-                        chordTab[2] = 1;
-                        chordTab[3] = 3;
-                        chordTab[4] = 3;
-                        chordTab[5] = 1;
-                        return chordTab;
+                        chordTab = new int[] {1, 1, 1, 3, 3, 1};
+                        break;
                 }
+                break;
+            case F_SHARP:
+                switch(chordType) {
+                    case Major:
+                        chordTab = new int[] {2, 2, 3, 4, 4, 2};
+                        break;
+                    case Minor:
+                        chordTab = new int[] {2, 2, 2, 4, 4, 2};
+                        break;
+                }
+                break;
             case G:
                 switch(chordType) {
                     case Major:
-                        chordTab[0] = 3;
-                        chordTab[1] = 0;
-                        chordTab[2] = 0;
-                        chordTab[3] = 0;
-                        chordTab[4] = 2;
-                        chordTab[5] = 3;
-                        return chordTab;
+                        chordTab = new int[] {3, 0, 0, 0, 2, 3};
+                        break;
                     case Minor:
-                        chordTab[0] = 3;
-                        chordTab[1] = 3;
-                        chordTab[2] = 3;
-                        chordTab[3] = 5;
-                        chordTab[4] = 5;
-                        chordTab[5] = 3;
-                        return chordTab;
+                        chordTab = new int[] {3, 3, 3, 5, 5, 3};
+                        break;
                 }
+                break;
+            case G_SHARP:
+                break;
         }
-        return null;
+        return chordTab;
     }
 
     public static void setTuningChordChart(Context ctx, NotesEnum pitchNote, float pitchFreq) {
@@ -167,5 +217,18 @@ public class GuitarChordChart extends ChordChart {
     public static void hideChordChart(Context ctx) {
         LinearLayout chordChartLayout = ((Activity)ctx).findViewById(R.id.guitar_chord_chart_layout);
         chordChartLayout.setVisibility(View.GONE);
+    }
+
+    private static boolean isStandardGuitarTuning(NotesEnum[] guitarTuning) {
+        if (guitarTuning[0] == NotesEnum.E
+                && guitarTuning[1] == NotesEnum.B
+                && guitarTuning[2] == NotesEnum.G
+                && guitarTuning[3] == NotesEnum.D
+                && guitarTuning[4] == NotesEnum.A
+                && guitarTuning[5] == NotesEnum.E) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
