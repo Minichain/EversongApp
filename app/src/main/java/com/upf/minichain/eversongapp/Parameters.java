@@ -13,66 +13,37 @@ import com.upf.minichain.eversongapp.enums.MusicalNotationEnum;
 import com.upf.minichain.eversongapp.enums.WindowFunctionEnum;
 
 public class Parameters {
-    private static final Parameters instance = new Parameters();
     private static SQLiteDatabase parametersDatabase;
-
-    public static Parameters getInstance() {
-        return instance;
-    }
 
     /*************
      * PARAMETERS
      ************/
-    public static int SAMPLE_RATE;          // The sampling rate (11025, 16000, 22050, 44100)
-    public static int BUFFER_SIZE;          // It must be a power of 2 (2048, 4096, 8192, 16384...)
-    public static int HOP_SIZE;             // It must be a power of 2
-    public static int FRAMES_PER_SECOND;
-    public static int BANDPASS_FILTER_LOW_FREQ;
-    public static int BANDPASS_FILTER_HIGH_FREQ;
+    public static int SAMPLE_RATE = 44100;                  // The sampling rate (11025, 16000, 22050, 44100)
+    public static int BUFFER_SIZE = 8192;                   // It must be a power of 2 (2048, 4096, 8192, 16384...)
+    public static int HOP_SIZE = 2048;                      // It must be a power of 2
+    public static int FRAMES_PER_SECOND = 10;
+    public static int BANDPASS_FILTER_LOW_FREQ = 55;
+    public static int BANDPASS_FILTER_HIGH_FREQ = 4000;
 
-    private static MusicalNotationEnum musicalNotation;
-    private static WindowFunctionEnum windowingFunction;
-    private static ChartTab chartTab;
-    private static ChordDetectionAlgorithm chordDetectionAlgorithm;
-    private static EversongFunctionalities functionalityTab;
-    private static int chordBufferSize;
-    private static int pitchBufferSize;
-    private static int chordProbabilityThreshold;
-    private static boolean debugMode;
+    private static MusicalNotationEnum musicalNotation = MusicalNotationEnum.ENGLISH_NOTATION;
+    private static WindowFunctionEnum windowingFunction = WindowFunctionEnum.HANNING_WINDOW;
+    private static ChartTab chartTab = ChartTab.GUITAR_TAB;
+    private static ChordDetectionAlgorithm chordDetectionAlgorithm = ChordDetectionAlgorithm.ADAM_STARK_ALGORITHM;
+    private static EversongFunctionalities functionalityTab = EversongFunctionalities.CHORD_DETECTION;
+    private static int chordBufferSize = 7;
+    private static int pitchBufferSize = 3;
+    private static int chordProbabilityThreshold = 95;
+    private static boolean debugMode = false;
 
     //Chromagram parameters
-    private static int chromagramNumHarmonics;
-    private static int chromagramNumOctaves;
-    private static int chromagramNumBinsToSearch;
+    private static int chromagramNumHarmonics = 3;
+    private static int chromagramNumOctaves = 2;
+    private static int chromagramNumBinsToSearch = 3;
 
-    /******************
-     * INIT PARAMETERS
-     *****************/
     private Parameters() {
-//        SAMPLE_RATE = 22050;
-        SAMPLE_RATE = 44100;
-        BUFFER_SIZE = 8192;
-        HOP_SIZE = 2048;
-        FRAMES_PER_SECOND = 10;
-        BANDPASS_FILTER_LOW_FREQ = 55;
-        BANDPASS_FILTER_HIGH_FREQ = 4000;
-
-        musicalNotation = MusicalNotationEnum.ENGLISH_NOTATION;
-        windowingFunction = WindowFunctionEnum.HANNING_WINDOW;
-        chordBufferSize = 7;
-        pitchBufferSize = 3;
-        chartTab = ChartTab.GUITAR_TAB;
-        functionalityTab = EversongFunctionalities.CHORD_DETECTION;
-        chordDetectionAlgorithm = ChordDetectionAlgorithm.ADAM_STARK_ALGORITHM;
-        chordProbabilityThreshold = 95;
-        debugMode = false;
-
-        chromagramNumHarmonics = 2;
-        chromagramNumOctaves = 3;
-        chromagramNumBinsToSearch = 2;
     }
 
-    public void loadParameters(Context context) {
+    public static void loadParameters(Context context) {
         ParametersDatabaseHelper parametersDbHelper = new ParametersDatabaseHelper(context);
         parametersDatabase = parametersDbHelper.getWritableDatabase();
 
@@ -133,7 +104,7 @@ public class Parameters {
         }
     }
 
-    public int loadParameter(String parameter) {
+    private static int loadParameter(String parameter) {
         int parameterValue = -1;
         Cursor cursor =  parametersDatabase.rawQuery( "SELECT Value FROM ParametersTable WHERE Parameter = '" + parameter + "'", null);
         cursor.moveToFirst();
@@ -148,7 +119,7 @@ public class Parameters {
         return parameterValue;
     }
 
-    public void setParameterInDataBase(String parameter, int value) {
+    private static void setParameterInDataBase(String parameter, int value) {
         if (parametersDatabase != null) {
             ContentValues newContent = new ContentValues();
             newContent.put(ParametersDatabaseHelper.ParametersColumns.COLUMN_PARAMETER, parameter);
@@ -163,7 +134,7 @@ public class Parameters {
         }
     }
 
-    public boolean isParameterInDataBase(String parameter) {
+    private static boolean isParameterInDataBase(String parameter) {
         try {
             Cursor cursor =  parametersDatabase.rawQuery( "SELECT COUNT(Parameter) FROM ParametersTable WHERE Parameter = '" + parameter + "'", null);
             cursor.moveToFirst();
@@ -177,12 +148,12 @@ public class Parameters {
         return false;
     }
 
-    public void setAudioBufferSize(int newSize) {
+    public static void setAudioBufferSize(int newSize) {
         setParameterInDataBase("BUFFER_SIZE", newSize);
         BUFFER_SIZE = newSize;
     }
 
-    private int checkAudioBufferValue(int tempValue) {
+    private static int checkAudioBufferValue(int tempValue) {
         switch(tempValue) {
             case 2048:
             case 4096:
@@ -194,116 +165,116 @@ public class Parameters {
         }
     }
 
-    public void setBandpassFilterLowFreq(int bandpassFilterLowFreq) {
+    public static void setBandpassFilterLowFreq(int bandpassFilterLowFreq) {
         setParameterInDataBase("BANDPASS_FILTER_LOW_FREQ", bandpassFilterLowFreq);
         BANDPASS_FILTER_LOW_FREQ = bandpassFilterLowFreq;
     }
 
-    public void setBandpassFilterHighFreq(int bandpassFilterHighFreq) {
+    public static void setBandpassFilterHighFreq(int bandpassFilterHighFreq) {
         setParameterInDataBase("BANDPASS_FILTER_HIGH_FREQ", bandpassFilterHighFreq);
         BANDPASS_FILTER_HIGH_FREQ = bandpassFilterHighFreq;
     }
 
-    public void setMusicalNotation(MusicalNotationEnum notation) {
+    public static void setMusicalNotation(MusicalNotationEnum notation) {
         setParameterInDataBase("musicalNotation", notation.getValue());
         musicalNotation = notation;
     }
 
-    public MusicalNotationEnum getMusicalNotation() {
+    public static MusicalNotationEnum getMusicalNotation() {
         return musicalNotation;
     }
 
-    public void setWindowingFunction(WindowFunctionEnum window) {
+    public static void setWindowingFunction(WindowFunctionEnum window) {
         setParameterInDataBase("windowingFunction", window.getValue());
         windowingFunction = window;
     }
 
-    public WindowFunctionEnum getWindowingFunction() {
+    public static WindowFunctionEnum getWindowingFunction() {
         return windowingFunction;
     }
 
-    public void setChordBufferSize(int newSize) {
+    public static void setChordBufferSize(int newSize) {
         setParameterInDataBase("chordBufferSize", newSize);
         chordBufferSize = newSize;
     }
 
-    public int getChordBufferSize() {
+    public static int getChordBufferSize() {
         return chordBufferSize;
     }
 
-    public void setPitchBufferSize(int newSize) {
+    public static void setPitchBufferSize(int newSize) {
         setParameterInDataBase("pitchBufferSize", newSize);
         pitchBufferSize = newSize;
     }
 
-    public int getPitchBufferSize() {
+    public static int getPitchBufferSize() {
         return pitchBufferSize;
     }
 
-    public void setFunctionalitySelected(EversongFunctionalities tab) {
+    public static void setFunctionalitySelected(EversongFunctionalities tab) {
         setParameterInDataBase("functionalityTab", tab.getValue());
         functionalityTab = tab;
     }
 
-    public EversongFunctionalities getFunctionalitySelected() {
+    public static EversongFunctionalities getFunctionalitySelected() {
         return functionalityTab;
     }
 
-    public void setChartTabSelected(ChartTab tab) {
+    public static void setChartTabSelected(ChartTab tab) {
         setParameterInDataBase("chartTab", tab.getValue());
         chartTab = tab;
     }
 
-    public ChartTab getChartTabSelected() {
+    public static ChartTab getChartTabSelected() {
         return chartTab;
     }
 
-    public void setChordDetectionAlgorithm(ChordDetectionAlgorithm algorithm) {
+    public static void setChordDetectionAlgorithm(ChordDetectionAlgorithm algorithm) {
         setParameterInDataBase("chordDetectionAlgorithm", algorithm.getValue());
         chordDetectionAlgorithm = algorithm;
     }
 
-    public ChordDetectionAlgorithm getChordDetectionAlgorithm() {
+    public static ChordDetectionAlgorithm getChordDetectionAlgorithm() {
         return chordDetectionAlgorithm;
     }
 
-    public int getChordProbabilityThreshold() {
+    public static int getChordProbabilityThreshold() {
         return chordProbabilityThreshold;
     }
 
-    public void setDebugMode(boolean value) {
+    public static void setDebugMode(boolean value) {
         setParameterInDataBase("debugMode", value ? 1 : 0);
         debugMode = value;
     }
 
-    public boolean isDebugMode() {
+    public static boolean isDebugMode() {
         return debugMode;
     }
 
-    public void setChromagramNumHarmonics(int numHarmonics) {
+    public static void setChromagramNumHarmonics(int numHarmonics) {
         setParameterInDataBase("chromagramNumHarmonics", numHarmonics);
         chromagramNumHarmonics = numHarmonics;
     }
 
-    public int getChromagramNumHarmonics() {
+    public static int getChromagramNumHarmonics() {
         return chromagramNumHarmonics;
     }
 
-    public void setChromagramNumOctaves(int numHarmonics) {
+    public static void setChromagramNumOctaves(int numHarmonics) {
         setParameterInDataBase("chromagramNumOctaves", numHarmonics);
         chromagramNumOctaves = numHarmonics;
     }
 
-    public int getChromagramNumOctaves() {
+    public static int getChromagramNumOctaves() {
         return chromagramNumOctaves;
     }
 
-    public void setChromagramNumBinsToSearch(int numHarmonics) {
+    public static void setChromagramNumBinsToSearch(int numHarmonics) {
         setParameterInDataBase("chromagramNumBinsToSearch", numHarmonics);
         chromagramNumBinsToSearch = numHarmonics;
     }
 
-    public int getChromagramNumBinsToSearch() {
+    public static int getChromagramNumBinsToSearch() {
         return chromagramNumBinsToSearch;
     }
 }

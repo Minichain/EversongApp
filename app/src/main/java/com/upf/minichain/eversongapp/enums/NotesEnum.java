@@ -81,7 +81,7 @@ public enum NotesEnum {
     }
 
     public String toString() {
-        MusicalNotationEnum musicalNotation = Parameters.getInstance().getMusicalNotation();
+        MusicalNotationEnum musicalNotation = Parameters.getMusicalNotation();
         if (musicalNotation == MusicalNotationEnum.SOLFEGE_NOTATION) {
             switch(this) {
                 case A:

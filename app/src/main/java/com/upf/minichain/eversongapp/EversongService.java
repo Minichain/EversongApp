@@ -89,8 +89,8 @@ public class EversongService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.l("EversongServiceLog:: onStartCommand service");
         AudioStack.initAudioStack();
-        pitchDetectedBuffer = new float[Parameters.getInstance().getPitchBufferSize()];
-        mostProbableChordBuffer = new int[Parameters.getInstance().getChordBufferSize()][2];
+        pitchDetectedBuffer = new float[Parameters.getPitchBufferSize()];
+        mostProbableChordBuffer = new int[Parameters.getChordBufferSize()][2];
 
         if (audioSamplesBuffer == null || Parameters.BUFFER_SIZE != audioSamplesBuffer.length) {
             audioSamplesBuffer = new double[Parameters.BUFFER_SIZE];
@@ -151,7 +151,7 @@ public class EversongService extends Service {
                         recordAudio();
                     } else if (broadcast.equals(BroadcastMessage.STOP_RECORDING_AUDIO.toString())) {
                         keepRecordingAudio = false;
-                        if (Parameters.getInstance().isDebugMode()) {
+                        if (Parameters.isDebugMode()) {
                             Bundle extras = new Bundle();
                             extras.putDouble(BroadcastExtra.ALGORITHM_PERFORMANCE.toString(), TestAlgorithm.computeAlgorithmPerformance(arrayOfChordsDetected));
                             sendBroadcastToActivity(BroadcastMessage.ALGORITHM_PERFORMANCE, extras);
@@ -191,13 +191,13 @@ public class EversongService extends Service {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    final int[] chordDetectedThread = AudioStack.chordDetection(audioSamplesBufferWindowed, audioSpectrumBuffer, Parameters.getInstance().getChordDetectionAlgorithm().getValue());
+                    final int[] chordDetectedThread = AudioStack.chordDetection(audioSamplesBufferWindowed, audioSpectrumBuffer, Parameters.getChordDetectionAlgorithm().getValue());
                     final double chordDetectedProbabilityThread = (float)((1 - AudioStack.getChordProbability()) * 100);
                     final double[] chromagramThread = AudioStack.getChromagram();
 
                     Log.l("EversongServiceLog:: Chord detected: " + chordDetected[0] + ", " + chordDetected[1] + ", Probability: " + chordDetectedProbabilityThread);
 
-                    if (chordDetectedProbabilityThread >= Parameters.getInstance().getChordProbabilityThreshold()) {
+                    if (chordDetectedProbabilityThread >= Parameters.getChordProbabilityThreshold()) {
                         chordDetectedProbability = (float)chordDetectedProbabilityThread;
                         chordDetected = chordDetectedThread;
                     } else {
@@ -206,8 +206,8 @@ public class EversongService extends Service {
                     }
 
                     chromagram = chromagramThread;
-                    mostProbableChordBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][0] = chordDetected[0];
-                    mostProbableChordBuffer[chordBufferIterator % Parameters.getInstance().getChordBufferSize()][1] = chordDetected[1];
+                    mostProbableChordBuffer[chordBufferIterator % Parameters.getChordBufferSize()][0] = chordDetected[0];
+                    mostProbableChordBuffer[chordBufferIterator % Parameters.getChordBufferSize()][1] = chordDetected[1];
                     int[] tempMostProbableChord = AudioStack.getMostProbableChord(mostProbableChordBuffer);
                     if (tempMostProbableChord[2] >= 50) {
                         mostProbableChord = tempMostProbableChord;
@@ -232,9 +232,9 @@ public class EversongService extends Service {
                     pitchProbability = pitchProbabilityThread;
                 }
 
-                pitchDetectedBuffer[pitchBufferIterator % Parameters.getInstance().getPitchBufferSize()] = pitchDetected;
-                pitchDetected = Utils.getAverage(pitchDetectedBuffer, Parameters.getInstance().getPitchBufferSize());
-                float stdDeviation = Utils.getStandardDeviation(pitchDetectedBuffer, Parameters.getInstance().getPitchBufferSize());
+                pitchDetectedBuffer[pitchBufferIterator % Parameters.getPitchBufferSize()] = pitchDetected;
+                pitchDetected = Utils.getAverage(pitchDetectedBuffer, Parameters.getPitchBufferSize());
+                float stdDeviation = Utils.getStandardDeviation(pitchDetectedBuffer, Parameters.getPitchBufferSize());
                 if (stdDeviation > 100) {
                     pitchDetected = -1;
                 }
@@ -297,7 +297,7 @@ public class EversongService extends Service {
                     totalShortsRead += numberOfShortRead;
                     prevAudioSpectrumBuffer = audioSpectrumBuffer;
                     audioSamplesBuffer = AudioStack.getSamplesToDouble(tempAudioSamples);
-                    audioSamplesBufferWindowed = AudioStack.window(audioSamplesBuffer, Parameters.getInstance().getWindowingFunction());
+                    audioSamplesBufferWindowed = AudioStack.window(audioSamplesBuffer, Parameters.getWindowingFunction());
                     audioSpectrumBuffer = AudioStack.bandPassFilter(AudioStack.fft(audioSamplesBufferWindowed, true), Parameters.BANDPASS_FILTER_LOW_FREQ, Parameters.BANDPASS_FILTER_HIGH_FREQ);
                     setActivitySampleBuffer();
                     processAudio();

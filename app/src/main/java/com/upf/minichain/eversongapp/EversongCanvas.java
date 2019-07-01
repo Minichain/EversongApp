@@ -73,11 +73,11 @@ public class EversongCanvas {
 
         drawBufferSamples(bufferSamples, spectrumAverage, mPaint01);
 
-        if (bufferSamples != null && Parameters.getInstance().getChartTabSelected() == ChartTab.CHROMAGRAM) {
+        if (bufferSamples != null && Parameters.getChartTabSelected() == ChartTab.CHROMAGRAM) {
             drawChromagram(chromagram, spectrumAverage, chordDetected, chromagramPaint, mPaint02);
         }
 
-        if (bufferFrequency != null && Parameters.getInstance().isDebugMode()) {
+        if (bufferFrequency != null && Parameters.isDebugMode()) {
             drawSpectrum(bufferFrequency, spectrumAverage, pitch, mPaint01);
         }
     }

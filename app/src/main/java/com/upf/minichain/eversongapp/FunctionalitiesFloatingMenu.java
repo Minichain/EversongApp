@@ -65,7 +65,7 @@ public class FunctionalitiesFloatingMenu {
         chordDetectionFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.CHORD_DETECTION);
+                Parameters.setFunctionalitySelected(EversongFunctionalities.CHORD_DETECTION);
                 Toast toast = Toast.makeText(context, context.getString(R.string.toast_functionalities_menu_chord_detection), Toast.LENGTH_SHORT);
                 toast.show();
                 onFloatingButtonPressed();
@@ -75,7 +75,7 @@ public class FunctionalitiesFloatingMenu {
         chordLibFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.CHORD_SCORE);
+                Parameters.setFunctionalitySelected(EversongFunctionalities.CHORD_SCORE);
                 Toast toast = Toast.makeText(context, context.getString(R.string.toast_functionalities_menu_chord_library), Toast.LENGTH_SHORT);
                 toast.show();
                 onFloatingButtonPressed();
@@ -85,7 +85,7 @@ public class FunctionalitiesFloatingMenu {
         tuningFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Parameters.getInstance().setFunctionalitySelected(EversongFunctionalities.TUNING);
+                Parameters.setFunctionalitySelected(EversongFunctionalities.TUNING);
                 Toast toast = Toast.makeText(context, context.getString(R.string.toast_functionalities_menu_tuner), Toast.LENGTH_SHORT);
                 toast.show();
                 onFloatingButtonPressed();
@@ -102,20 +102,20 @@ public class FunctionalitiesFloatingMenu {
 
     private void updateFloatingMenu() {
         functionalitiesFloatingMenu.removeAllMenuButtons();
-        if (Parameters.getInstance().getFunctionalitySelected() != EversongFunctionalities.CHORD_DETECTION) {
+        if (Parameters.getFunctionalitySelected() != EversongFunctionalities.CHORD_DETECTION) {
             functionalitiesFloatingMenu.addMenuButton(chordDetectionFloatingButton);
         }
-        if (Parameters.getInstance().getFunctionalitySelected() != EversongFunctionalities.CHORD_SCORE) {
+        if (Parameters.getFunctionalitySelected() != EversongFunctionalities.CHORD_SCORE) {
             functionalitiesFloatingMenu.addMenuButton(chordLibFloatingButton);
         }
-        if (Parameters.getInstance().getFunctionalitySelected() != EversongFunctionalities.TUNING) {
+        if (Parameters.getFunctionalitySelected() != EversongFunctionalities.TUNING) {
             functionalitiesFloatingMenu.addMenuButton(tuningFloatingButton);
         }
     }
 
     private void setFloatingMenuIcon() {
         Drawable menuDrawable = null;
-        switch(Parameters.getInstance().getFunctionalitySelected()) {
+        switch(Parameters.getFunctionalitySelected()) {
             case CHORD_DETECTION:
                 menuDrawable = ContextCompat.getDrawable(activity, R.drawable.ear_24dp);
                 break;

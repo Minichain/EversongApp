@@ -38,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void setMusicalNotationSetting() {
         RadioButton view;
-        switch (Parameters.getInstance().getMusicalNotation()) {
+        switch (Parameters.getMusicalNotation()) {
             case ENGLISH_NOTATION:
                 view = this.findViewById(R.id.english_notation);
                 view.setChecked(true);
@@ -57,19 +57,19 @@ public class SettingsActivity extends AppCompatActivity {
         switch(view.getId()) {
             case R.id.english_notation:
                 if (checked)
-                    Parameters.getInstance().setMusicalNotation(MusicalNotationEnum.ENGLISH_NOTATION);
+                    Parameters.setMusicalNotation(MusicalNotationEnum.ENGLISH_NOTATION);
                     break;
             case R.id.solfege_notation:
             default:
                 if (checked)
-                    Parameters.getInstance().setMusicalNotation(MusicalNotationEnum.SOLFEGE_NOTATION);
+                    Parameters.setMusicalNotation(MusicalNotationEnum.SOLFEGE_NOTATION);
                     break;
         }
     }
 
     private void setWindowingFunctionSetting() {
         RadioButton view;
-        switch(Parameters.getInstance().getWindowingFunction()) {
+        switch(Parameters.getWindowingFunction()) {
             case RECTANGULAR_WINDOW:
                 view = this.findViewById(R.id.rectangular_window);
                 view.setChecked(true);
@@ -96,26 +96,26 @@ public class SettingsActivity extends AppCompatActivity {
         switch(view.getId()) {
             case R.id.rectangular_window:
                 if (checked)
-                    Parameters.getInstance().setWindowingFunction(WindowFunctionEnum.RECTANGULAR_WINDOW);
+                    Parameters.setWindowingFunction(WindowFunctionEnum.RECTANGULAR_WINDOW);
                 break;
             case R.id.hanning_window:
                 if (checked)
-                    Parameters.getInstance().setWindowingFunction(WindowFunctionEnum.HANNING_WINDOW);
+                    Parameters.setWindowingFunction(WindowFunctionEnum.HANNING_WINDOW);
                 break;
             case R.id.hamming_window:
                 if (checked)
-                    Parameters.getInstance().setWindowingFunction(WindowFunctionEnum.HAMMING_WINDOW);
+                    Parameters.setWindowingFunction(WindowFunctionEnum.HAMMING_WINDOW);
                 break;
             case R.id.blackman_window:
             default:
                 if (checked)
-                    Parameters.getInstance().setWindowingFunction(WindowFunctionEnum.BLACKMAN_WINDOW);
+                    Parameters.setWindowingFunction(WindowFunctionEnum.BLACKMAN_WINDOW);
                 break;
         }
     }
 
     private void setChordBufferSizeSetting() {
-        int bufferSize = Parameters.getInstance().getChordBufferSize();
+        int bufferSize = Parameters.getChordBufferSize();
         SeekBar seekBar = this.findViewById(R.id.chord_buffer_size_seekbar);
         seekBar.setProgress(bufferSize);
         final TextView textView = this.findViewById(R.id.chord_buffer_size_seekbar_text);
@@ -129,7 +129,7 @@ public class SettingsActivity extends AppCompatActivity {
                     seekBar.setProgress(progress);
                 }
                 textView.setText(String.valueOf(progress) + " chords");
-                Parameters.getInstance().setChordBufferSize(progress);
+                Parameters.setChordBufferSize(progress);
             }
 
             @Override
@@ -155,7 +155,7 @@ public class SettingsActivity extends AppCompatActivity {
                     seekBar.setProgress(progress);
                 }
                 textView.setText(String.valueOf(progress) + " Hz");
-                Parameters.getInstance().setBandpassFilterLowFreq(progress);
+                Parameters.setBandpassFilterLowFreq(progress);
             }
 
             @Override
@@ -178,7 +178,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
                 seekBar.setProgress(progress);
                 textView.setText(String.valueOf(progress + minFreq) + " Hz");
-                Parameters.getInstance().setBandpassFilterHighFreq(progress + minFreq);
+                Parameters.setBandpassFilterHighFreq(progress + minFreq);
             }
 
             @Override
@@ -215,7 +215,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
                 int newAudioBufferSize = (int)Math.pow(2, 11 + progress);
                 textView.setText(String.valueOf(newAudioBufferSize) + " s.");
-                Parameters.getInstance().setAudioBufferSize(newAudioBufferSize);
+                Parameters.setAudioBufferSize(newAudioBufferSize);
             }
 
             @Override
@@ -228,7 +228,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void setChordDetectionAlgorithmSetting() {
         RadioButton view;
-        switch (Parameters.getInstance().getChordDetectionAlgorithm()) {
+        switch (Parameters.getChordDetectionAlgorithm()) {
             case ADAM_STARK_ALGORITHM:
                 view = this.findViewById(R.id.adam_stark_algorithm_option);
                 view.setChecked(true);
@@ -251,22 +251,22 @@ public class SettingsActivity extends AppCompatActivity {
         switch(view.getId()) {
             case R.id.adam_stark_algorithm_option:
                 if (checked)
-                    Parameters.getInstance().setChordDetectionAlgorithm(ChordDetectionAlgorithm.ADAM_STARK_ALGORITHM);
+                    Parameters.setChordDetectionAlgorithm(ChordDetectionAlgorithm.ADAM_STARK_ALGORITHM);
                 break;
             case R.id.eversong_algorithm_1_option:
                 if (checked)
-                    Parameters.getInstance().setChordDetectionAlgorithm(ChordDetectionAlgorithm.EVERSONG_ALGORITHM_1);
+                    Parameters.setChordDetectionAlgorithm(ChordDetectionAlgorithm.EVERSONG_ALGORITHM_1);
                 break;
             case R.id.eversong_algorithm_2_option:
             default:
                 if (checked)
-                    Parameters.getInstance().setChordDetectionAlgorithm(ChordDetectionAlgorithm.EVERSONG_ALGORITHM_2);
+                    Parameters.setChordDetectionAlgorithm(ChordDetectionAlgorithm.EVERSONG_ALGORITHM_2);
                 break;
         }
     }
 
     private void setPitchBufferSizeSetting() {
-        int bufferSize = Parameters.getInstance().getPitchBufferSize();
+        int bufferSize = Parameters.getPitchBufferSize();
         SeekBar seekBar = this.findViewById(R.id.pitch_buffer_size_seekbar);
         seekBar.setProgress(bufferSize);
         final TextView textView = this.findViewById(R.id.pitch_buffer_size_seekbar_text);
@@ -280,7 +280,7 @@ public class SettingsActivity extends AppCompatActivity {
                     seekBar.setProgress(progress);
                 }
                 textView.setText(String.valueOf(progress) + " values");
-                Parameters.getInstance().setPitchBufferSize(progress);
+                Parameters.setPitchBufferSize(progress);
             }
 
             @Override
@@ -298,7 +298,7 @@ public class SettingsActivity extends AppCompatActivity {
             switchView.setVisibility(View.GONE);
             return;
         }
-        switchView.setChecked(Parameters.getInstance().isDebugMode());
+        switchView.setChecked(Parameters.isDebugMode());
 
         switchView.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
             @Override
@@ -306,13 +306,13 @@ public class SettingsActivity extends AppCompatActivity {
                 String toastString = b ? getString(R.string.toast_debug_mode_enabled) : getString(R.string.toast_debug_mode_disabled);
                 Toast toast = Toast.makeText(getApplicationContext(), toastString, Toast.LENGTH_SHORT);
                 toast.show();
-                Parameters.getInstance().setDebugMode(b);
+                Parameters.setDebugMode(b);
             }
         });
     }
 
     private void setChromagramNumHarmonicsSetting() {
-        int seekBarProgress = Parameters.getInstance().getChromagramNumHarmonics();
+        int seekBarProgress = Parameters.getChromagramNumHarmonics();
         SeekBar seekBar = this.findViewById(R.id.chromagram_num_harmonics_seekbar);
         seekBar.setProgress(seekBarProgress);
         final TextView textView = this.findViewById(R.id.chromagram_num_harmonics_seekbar_text);
@@ -326,7 +326,7 @@ public class SettingsActivity extends AppCompatActivity {
                     seekBar.setProgress(progress);
                 }
                 textView.setText(String.valueOf(progress));
-                Parameters.getInstance().setChromagramNumHarmonics(progress);
+                Parameters.setChromagramNumHarmonics(progress);
             }
 
             @Override
@@ -338,7 +338,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void setChromagramNumOctavesSetting() {
-        int seekBarProgress = Parameters.getInstance().getChromagramNumOctaves();
+        int seekBarProgress = Parameters.getChromagramNumOctaves();
         SeekBar seekBar = this.findViewById(R.id.chromagram_num_octaves_seekbar);
         seekBar.setProgress(seekBarProgress);
         final TextView textView = this.findViewById(R.id.chromagram_num_octaves_seekbar_text);
@@ -352,7 +352,7 @@ public class SettingsActivity extends AppCompatActivity {
                     seekBar.setProgress(progress);
                 }
                 textView.setText(String.valueOf(progress));
-                Parameters.getInstance().setChromagramNumOctaves(progress);
+                Parameters.setChromagramNumOctaves(progress);
             }
 
             @Override
@@ -364,7 +364,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void setChromagramNumBinsToSearchSetting() {
-        int seekBarProgress = Parameters.getInstance().getChromagramNumBinsToSearch();
+        int seekBarProgress = Parameters.getChromagramNumBinsToSearch();
         SeekBar seekBar = this.findViewById(R.id.chromagram_num_bins_seekbar);
         seekBar.setProgress(seekBarProgress);
         final TextView textView = this.findViewById(R.id.chromagram_num_bins_seekbar_text);
@@ -378,7 +378,7 @@ public class SettingsActivity extends AppCompatActivity {
                     seekBar.setProgress(progress);
                 }
                 textView.setText(String.valueOf(progress));
-                Parameters.getInstance().setChromagramNumBinsToSearch(progress);
+                Parameters.setChromagramNumBinsToSearch(progress);
             }
 
             @Override
