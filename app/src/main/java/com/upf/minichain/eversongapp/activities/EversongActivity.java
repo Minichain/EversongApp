@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
@@ -28,8 +27,10 @@ import com.github.clans.fab.FloatingActionButton;
 import com.shawnlin.numberpicker.NumberPicker;
 import com.upf.minichain.eversongapp.AudioStack;
 import com.upf.minichain.eversongapp.ChartFloatingMenu;
+import com.upf.minichain.eversongapp.ChordPlayer;
 import com.upf.minichain.eversongapp.DetectedChordFile;
 import com.upf.minichain.eversongapp.EversongCanvas;
+import com.upf.minichain.eversongapp.enums.EversongFunctionalities;
 import com.upf.minichain.eversongapp.services.EversongService;
 import com.upf.minichain.eversongapp.FunctionalitiesFloatingMenu;
 import com.upf.minichain.eversongapp.Log;
@@ -52,7 +53,7 @@ import java.util.ArrayList;
 public class EversongActivity extends AppCompatActivity {
     EversongActivityBroadcastReceiver eversongBroadcastReceiver;
 
-    MediaPlayer mediaPlayer;
+    ChordPlayer chordPlayer;
 
     boolean keepRecordingAudio;
     boolean keepProcessingFrame;
@@ -202,6 +203,8 @@ public class EversongActivity extends AppCompatActivity {
             getApplicationContext().startService(serviceIntent);
         }
 
+        chordPlayer = new ChordPlayer(getApplicationContext());
+
         musicBeingPlayed = false;
         polytonalMusicBeingPlayed = false;
         pitchDetected = -1;
@@ -316,10 +319,10 @@ public class EversongActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.l("EversongActivityLog:: playChordButton pressed!");
-                //TODO play chord
-                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.piano_a3);
-                if (!mediaPlayer.isPlaying()) {
-                    mediaPlayer.start();
+                if (Parameters.getFunctionalitySelected() == EversongFunctionalities.CHORD_DETECTION) {
+                    chordPlayer.playChord(NotesEnum.fromInteger(mostProbableChord[0]), ChordTypeEnum.fromInteger(mostProbableChord[1]));
+                } else if (Parameters.getFunctionalitySelected() == EversongFunctionalities.CHORD_SCORE) {
+                    chordPlayer.playChord(chordScoreTonicNotePicked, chordScoreChordTypePicked);
                 }
             }
         });
