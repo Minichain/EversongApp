@@ -1,4 +1,4 @@
-package com.upf.minichain.eversongapp;
+package com.upf.minichain.eversongapp.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +10,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.upf.minichain.eversongapp.BuildConfig;
+import com.upf.minichain.eversongapp.Log;
+import com.upf.minichain.eversongapp.Parameters;
+import com.upf.minichain.eversongapp.R;
 import com.upf.minichain.eversongapp.enums.ChordDetectionAlgorithm;
 import com.upf.minichain.eversongapp.enums.MusicalNotationEnum;
 import com.upf.minichain.eversongapp.enums.WindowFunctionEnum;

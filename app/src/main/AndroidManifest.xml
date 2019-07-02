@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EversongActivity"
+        <activity android:name=".activities.EversongActivity"
             android:screenOrientation="portrait"
             android:process=":EversongActivityProcess">
             <intent-filter>
@@ -23,28 +23,28 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SettingsActivity"
+        <activity android:name=".activities.SettingsActivity"
             android:label="Settings"
-            android:parentActivityName=".EversongActivity"
+            android:parentActivityName=".activities.EversongActivity"
             android:screenOrientation="portrait"
             android:process=":SettingsActivityProcess">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".EversongActivity"/>
+                android:value=".activities.EversongActivity"/>
         </activity>
 
-        <activity android:name=".CreditsActivity"
+        <activity android:name=".activities.CreditsActivity"
             android:label="Credits"
-            android:parentActivityName=".EversongActivity"
+            android:parentActivityName=".activities.EversongActivity"
             android:screenOrientation="portrait"
             android:process=":CreditsActivityProcess">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".EversongActivity"/>
+                android:value=".activities.EversongActivity"/>
         </activity>
 
         <service
-            android:name=".EversongService"
+            android:name=".services.EversongService"
             android:process=":EversongServiceProcess">
         </service>
     </application>

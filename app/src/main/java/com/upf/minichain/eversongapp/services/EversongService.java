@@ -1,4 +1,4 @@
-package com.upf.minichain.eversongapp;
+package com.upf.minichain.eversongapp.services;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -19,6 +19,13 @@ import android.os.Process;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
+import com.upf.minichain.eversongapp.AudioStack;
+import com.upf.minichain.eversongapp.DetectedChordFile;
+import com.upf.minichain.eversongapp.Log;
+import com.upf.minichain.eversongapp.Parameters;
+import com.upf.minichain.eversongapp.R;
+import com.upf.minichain.eversongapp.TestAlgorithm;
+import com.upf.minichain.eversongapp.Utils;
 import com.upf.minichain.eversongapp.enums.BroadcastExtra;
 import com.upf.minichain.eversongapp.enums.BroadcastMessage;
 import com.upf.minichain.eversongapp.enums.ChordTypeEnum;

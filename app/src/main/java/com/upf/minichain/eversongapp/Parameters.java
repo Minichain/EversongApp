@@ -114,18 +114,20 @@ public class Parameters {
             cursor.close();
             Log.l("ParametersLog:: Error loading " + parameter + " parameter");
         }
-        Log.l("ParametersLog:: " + parameter + " loaded. Value: " + parameterValue);
+        Log.l("ParametersLog:: Parameter " + parameter + " loaded. Value: " + parameterValue);
         cursor.close();
         return parameterValue;
     }
 
     private static void setParameterInDataBase(String parameter, int value) {
         if (parametersDatabase != null) {
+            Log.l("AdriHell:: setParameterInDataBase?? yes!!");
             ContentValues newContent = new ContentValues();
             newContent.put(ParametersDatabaseHelper.ParametersColumns.COLUMN_PARAMETER, parameter);
             newContent.put(ParametersDatabaseHelper.ParametersColumns.COLUMN_VALUE, value);
 
             if (!isParameterInDataBase(parameter)) {
+                Log.l("ParametersLog:: Parameter " + parameter + " inserted int the database with value: " + value);
                 parametersDatabase.insert(ParametersDatabaseHelper.ParametersColumns.PARAMETERS_TABLE_NAME, null, newContent);
             } else {
                 Log.l("ParametersLog:: Parameter " + parameter + " is already in the database. Updating it with value: " + value);

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EversongActivity">
+    tools:context=".activities.EversongActivity">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/tuning_pitch_note_layout"

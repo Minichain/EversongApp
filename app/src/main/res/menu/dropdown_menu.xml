@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="10dp"
     android:layout_width="10dp"
-    tools:context=".EversongActivity">
+    tools:context=".activities.EversongActivity">
 
     <item android:id="@+id/open_settings_menu_option"
         android:title="@string/open_settings_menu"

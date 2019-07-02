@@ -1,4 +1,4 @@
-package com.upf.minichain.eversongapp;
+package com.upf.minichain.eversongapp.activities;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +26,17 @@ import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.shawnlin.numberpicker.NumberPicker;
+import com.upf.minichain.eversongapp.AudioStack;
+import com.upf.minichain.eversongapp.ChartFloatingMenu;
+import com.upf.minichain.eversongapp.DetectedChordFile;
+import com.upf.minichain.eversongapp.EversongCanvas;
+import com.upf.minichain.eversongapp.services.EversongService;
+import com.upf.minichain.eversongapp.FunctionalitiesFloatingMenu;
+import com.upf.minichain.eversongapp.Log;
+import com.upf.minichain.eversongapp.Parameters;
+import com.upf.minichain.eversongapp.R;
+import com.upf.minichain.eversongapp.TestAlgorithm;
+import com.upf.minichain.eversongapp.Utils;
 import com.upf.minichain.eversongapp.chordChart.GuitarChordChart;
 import com.upf.minichain.eversongapp.chordChart.PianoChordChart;
 import com.upf.minichain.eversongapp.chordChart.StaffChordChart;

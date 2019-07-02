@@ -10,12 +10,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 public class DetectedChordFile {
-    FileOutputStream chordsDetectedOutputStream;
-    OutputStreamWriter chordsDetectedOutputStreamWriter;
-    BufferedWriter chordsDetectedBufferedWriter;
-    long startTime;
+    private FileOutputStream chordsDetectedOutputStream;
+    private OutputStreamWriter chordsDetectedOutputStreamWriter;
+    private BufferedWriter chordsDetectedBufferedWriter;
+    public long startTime;
 
-    DetectedChordFile(Context context) {
+    public DetectedChordFile(Context context) {
         String filename = "chords_detected.txt";
 //        File file = new File(context.getFilesDir(), filename);
         File file = new File(context.getExternalFilesDir(null), filename);

@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.upf.minichain.eversongapp.activities.EversongActivity;
 import com.upf.minichain.eversongapp.enums.EversongFunctionalities;
 
 public class FunctionalitiesFloatingMenu {
