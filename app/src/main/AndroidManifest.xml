@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".EversongActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:process=":EversongActivityProcess">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,7 +26,8 @@
         <activity android:name=".SettingsActivity"
             android:label="Settings"
             android:parentActivityName=".EversongActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:process=":SettingsActivityProcess">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".EversongActivity"/>
@@ -34,14 +36,16 @@
         <activity android:name=".CreditsActivity"
             android:label="Credits"
             android:parentActivityName=".EversongActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:process=":CreditsActivityProcess">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".EversongActivity"/>
         </activity>
 
         <service
-            android:name=".EversongService" >
+            android:name=".EversongService"
+            android:process=":EversongServiceProcess">
         </service>
     </application>
 
