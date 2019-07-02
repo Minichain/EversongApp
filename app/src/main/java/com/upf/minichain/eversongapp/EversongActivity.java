@@ -7,13 +7,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Process;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionButton;
 import com.shawnlin.numberpicker.NumberPicker;
 import com.upf.minichain.eversongapp.chordChart.GuitarChordChart;
 import com.upf.minichain.eversongapp.chordChart.PianoChordChart;
@@ -39,10 +42,13 @@ import java.util.ArrayList;
 public class EversongActivity extends AppCompatActivity {
     EversongActivityBroadcastReceiver eversongBroadcastReceiver;
 
+    MediaPlayer mediaPlayer;
+
     boolean keepRecordingAudio;
     boolean keepProcessingFrame;
 
     ImageButton recordingButton;
+    FloatingActionButton playChordButton;
     TextView pitchText;
     TextView spectralFlatnessText;
     ImageView musicPlayingDetectorImageView;
@@ -273,6 +279,11 @@ public class EversongActivity extends AppCompatActivity {
         setChordScoreViews();
         setCanvas();
 
+        setRecordingButton();
+        setPlayChordButton();
+    }
+
+    private void setRecordingButton() {
         recordingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -281,6 +292,24 @@ public class EversongActivity extends AppCompatActivity {
                     startRecording();
                 } else {
                     stopRecording();
+                }
+            }
+        });
+    }
+
+    private void setPlayChordButton() {
+        playChordButton = this.findViewById(R.id.play_chord_button);
+        playChordButton.setButtonSize(FloatingActionButton.SIZE_MINI);
+        playChordButton.setColorNormal(colorPrimary);
+        playChordButton.setColorPressed(colorPrimaryDark);
+        playChordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.l("EversongActivityLog:: playChordButton pressed!");
+                //TODO play chord
+                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.piano_a3);
+                if (!mediaPlayer.isPlaying()) {
+                    mediaPlayer.start();
                 }
             }
         });

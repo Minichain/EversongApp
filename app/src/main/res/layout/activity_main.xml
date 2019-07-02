@@ -77,7 +77,7 @@
         android:id="@+id/recording_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="15dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:foregroundGravity="bottom"
@@ -134,6 +134,19 @@
         android:layout_gravity="bottom"
         android:layout_marginBottom="15dp"
         app:menu_labels_position="left" />
+
+    <!--PLAY BUTTON-->
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/play_chord_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginStart="20dp"
+        android:foregroundGravity="bottom"
+        android:background="@null"
+        android:src="@drawable/baseline_play_arrow_white_18"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/recording_button" />
 
     <!--DEBUG INFO-->
     <TextView

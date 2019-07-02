@@ -16,16 +16,16 @@ import com.upf.minichain.eversongapp.chordChart.UkuleleChordChart;
 import com.upf.minichain.eversongapp.enums.ChartTab;
 
 public class ChartFloatingMenu {
-    Activity activity;
-    Context context;
-    FloatingActionMenu chartFloatingMenu;
-    FloatingActionButton guitarFloatingButton;
-    FloatingActionButton ukuleleFloatingButton;
-    FloatingActionButton pianoFloatingButton;
-    FloatingActionButton staffFloatingButton;
-    FloatingActionButton chromaFloatingButton;
-    int colorNormal;
-    int colorPressed;
+    private Activity activity;
+    private Context context;
+    private FloatingActionMenu chartFloatingMenu;
+    private FloatingActionButton guitarFloatingButton;
+    private FloatingActionButton ukuleleFloatingButton;
+    private FloatingActionButton pianoFloatingButton;
+    private FloatingActionButton staffFloatingButton;
+    private FloatingActionButton chromaFloatingButton;
+    private int colorNormal;
+    private int colorPressed;
 
     public ChartFloatingMenu(Activity activity, Context context, int colorNormal, int colorPressed) {
         this.activity = activity;

@@ -11,14 +11,14 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.upf.minichain.eversongapp.enums.EversongFunctionalities;
 
 public class FunctionalitiesFloatingMenu {
-    EversongActivity activity;
-    Context context;
-    FloatingActionMenu functionalitiesFloatingMenu;
-    FloatingActionButton chordDetectionFloatingButton;
-    FloatingActionButton chordLibFloatingButton;
-    FloatingActionButton tuningFloatingButton;
-    int colorNormal;
-    int colorPressed;
+    private EversongActivity activity;
+    private Context context;
+    private FloatingActionMenu functionalitiesFloatingMenu;
+    private FloatingActionButton chordDetectionFloatingButton;
+    private FloatingActionButton chordLibFloatingButton;
+    private FloatingActionButton tuningFloatingButton;
+    private int colorNormal;
+    private int colorPressed;
 
     public FunctionalitiesFloatingMenu(EversongActivity activity, Context context, int colorNormal, int colorPressed) {
         this.activity = activity;
