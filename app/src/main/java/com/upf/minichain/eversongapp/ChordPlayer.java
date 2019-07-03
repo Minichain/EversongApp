@@ -13,10 +13,11 @@ public class ChordPlayer {
     private boolean soundPoolLoaded;
     private AudioManager audioManager;
     private Context context;
+    private int maxStreams = 4;
 
     public ChordPlayer(Context context) {
         this.context = context;
-        soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
+        soundPool = new SoundPool(maxStreams, AudioManager.STREAM_MUSIC, 0);
         audioManager = (AudioManager) this.context.getSystemService(Context.AUDIO_SERVICE);
         loadSoundPool();
     }
@@ -44,28 +45,40 @@ public class ChordPlayer {
         });
     }
 
+    public void playNote(NotesEnum note) {
+        playChord(note, null);
+    }
+
     public void playChord(NotesEnum tonic, ChordTypeEnum chordType) {
         if (!soundPoolLoaded
-                || tonic == null || tonic.getValue() == -1
-                || chordType == null || chordType.getValue() == -1) {
+                || tonic == null || tonic.getValue() == -1) {
             return;
         }
-        NotesEnum[] chordNotes = Utils.getChordNotes(tonic, chordType);
-        if (chordNotes[2] == NotesEnum.NO_NOTE) {
-            float streamVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / 2;
-            soundPool.play(soundPoolChord[chordNotes[0].getValue()], streamVolume, streamVolume, 1, 0, 1f);
-            soundPool.play(soundPoolChord[chordNotes[1].getValue()], streamVolume, streamVolume, 1, 0, 1f);
-        } else if (chordNotes[3] == NotesEnum.NO_NOTE) {
-            float streamVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / 3;
-            soundPool.play(soundPoolChord[chordNotes[0].getValue()], streamVolume, streamVolume, 1, 0, 1f);
-            soundPool.play(soundPoolChord[chordNotes[1].getValue()], streamVolume, streamVolume, 1, 0, 1f);
-            soundPool.play(soundPoolChord[chordNotes[2].getValue()], streamVolume, streamVolume, 1, 0, 1f);
+
+        if (chordType == null || chordType.getValue() == -1) {
+            // Note
+            float streamVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            soundPool.play(soundPoolChord[tonic.getValue()], streamVolume, streamVolume, 1, 0, 1f);
         } else {
-            float streamVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / 4;
-            soundPool.play(soundPoolChord[chordNotes[0].getValue()], streamVolume, streamVolume, 1, 0, 1f);
-            soundPool.play(soundPoolChord[chordNotes[1].getValue()], streamVolume, streamVolume, 1, 0, 1f);
-            soundPool.play(soundPoolChord[chordNotes[2].getValue()], streamVolume, streamVolume, 1, 0, 1f);
-            soundPool.play(soundPoolChord[chordNotes[3].getValue()], streamVolume, streamVolume, 1, 0, 1f);
+            // Chord
+            NotesEnum[] chordNotes = Utils.getChordNotes(tonic, chordType);
+
+            if (chordNotes[2] == NotesEnum.NO_NOTE) {
+                float streamVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / 2;
+                soundPool.play(soundPoolChord[chordNotes[0].getValue()], streamVolume, streamVolume, 1, 0, 1f);
+                soundPool.play(soundPoolChord[chordNotes[1].getValue()], streamVolume, streamVolume, 1, 0, 1f);
+            } else if (chordNotes[3] == NotesEnum.NO_NOTE) {
+                float streamVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / 3;
+                soundPool.play(soundPoolChord[chordNotes[0].getValue()], streamVolume, streamVolume, 1, 0, 1f);
+                soundPool.play(soundPoolChord[chordNotes[1].getValue()], streamVolume, streamVolume, 1, 0, 1f);
+                soundPool.play(soundPoolChord[chordNotes[2].getValue()], streamVolume, streamVolume, 1, 0, 1f);
+            } else {
+                float streamVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / 4;
+                soundPool.play(soundPoolChord[chordNotes[0].getValue()], streamVolume, streamVolume, 1, 0, 1f);
+                soundPool.play(soundPoolChord[chordNotes[1].getValue()], streamVolume, streamVolume, 1, 0, 1f);
+                soundPool.play(soundPoolChord[chordNotes[2].getValue()], streamVolume, streamVolume, 1, 0, 1f);
+                soundPool.play(soundPoolChord[chordNotes[3].getValue()], streamVolume, streamVolume, 1, 0, 1f);
+            }
         }
     }
 }

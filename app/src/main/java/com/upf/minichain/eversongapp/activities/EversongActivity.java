@@ -795,8 +795,28 @@ public class EversongActivity extends AppCompatActivity {
         placeHolder = this.findViewById(R.id.piano_chord_chart_layout);
         getLayoutInflater().inflate(R.layout.piano_chord_chart, placeHolder);
 
+        setPianoChordChartNotes();
+
         placeHolder = this.findViewById(R.id.staff_chord_chart_layout);
         getLayoutInflater().inflate(R.layout.staff_chord_chart, placeHolder);
+    }
+
+    private void setPianoChordChartNotes() {
+        for (int i = 1; i <= NotesEnum.numberOfNotes; i++) {
+            int chordKeyViewId;
+            if (i <= 9) {
+                chordKeyViewId = getResources().getIdentifier("piano_key_0" + i, "id", getPackageName());
+            } else {
+                chordKeyViewId = getResources().getIdentifier("piano_key_" + i, "id", getPackageName());
+            }
+            final int ii = i - 1;
+            this.findViewById(chordKeyViewId).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    chordPlayer.playNote(NotesEnum.fromInteger((ii + 3) % NotesEnum.numberOfNotes));
+                }
+            });
+        }
     }
 
     private void inflateChordScoreLayout() {
