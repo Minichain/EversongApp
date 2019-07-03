@@ -126,7 +126,7 @@ public class GuitarChordChart extends ChordChart {
                         chordTab = new int[] {2, 3, 2, 4, 2, -1};
                         break;
                     case Augmented5th:
-                        chordTab = new int[] {2, 4, 4, 5, -1, -1};
+                        chordTab = new int[] {3, 4, 4, 5, -1, -1};
                         break;
                     case Power5th:
                         chordTab = new int[] {-1, -1, 4, 4, 2, -1};
