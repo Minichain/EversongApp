@@ -861,8 +861,6 @@ public class EversongActivity extends AppCompatActivity {
     }
 
     public void closeApp() {
-        Intent serviceIntent = new Intent(getApplicationContext(), EversongService.class);
-        getApplicationContext().stopService(serviceIntent);
         this.onDestroy();
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(-1);
@@ -872,5 +870,7 @@ public class EversongActivity extends AppCompatActivity {
     protected void onDestroy() {
         Log.l("EversongActivityLog:: onDestroy EversongActivity");
         super.onDestroy();
+        Intent serviceIntent = new Intent(getApplicationContext(), EversongService.class);
+        getApplicationContext().stopService(serviceIntent);
     }
 }
