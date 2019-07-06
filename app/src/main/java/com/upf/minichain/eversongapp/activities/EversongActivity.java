@@ -788,21 +788,50 @@ public class EversongActivity extends AppCompatActivity {
 
         placeHolder = this.findViewById(R.id.guitar_chord_chart_layout);
         getLayoutInflater().inflate(R.layout.guitar_chord_chart, placeHolder);
+        setGuitarChordChartNotes();
 
         placeHolder = this.findViewById(R.id.ukulele_chord_chart_layout);
         getLayoutInflater().inflate(R.layout.ukulele_chord_chart, placeHolder);
+        setUkuleleChordChartNotes();
 
         placeHolder = this.findViewById(R.id.piano_chord_chart_layout);
         getLayoutInflater().inflate(R.layout.piano_chord_chart, placeHolder);
-
         setPianoChordChartNotes();
 
         placeHolder = this.findViewById(R.id.staff_chord_chart_layout);
         getLayoutInflater().inflate(R.layout.staff_chord_chart, placeHolder);
     }
 
+    private void setGuitarChordChartNotes() {
+        for (int i = 1; i <= GuitarChordChart.numberOfStrings; i++) {
+            int chordKeyViewId;
+            chordKeyViewId = getResources().getIdentifier("guitar_chord_string_0" + i, "id", getPackageName());
+            final int ii = i - 1;
+            this.findViewById(chordKeyViewId).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    chordPlayer.playNote(GuitarChordChart.guitarTuning[ii]);
+                }
+            });
+        }
+    }
+
+    private void setUkuleleChordChartNotes() {
+        for (int i = 1; i <= UkuleleChordChart.numberOfStrings; i++) {
+            int chordKeyViewId;
+            chordKeyViewId = getResources().getIdentifier("ukulele_chord_string_0" + i, "id", getPackageName());
+            final int ii = i - 1;
+            this.findViewById(chordKeyViewId).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    chordPlayer.playNote(UkuleleChordChart.ukuleleTuning[ii]);
+                }
+            });
+        }
+    }
+
     private void setPianoChordChartNotes() {
-        for (int i = 1; i <= NotesEnum.numberOfNotes; i++) {
+        for (int i = 1; i <= PianoChordChart.numberOfKeys; i++) {
             int chordKeyViewId;
             if (i <= 9) {
                 chordKeyViewId = getResources().getIdentifier("piano_key_0" + i, "id", getPackageName());

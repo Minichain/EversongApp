@@ -18,9 +18,9 @@ import com.upf.minichain.eversongapp.enums.NotesEnum;
  */
 //TODO include all chordChart classes into one big chordChart class
 public class UkuleleChordChart extends ChordChart {
-    private static int numberOfStrings = 4;
-    private static int numberOfFrets = 4;
-    private static NotesEnum[] ukuleleTuning = new NotesEnum[numberOfStrings];
+    public static int numberOfStrings = 4;
+    public static int numberOfFrets = 4;
+    public static NotesEnum[] ukuleleTuning = new NotesEnum[numberOfStrings];
 
     static {
         ukuleleTuning[0] = NotesEnum.A;

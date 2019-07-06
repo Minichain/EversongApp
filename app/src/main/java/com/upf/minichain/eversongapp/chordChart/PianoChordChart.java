@@ -12,7 +12,7 @@ import com.upf.minichain.eversongapp.enums.ChordTypeEnum;
 import com.upf.minichain.eversongapp.enums.NotesEnum;
 
 public class PianoChordChart {
-    private static int numberOfKeys = 12;
+    public static int numberOfKeys = 12;
     private static NotesEnum firstKeyNote = NotesEnum.C;
 
     public static void setChordChart(Context ctx, NotesEnum tonic, ChordTypeEnum chordType, float alpha) {

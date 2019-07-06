@@ -18,9 +18,9 @@ import com.upf.minichain.eversongapp.enums.NotesEnum;
  *      for the chord "F major" it would be {1, 1, 2, 3, 3, 1}
  */
 public class GuitarChordChart extends ChordChart {
-    private static int numberOfStrings = 6;
-    private static int numberOfFrets = 4;
-    private static NotesEnum[] guitarTuning = new NotesEnum[numberOfStrings];
+    public static int numberOfStrings = 6;
+    public static int numberOfFrets = 4;
+    public static NotesEnum[] guitarTuning = new NotesEnum[numberOfStrings];
 
     static {
         guitarTuning[0] = NotesEnum.E;
