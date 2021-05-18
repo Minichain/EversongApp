@@ -50,6 +50,8 @@ android {
             jcenter()
         }
     }
+
+    ndkVersion "23.0.7272597"
 }
 
 dependencies {
