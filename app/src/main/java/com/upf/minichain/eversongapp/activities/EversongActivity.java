@@ -391,12 +391,9 @@ public class EversongActivity extends AppCompatActivity {
 
     private void setCanvas() {
         ImageView canvasView = this.findViewById(R.id.canvas_view);
-        int canvasHeight = Utils.getActivityHeightInPixels(this) - (
-                + (int)Utils.convertDpToPixel(56, this) //Toolbar
-                + (int)Utils.convertDpToPixel(24, this) //Top menu (where time, battery... are displayed)
-        );
-
         int canvasWidth = Utils.getActivityWidthInPixels(this);
+        int canvasHeight = Utils.getActivityHeightInPixels(this);
+
         ConstraintLayout.LayoutParams params;
         params = (ConstraintLayout.LayoutParams) canvasView.getLayoutParams();
         params.height = canvasHeight;

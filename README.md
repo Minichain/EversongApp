@@ -8,7 +8,6 @@ a piano. Whenever you play a chord with an instrument, the application
 gives you information about what chord is being played. Additionally, you
 can use this application to tune your instrument.
 
-
 ## Screenshots
 ![Alt text](/screenshots/app_flow_chart_3.png?raw=true "app_flow_chart_3")
 ![Alt text](/screenshots/eversong_activity_1.png?raw=true "eversong_activity_1")
